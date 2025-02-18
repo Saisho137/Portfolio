@@ -5,9 +5,3 @@ export const roboto = localFont({
   variable: '--font-roboto',
   weight: '100 900'
 });
-
-export const robotoItalic = localFont({
-  src: '../assets/fonts/Roboto-Italic.ttf',
-  variable: '--font-roboto-italic',
-  weight: '100 900'
-});
