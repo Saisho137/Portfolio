@@ -18,15 +18,13 @@
   text-overflow: ellipsis;
 }
 
-@mixin scrollBar(
-  $color: #b2b2b2,
+@mixin scrollBar($color: #b2b2b2,
   $width: 4px,
   $radius: 20px,
   $track-color: transparent,
   $track-radius: 0,
   $thumb: none,
-  $height: inherit
-) {
+  $height: inherit) {
   scrollbar-color: $color $track-color;
   scrollbar-width: thin;
 
@@ -70,60 +68,30 @@
 //* Typography
 @mixin h1 {
   font-weight: 900;
-  font-size: clamp(2.5rem, 1.635vw + 2.132rem, 3.563rem);
-  line-height: clamp(3.25rem, 2.235vw + 2.747rem, 4.703rem);
+  font-size: clamp(2.688rem, 1.574vw + 2.333rem, 3.75rem);
+  line-height: clamp(3.413rem, 2.055vw + 2.951rem, 4.8rem);
 }
 
 @mixin h2 {
   font-weight: 700;
-  font-size: size(31, $base-font-size);
-  line-height: size(34, $base-font-size);
+  font-size: clamp(2.25rem, 0.37vw + 2.167rem, 2.5rem);
+  line-height: clamp(2.873rem, 0.466vw + 2.768rem, 3.188rem);
+}
+
+@mixin h3 {
+  font-weight: 700;
+  font-size: clamp(1.625rem, 0.37vw + 1.542rem, 1.875rem);
+  line-height: clamp(2.062rem, 0.462vw + 1.958rem, 2.374rem);
 }
 
 @mixin h4 {
   font-weight: 700;
-  font-size: size(23);
-  line-height: size(25, $base-font-size);
+  font-size: clamp(1.125rem, 0.185vw + 1.083rem, 1.25rem);
+  line-height: clamp(1.437rem, 0.279vw + 1.374rem, 1.625rem);
 }
 
-@mixin h5 {
-  font-weight: 700;
-  font-size: size(19, $base-font-size);
-  line-height: size(20, $base-font-size);
-}
-
-@mixin h6 {
-  font-weight: 700;
-  font-size: size(16, $base-font-size);
-  line-height: size(18, $base-font-size);
-}
-
-@mixin body1 {
+@mixin body {
   font-weight: 400;
-  font-size: size(16, $base-font-size);
-  line-height: size(20, $base-font-size);
-}
-
-@mixin body2 {
-  font-weight: 400;
-  font-size: size(14, $base-font-size);
-  line-height: size(19, $base-font-size);
-}
-
-@mixin body3 {
-  font-weight: 400;
-  font-size: size(11, $base-font-size);
-  line-height: size(16, $base-font-size);
-}
-
-@mixin subtitle1 {
-  font-weight: 400;
-  font-size: size(16, $base-font-size);
-  line-height: size(24, $base-font-size);
-}
-
-@mixin subtitle2 {
-  font-weight: 400;
-  font-size: size(13, $base-font-size);
-  line-height: size(20, $base-font-size);
+  font-size: clamp(1rem, 0.185vw + 0.958rem, 1.125rem);
+  line-height: clamp(1.437rem, -0.094vw + 1.521rem, 1.5rem);
 }

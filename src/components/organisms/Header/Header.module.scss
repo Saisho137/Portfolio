@@ -19,8 +19,7 @@
   }
 
   &__title {
-    font-size: size(24);
-    font-weight: bold;
+    @include h3;
   }
 
   &__nav {
@@ -28,7 +27,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    font-size: size(20);
+    @include h4;
     gap: size(40);
   }
 
@@ -52,8 +51,7 @@
   &__contact-button {
     cursor: pointer;
     color: $neutral-000;
-    font-size: size(20);
-    padding: 20px 35px;
+    padding: 15px 30px;
     border-radius: 14px;
     border: 1px solid $neutral-000;
     background-color: transparent;
