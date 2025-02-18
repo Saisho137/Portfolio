@@ -1,5 +1,7 @@
 import { FC, ReactNode } from 'react';
 
+import { Footer, Header } from '@/components/organisms';
+
 import styles from './BaseLayout.module.scss';
 
 interface BaseLayoutProps {
@@ -9,9 +11,9 @@ interface BaseLayoutProps {
 const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
   return (
     <section className={styles.container}>
-      <header>Header</header>
+      <Header />
       <main>{children}</main>
-      <footer>Footer</footer>
+      <Footer />
     </section>
   );
 };
