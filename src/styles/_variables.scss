@@ -1,0 +1,66 @@
+$mask-background: rgba(0, 0, 0, 0.5);
+
+//* Colors
+$neutral-000: #fff;
+$neutral-100: #fafbfc;
+$neutral-200: #e2e7ed;
+$neutral-300: #cbd1de;
+$neutral-400: #b4bcce;
+$neutral-500: #9da5be;
+$neutral-600: #7f839b;
+$neutral-700: #626277;
+$neutral-800: #464454;
+$neutral-900: #292730;
+$neutral-black: #000;
+
+//* Shadows
+$shadow-xxs:
+  0px 1px 3px rgba(149, 150, 153, 0.2),
+  0px 2px 1px rgba(149, 150, 153, 0.12),
+  0px 1px 1px rgba(149, 150, 153, 0.12);
+$shadow-xs:
+  0px 1px 5px rgba(149, 150, 153, 0.2),
+  0px 3px 1px rgba(149, 150, 153, 0.12),
+  0px 2px 2px rgba(149, 150, 153, 0.14);
+$shadow-s:
+  0px 2px 4px rgba(149, 150, 153, 0.2),
+  0px 1px 10px rgba(149, 150, 153, 0.12),
+  0px 4px 5px rgba(149, 150, 153, 0.14);
+$shadow-m:
+  0px 5px 5px rgba(149, 150, 153, 0.2),
+  0px 3px 14px rgba(149, 150, 153, 0.12),
+  0px 8px 10px rgba(149, 150, 153, 0.14);
+$shadow-l:
+  0px 8px 10px rgba(149, 150, 153, 0.2),
+  0px 6px 30px rgba(149, 150, 153, 0.12),
+  0px 16px 24px rgba(149, 150, 153, 0.14);
+$shadow-xl:
+  0px 11px 15px rgba(149, 150, 153, 0.2),
+  0px 9px 46px rgba(149, 150, 153, 0.12),
+  0px 24px 38px rgba(149, 150, 153, 0.14);
+
+//* Breakpoints
+$base-font-size: 16;
+$base-font-size-px: 16px;
+$breakpoint-xs: 0;
+$breakpoint-sm: calc(480px / $base-font-size-px * 1rem);
+$breakpoint-md: calc(768px / $base-font-size-px * 1rem);
+$breakpoint-lg: calc(1200px / $base-font-size-px * 1rem);
+$breakpoint-xl: calc(1440px / $base-font-size-px * 1rem);
+$breakpoint-xxl: calc(1536px / $base-font-size-px * 1rem);
+$half-pixel-rem: calc(0.5px / $base-font-size-px * 1rem);
+
+//* Transparencies
+$transparency-xs: 0.05;
+$transparency-sm: 0.1;
+$transparency-sm-md: 0.25;
+$transparency-md: 0.3;
+$transparency-lg: 0.5;
+$transparency-xlg: 0.6;
+$transparency-xl: 0.7;
+$transparency-xxl: 0.9;
+
+//* Z index values
+$z-index-low: 1;
+$z-index-medium: 10;
+$z-index-high: 100;

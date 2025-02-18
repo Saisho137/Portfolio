@@ -1,0 +1,10 @@
+{
+  "embeddedLanguageFormatting": "auto",
+  "trailingComma": "none",
+  "jsxSingleQuote": true,
+  "singleQuote": true,
+  "endOfLine": "auto",
+  "printWidth": 100,
+  "semi": true,
+  "tabWidth": 2
+}

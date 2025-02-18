@@ -1,0 +1,10 @@
+.icons-container {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  gap: 10px;
+
+  &__icon {
+    color: red;
+  }
+}
