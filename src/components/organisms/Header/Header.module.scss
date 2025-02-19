@@ -16,6 +16,11 @@
     display: flex;
     gap: size(10);
     align-items: center;
+
+    &:hover {
+      color: $color-primary;
+      cursor: pointer;
+    }
   }
 
   &__title {
