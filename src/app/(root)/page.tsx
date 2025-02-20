@@ -30,7 +30,7 @@ export default function Home() {
         </div>
       </section>
       <aside>
-        <Image className={styles.home__image} alt='' src={Photo} width={400} />
+        <Image className={styles.home__image} alt='' src={Photo} width={400} priority />
       </aside>
     </section>
   );
