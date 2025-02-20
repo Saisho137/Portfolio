@@ -1,3 +1,5 @@
+'use client';
+import Script from 'next/script';
 import { ReactNode } from 'react';
 
 import { BaseLayout } from '@/components/templates';
@@ -13,7 +15,9 @@ export default function RootLayout({
   return (
     <html lang='es' data-testid='root-html'>
       <head>
-        <script
+        <Script
+          id='google-tag-manager'
+          strategy='afterInteractive'
           dangerouslySetInnerHTML={{
             __html: `
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
@@ -26,6 +30,15 @@ export default function RootLayout({
         />
       </head>
       <body className={`${roboto.variable}`}>
+        <noscript>
+          <iframe
+            title='google tag manager'
+            src={`https://www.googletagmanager.com/ns.html?id=GTM-KH8PJXT6`}
+            height='0'
+            width='0'
+            style={{ display: 'none', visibility: 'hidden' }}
+          />
+        </noscript>
         <BaseLayout>{children}</BaseLayout>
       </body>
     </html>

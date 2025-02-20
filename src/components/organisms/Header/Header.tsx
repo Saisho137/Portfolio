@@ -10,11 +10,13 @@ const Header: FC = () => {
   const handleButtonClick = () => {
     console.log('Button clicked');
 
-    window?.dataLayer?.push({
-      event: 'button_click',
-      category: 'User Actions',
-      label: 'Clicked CTA Button'
-    });
+    if (window?.dataLayer) {
+      window?.dataLayer?.push({
+        event: 'button_click',
+        category: 'User Actions',
+        label: 'Clicked CTA Button'
+      });
+    }
   };
 
   return (
