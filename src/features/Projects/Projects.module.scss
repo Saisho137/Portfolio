@@ -1,0 +1,38 @@
+@use '@/styles/mixins' as *;
+
+.projects {
+  display: grid;
+  justify-content: center;
+
+  &__content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: center;
+    margin-inline: auto;
+    gap: 2rem;
+  }
+
+  &__paragraphs {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: left
+  }
+
+  &__name {
+    @include h1;
+  }
+
+  &__rol {
+    @include h2;
+  }
+
+  &__introduction {
+    max-width: 65ch;
+    @include body;
+  }
+
+  &__image {
+    filter: drop-shadow(0 0 0.33rem rgba(185, 255, 102, 0.5));
+  }
+}

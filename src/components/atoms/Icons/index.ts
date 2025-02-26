@@ -1,9 +1,11 @@
+import { LinkArrow } from './LinkArrow';
 import { Linkedin } from './Linkedin';
 import { Logo } from './Logo';
 
 const icons = {
   Logo,
-  Linkedin
+  Linkedin,
+  LinkArrow
 };
 
 export default icons;
