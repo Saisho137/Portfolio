@@ -17,7 +17,7 @@ const Card: FC<CardProps> = ({ title, theme, imageSrc, link = '#', imageAlt = 'C
   return (
     <article className={`${styles.card} ${styles['card--' + theme]}`}>
       <div className={styles.card__content}>
-        <h2>
+        <h3>
           {title.split(' ').map((word, index) => (
             <span
               className={`${styles['card__title-item']} ${styles['card__title-item--' + theme]}`}
@@ -26,7 +26,7 @@ const Card: FC<CardProps> = ({ title, theme, imageSrc, link = '#', imageAlt = 'C
               {word}{' '}
             </span>
           ))}
-        </h2>
+        </h3>
         <a href={link} className={`${styles.card__link} ${styles['card__link--' + theme]}`}>
           <Icons.LinkArrow className={`${styles.card__icon} ${styles['card__icon--' + theme]}`} />
           <span>Learn more</span>

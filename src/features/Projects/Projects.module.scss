@@ -21,6 +21,8 @@
 
   &__name {
     @include h1;
+    margin-block: 2rem;
+    margin-inline: auto;
   }
 
   &__rol {

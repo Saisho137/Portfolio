@@ -9,7 +9,7 @@ import styles from './Projects.module.scss';
 const Projects: FC = () => {
   return (
     <section className={styles.projects}>
-      <h2 className={styles.projects__name}>Projects:</h2>
+      <h2 className={styles.projects__name}>Projects</h2>
       <section className={styles.projects__content}>
         <Card title='Agenda Comfama' theme='green' imageSrc={ComfamaImage} imageAlt='Comfama' />
         <Card

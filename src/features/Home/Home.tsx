@@ -24,7 +24,7 @@ const Home: FC = () => {
           </p>
         </div>
       </section>
-      <aside>
+      <aside className={styles.home__aside}>
         <Image className={styles.home__image} alt='' src={Photo} width={400} priority />
       </aside>
     </section>

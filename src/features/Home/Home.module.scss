@@ -2,6 +2,8 @@
 
 .home {
   display: grid;
+  place-content: center;
+  min-height: 70vh;
   grid-template-columns: 1.5fr 1fr;
 
   &__content {
@@ -10,7 +12,14 @@
     justify-content: center;
     margin-inline: auto;
     text-align: left;
-    gap: 2rem;
+    gap: 4rem;
+  }
+
+  &__aside {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+
   }
 
   &__paragraphs {
