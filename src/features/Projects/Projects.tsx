@@ -11,8 +11,13 @@ const Projects: FC = () => {
     <section className={styles.projects}>
       <h2 className={styles.projects__name}>Projects:</h2>
       <section className={styles.projects__content}>
-        <Card title='Comfama' theme='green' imageSrc={ComfamaImage} imageAlt='Comfama' />
-        <Card title='Proteccion' theme='dark' imageSrc={BeathubImage} imageAlt='Comfama' />
+        <Card title='Agenda Comfama' theme='green' imageSrc={ComfamaImage} imageAlt='Comfama' />
+        <Card
+          title='Perfilador Financiero'
+          theme='dark'
+          imageSrc={BeathubImage}
+          imageAlt='Comfama'
+        />
         <Card title='BeatHub' theme='light' imageSrc={BeathubImage} imageAlt='Comfama' />
       </section>
     </section>

@@ -34,26 +34,34 @@
     justify-content: space-between;
   }
 
-  &__title {
+  &__title-item {
     @include h3;
-    font-weight: 900;
+    display: inline-block;
+    height: fit-content;
     width: fit-content;
     border-radius: 10px;
     padding: size(8);
 
+
     &--light {
       background-color: $color-primary;
       color: $color-dark;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
     }
 
     &--dark {
       background-color: $color-light;
       color: $color-dark;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
     }
 
     &--green {
       background-color: $color-light;
       color: $color-dark;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
     }
   }
 
@@ -102,7 +110,7 @@
   }
 
   &__image {
-    height: min(210px, 100%);
+    height: 210px;
     max-width: 100%;
     border-radius: 22.5px 45px 45px 22.5px;
     filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.2));
