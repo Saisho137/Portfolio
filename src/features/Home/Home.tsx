@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { FC } from 'react';
 
-import Photo from '@/assets/images/Photo.png';
+import Photo from '@/assets/images/ProfilePhoto.png';
 
 import styles from './Home.module.scss';
 

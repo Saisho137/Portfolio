@@ -1,4 +1,5 @@
-import { FC, ReactNode } from 'react';
+import Image, { StaticImageData } from 'next/image';
+import { FC } from 'react';
 
 import { Icons } from '@/components/atoms';
 
@@ -7,11 +8,12 @@ import styles from './Card.module.scss';
 interface CardProps {
   title: string;
   theme: 'light' | 'dark' | 'green';
-  child?: ReactNode;
+  imageSrc?: string | StaticImageData;
   link?: string;
+  imageAlt?: string;
 }
 
-const Card: FC<CardProps> = ({ title, theme, child, link = '#' }) => {
+const Card: FC<CardProps> = ({ title, theme, imageSrc, link = '#', imageAlt = 'Card Image' }) => {
   return (
     <article className={`${styles.card} ${styles['card--' + theme]}`}>
       <div className={styles.card__content}>
@@ -21,7 +23,7 @@ const Card: FC<CardProps> = ({ title, theme, child, link = '#' }) => {
           <span>Learn more</span>
         </a>
       </div>
-      {child && <div className={styles.card__image}>{child}</div>}
+      {imageSrc && <Image className={styles.card__image} src={imageSrc} alt={imageAlt} />}
     </article>
   );
 };

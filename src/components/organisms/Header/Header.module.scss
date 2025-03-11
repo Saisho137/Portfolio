@@ -16,6 +16,7 @@
     display: flex;
     gap: size(10);
     align-items: center;
+    transition: color ease-in-out 0.3s;
 
     &:hover {
       color: $color-primary;
@@ -45,7 +46,7 @@
   }
 
   &__nav-item {
-    transition: color 0.3s;
+    transition: color ease-in-out 0.3s;
     cursor: pointer;
 
     &:hover {
@@ -60,7 +61,7 @@
     border-radius: 14px;
     border: 1px solid $neutral-000;
     background-color: transparent;
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color ease-in-out 0.3s, color ease-in-out 0.3s;
 
     &:hover {
       background-color: $neutral-000;

@@ -2,8 +2,9 @@
 @use '@/styles/variables' as *;
 
 .card {
+  position: relative;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1.5fr;
   padding: size(50);
   height: size(310);
   width: size(600);
@@ -12,19 +13,19 @@
   &--light {
     background-color: $color-light;
     color: #333;
-    box-shadow: inset 0 -5px 20px 0px $color-dark;
+    box-shadow: inset 0 -2.5px 21px 0px $neutral-700;
   }
 
   &--dark {
     background-color: $color-dark;
     color: $color-light;
-    box-shadow: inset 0 -5px 20px 0px $color-light;
+    box-shadow: inset 0 -2.5px 21px 0px $neutral-700;
   }
 
   &--green {
     background-color: $color-primary;
     color: $color-dark;
-    box-shadow: inset 0 -5px 20px 0px $color-dark;
+    box-shadow: inset 0 -2.5px 21px 0px $neutral-700;
   }
 
   &__content {
@@ -101,7 +102,15 @@
   }
 
   &__image {
-    width: 100%;
-  }
+    height: min(210px, 100%);
+    max-width: 100%;
+    border-radius: 22.5px 45px 45px 22.5px;
+    filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.2));
+    transition: 0.3s ease-in-out;
 
+    &:hover {
+      filter: drop-shadow(0 0 20px rgba(126, 126, 126, 0.3));
+      transform: scale(1.05);
+    }
+  }
 }

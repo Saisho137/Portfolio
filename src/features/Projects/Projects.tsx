@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
-import { Icons } from '@/components/atoms';
+import ComfamaImage from '@/assets/images/Agenda-Comfama-screenshot.png';
+import BeathubImage from '@/assets/images/Beathub-screenshot.png';
 import { Card } from '@/components/molecules';
 
 import styles from './Projects.module.scss';
@@ -10,9 +11,9 @@ const Projects: FC = () => {
     <section className={styles.projects}>
       <h2 className={styles.projects__name}>Projects:</h2>
       <section className={styles.projects__content}>
-        <Card title='Comfama' theme='green' child={<Icons.Linkedin width='100' height='100' />} />
-        <Card title='Proteccion' theme='dark' child={<Icons.Linkedin width='100' height='100' />} />
-        <Card title='BeatHub' theme='light' child={<Icons.Linkedin width='100' height='100' />} />
+        <Card title='Comfama' theme='green' imageSrc={ComfamaImage} imageAlt='Comfama' />
+        <Card title='Proteccion' theme='dark' imageSrc={BeathubImage} imageAlt='Comfama' />
+        <Card title='BeatHub' theme='light' imageSrc={BeathubImage} imageAlt='Comfama' />
       </section>
     </section>
   );
