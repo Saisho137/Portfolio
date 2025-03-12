@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 
 import { BaseLayout } from '@/components/templates';
 import { roboto } from '@/config/fonts';
-
+import { generateJsonLd } from '@/utils/helpers';
 import '@/styles/globals.scss';
 
 export default function RootLayout({
@@ -12,6 +12,8 @@ export default function RootLayout({
 }: Readonly<{
   children: ReactNode;
 }>) {
+  const jsonLd = generateJsonLd();
+
   return (
     <html lang='en-US' data-testid='root-html'>
       <head>
@@ -27,6 +29,11 @@ export default function RootLayout({
             })(window,document,'script','dataLayer','GTM-KH8PJXT6');
           `
           }}
+        />
+        <Script
+          id='json-ld'
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
       <body className={`${roboto.variable}`}>
