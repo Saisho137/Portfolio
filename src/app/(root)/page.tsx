@@ -56,11 +56,15 @@ export default function HomePage() {
 
 export const metadata: Metadata = {
   title: 'Santiago Betancur | Frontend Developer',
-  description:
-    'Frontend Developer with expertise in React, Next.js, SEO, and Performance Optimization. Passionate about building fast and accessible web applications.',
   alternates: {
     canonical: 'https://portfolio-six-blond-30.vercel.app'
   },
+  robots: {
+    index: true,
+    follow: true
+  },
+  description:
+    'Frontend Developer with expertise in React, Next.js, SEO, and Performance Optimization. Passionate about building fast and accessible web applications.',
   openGraph: {
     title: 'Santiago Betancur | Frontend Developer',
     description:
