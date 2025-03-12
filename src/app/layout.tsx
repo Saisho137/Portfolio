@@ -13,7 +13,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang='es' data-testid='root-html'>
+    <html lang='en-US' data-testid='root-html'>
       <head>
         <Script
           id='google-tag-manager'

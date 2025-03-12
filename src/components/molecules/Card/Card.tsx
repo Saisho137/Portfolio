@@ -32,7 +32,16 @@ const Card: FC<CardProps> = ({ title, theme, imageSrc, link = '#', imageAlt = 'C
           <span>Learn more</span>
         </a>
       </div>
-      {imageSrc && <Image className={styles.card__image} src={imageSrc} alt={imageAlt} />}
+      {imageSrc && (
+        <Image
+          className={styles.card__image}
+          src={imageSrc}
+          alt={imageAlt}
+          loading='lazy'
+          width={300}
+          height={210}
+        />
+      )}
     </article>
   );
 };
