@@ -34,7 +34,7 @@ export default function RootLayout({
           id='json-ld'
           strategy='beforeInteractive'
           type='application/ld+json'
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd, null, 2) }}
         />
         <link rel='sitemap' type='application/xml' href={`${SITE_URL}/sitemap.xml`} />
       </head>
