@@ -1,11 +1,11 @@
 import type { MetadataRoute } from 'next';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://portfolio-six-blond-30.vercel.app';
+import { SITE_URL } from '@/utils/constants';
 
+export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: `${baseUrl}/`,
+      url: SITE_URL,
       lastModified: new Date().toISOString(),
       changeFrequency: 'monthly',
       priority: 1.0

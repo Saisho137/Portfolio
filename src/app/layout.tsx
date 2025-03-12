@@ -1,9 +1,9 @@
-'use client';
 import Script from 'next/script';
 import { ReactNode } from 'react';
 
 import { BaseLayout } from '@/components/templates';
 import { roboto } from '@/config/fonts';
+import { SITE_URL } from '@/utils/constants';
 import { generateJsonLd } from '@/utils/helpers';
 import '@/styles/globals.scss';
 
@@ -32,9 +32,11 @@ export default function RootLayout({
         />
         <Script
           id='json-ld'
+          strategy='beforeInteractive'
           type='application/ld+json'
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <link rel='sitemap' type='application/xml' href={`${SITE_URL}/sitemap.xml`} />
       </head>
       <body className={`${roboto.variable}`}>
         <noscript>

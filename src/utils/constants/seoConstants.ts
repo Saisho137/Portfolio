@@ -1,6 +1,5 @@
-// utils/seoConstants.ts
 export const SITE_URL = 'https://portfolio-six-blond-30.vercel.app';
-export const SITE_NAME = 'Santiago Betancur | Frontend Developer';
+export const SITE_NAME = 'Portfolio | Santiago Betancur Duque';
 export const SITE_DESCRIPTION =
   'Frontend Developer with expertise in React, Next.js, SEO, and Performance Optimization. Passionate about building fast and accessible web applications.';
 export const PROFILE_IMAGE = `${SITE_URL}/images/ProfilePhoto.png`;
