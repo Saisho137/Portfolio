@@ -1,6 +1,9 @@
 node_modules
-package.json
 package-lock.json
-tsconfig.json
 .next
+out
+coverage
 public
+next-env.d.ts
+# hand-written standalone mockups
+docs/design/*.html

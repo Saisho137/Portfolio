@@ -61,7 +61,9 @@
     border-radius: 14px;
     border: 1px solid $neutral-000;
     background-color: transparent;
-    transition: background-color ease-in-out 0.3s, color ease-in-out 0.3s;
+    transition:
+      background-color ease-in-out 0.3s,
+      color ease-in-out 0.3s;
 
     &:hover {
       background-color: $neutral-000;

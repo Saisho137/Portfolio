@@ -14,27 +14,33 @@ $neutral-900: #292730;
 $neutral-black: #000;
 
 //* Colors DS
-$color-primary: #B9FF66;
-$color-dark: #191A23;
-$color-light: #F3F3F3;
+$color-primary: #b9ff66;
+$color-dark: #191a23;
+$color-light: #f3f3f3;
 
 //* Shadows
-$shadow-xxs: 0px 1px 3px rgba(149, 150, 153, 0.2),
+$shadow-xxs:
+  0px 1px 3px rgba(149, 150, 153, 0.2),
   0px 2px 1px rgba(149, 150, 153, 0.12),
   0px 1px 1px rgba(149, 150, 153, 0.12);
-$shadow-xs: 0px 1px 5px rgba(149, 150, 153, 0.2),
+$shadow-xs:
+  0px 1px 5px rgba(149, 150, 153, 0.2),
   0px 3px 1px rgba(149, 150, 153, 0.12),
   0px 2px 2px rgba(149, 150, 153, 0.14);
-$shadow-s: 0px 2px 4px rgba(149, 150, 153, 0.2),
+$shadow-s:
+  0px 2px 4px rgba(149, 150, 153, 0.2),
   0px 1px 10px rgba(149, 150, 153, 0.12),
   0px 4px 5px rgba(149, 150, 153, 0.14);
-$shadow-m: 0px 5px 5px rgba(149, 150, 153, 0.2),
+$shadow-m:
+  0px 5px 5px rgba(149, 150, 153, 0.2),
   0px 3px 14px rgba(149, 150, 153, 0.12),
   0px 8px 10px rgba(149, 150, 153, 0.14);
-$shadow-l: 0px 8px 10px rgba(149, 150, 153, 0.2),
+$shadow-l:
+  0px 8px 10px rgba(149, 150, 153, 0.2),
   0px 6px 30px rgba(149, 150, 153, 0.12),
   0px 16px 24px rgba(149, 150, 153, 0.14);
-$shadow-xl: 0px 11px 15px rgba(149, 150, 153, 0.2),
+$shadow-xl:
+  0px 11px 15px rgba(149, 150, 153, 0.2),
   0px 9px 46px rgba(149, 150, 153, 0.12),
   0px 24px 38px rgba(149, 150, 153, 0.14);
 

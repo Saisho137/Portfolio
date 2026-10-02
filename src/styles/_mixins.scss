@@ -18,13 +18,15 @@
   text-overflow: ellipsis;
 }
 
-@mixin scrollBar($color: #b2b2b2,
+@mixin scrollBar(
+  $color: #b2b2b2,
   $width: 4px,
   $radius: 20px,
   $track-color: transparent,
   $track-radius: 0,
   $thumb: none,
-  $height: inherit) {
+  $height: inherit
+) {
   scrollbar-color: $color $track-color;
   scrollbar-width: thin;
 

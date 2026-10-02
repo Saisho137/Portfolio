@@ -2,11 +2,11 @@
 
 Tres direcciones visuales para el rediseño del portfolio. Son HTML estáticos autocontenidos (HTML + CSS nativo, sin JS, sin Canvas/WebGL) con contenido de ejemplo quemado. Ábrelos directamente en el navegador.
 
-| Archivo | Dirección | Claves |
-| --- | --- | --- |
-| [`01-brutalist-utrecht.html`](./01-brutalist-utrecht.html) | Brutalista inspirado en utrecht.jp | Un solo color de tinta sobre papel, reglas de 1px como estructura, rail lateral con texto vertical, títulos bilingües ES/EN, listado de proyectos tipo catálogo con hover invertido, doodle SVG que se dibuja al cargar. |
-| [`02-raw-html-color.html`](./02-raw-html-color.html) | HTML crudo con color | Cada elemento imprime sus propias etiquetas vía `::before/::after` + `attr()` (ocultas a lectores de pantalla), un color por familia de etiqueta, guías de indentación, `<table border="1">` crudo, estática ligera animada. |
-| [`03-raw-html-bw.html`](./03-raw-html-bw.html) | HTML crudo B&W | Estética de "inspector" de DevTools: cada caja punteada con su selector en la esquina, hover = inspeccionar, grano + scanline, jerarquía solo por peso/tamaño. |
+| Archivo                                                    | Dirección                          | Claves                                                                                                                                                                                                                       |
+| ---------------------------------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`01-brutalist-utrecht.html`](./01-brutalist-utrecht.html) | Brutalista inspirado en utrecht.jp | Un solo color de tinta sobre papel, reglas de 1px como estructura, rail lateral con texto vertical, títulos bilingües ES/EN, listado de proyectos tipo catálogo con hover invertido, doodle SVG que se dibuja al cargar.     |
+| [`02-raw-html-color.html`](./02-raw-html-color.html)       | HTML crudo con color               | Cada elemento imprime sus propias etiquetas vía `::before/::after` + `attr()` (ocultas a lectores de pantalla), un color por familia de etiqueta, guías de indentación, `<table border="1">` crudo, estática ligera animada. |
+| [`03-raw-html-bw.html`](./03-raw-html-bw.html)             | HTML crudo B&W                     | Estética de "inspector" de DevTools: cada caja punteada con su selector en la esquina, hover = inspeccionar, grano + scanline, jerarquía solo por peso/tamaño.                                                               |
 
 Comunes a los tres: light/dark nativo (`color-scheme` + `light-dark()`), `prefers-reduced-motion`, `100dvh`, `env(safe-area-inset-*)`, responsive mobile-first.
 
