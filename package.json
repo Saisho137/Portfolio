@@ -39,5 +39,13 @@
     "ts-node": "^10.9.2",
     "typescript": "^5",
     "typescript-eslint": "^8.19.0"
+  },
+  "engines": {
+    "node": "24.x",
+    "npm": ">=11.19.0"
+  },
+  "volta": {
+    "node": "24.21.0",
+    "npm": "11.19.0"
   }
 }
