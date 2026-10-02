@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <title>03 · Raw HTML (B&amp;W) — Santiago Betancur Duque</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fragment+Mono:ital@0;1&family=Bricolage+Grotesque:opsz,wght@12..96,300..800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer reset, tokens, base, inspector, components;
+
+      @layer reset {
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        ul, ol { list-style: none; }
+        a { color: inherit; }
+      }
+
+      @layer tokens {
+        :root {
+          color-scheme: light dark;
+          --bg: light-dark(#f2f2f0, #0b0b0b);
+          --fg: light-dark(#0b0b0b, #f2f2f0);
+          --dim: light-dark(#6b6b6b, #8d8d8d);
+          --box: light-dark(#0b0b0b, #f2f2f0);
+          --hair: light-dark(rgb(0 0 0 / 0.22), rgb(255 255 255 / 0.22));
+          --mono: 'Fragment Mono', ui-monospace, monospace;
+          --sans: 'Bricolage Grotesque', system-ui, sans-serif;
+          --pad: clamp(0.9rem, 2.5vw, 1.75rem);
+          --tag: clamp(0.66rem, 0.64rem + 0.1vw, 0.74rem);
+        }
+        :root:has(#flip:checked) { color-scheme: dark; }
+        @media (prefers-color-scheme: dark) {
+          :root:has(#flip:checked) { color-scheme: light; }
+        }
+      }
+
+      @layer base {
+        html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+        body {
+          min-height: 100dvh;
+          background: var(--bg);
+          color: var(--fg);
+          font: 400 clamp(1rem, 0.96rem + 0.2vw, 1.125rem) / 1.6 var(--mono);
+          padding:
+            max(var(--pad), env(safe-area-inset-top))
+            max(var(--pad), env(safe-area-inset-right))
+            max(var(--pad), env(safe-area-inset-bottom))
+            max(var(--pad), env(safe-area-inset-left));
+          isolation: isolate;
+        }
+        /* static: grain + slow rolling scanline, both pure CSS/SVG */
+        body::before, body::after {
+          content: '';
+          position: fixed;
+          pointer-events: none;
+          z-index: 10;
+        }
+        body::before {
+          inset: -50%;
+          --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='turbulence' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+          background: var(--fg);
+          -webkit-mask: var(--noise);
+          mask: var(--noise);
+          opacity: 0.09;
+          animation: grain 0.7s steps(5) infinite;
+        }
+        body::after {
+          inset: 0;
+          background:
+            repeating-linear-gradient(to bottom, transparent 0 2px, var(--hair) 2px 3px),
+            linear-gradient(to bottom, transparent 0%, color-mix(in oklab, var(--fg) 6%, transparent) 50%, transparent 100%);
+          background-size: 100% 3px, 100% 30vh;
+          background-repeat: repeat, no-repeat;
+          opacity: 0.35;
+          animation: roll 9s linear infinite;
+        }
+        @keyframes grain {
+          0% { transform: translate(0, 0); } 25% { transform: translate(-5%, 4%); }
+          50% { transform: translate(4%, -3%); } 75% { transform: translate(-3%, -6%); }
+          100% { transform: translate(6%, 2%); }
+        }
+        @keyframes roll { from { background-position: 0 0, 0 -30vh; } to { background-position: 0 0, 0 130vh; } }
+        a { text-decoration: underline 1px; text-underline-offset: 0.2em; }
+        a:hover { background: var(--fg); color: var(--bg); text-decoration: none; }
+        :focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+        ::selection { background: var(--fg); color: var(--bg); }
+        @media (prefers-reduced-motion: reduce) {
+          body::before, body::after, .caret { animation: none !important; }
+          html { scroll-behavior: auto; }
+        }
+      }
+
+      /* ── "Inspector" engine: every [data-el] is an outlined box
+            with its selector printed on the corner, like DevTools. ── */
+      @layer inspector {
+        [data-el] {
+          position: relative;
+          border: 1px dashed var(--hair);
+          padding: calc(var(--pad) + 0.6rem) var(--pad) var(--pad);
+          transition: border-color 0.12s;
+        }
+        [data-el]::before {
+          content: attr(data-el) / '';
+          position: absolute;
+          inset-block-start: -1px;
+          inset-inline-start: -1px;
+          padding: 0.05rem 0.45rem;
+          font: 400 var(--tag)/1.6 var(--mono);
+          color: var(--dim);
+          border: 1px dashed var(--hair);
+          border-top-style: solid;
+          background: var(--bg);
+          white-space: nowrap;
+          letter-spacing: normal;
+          text-transform: none;
+          transition: background 0.12s, color 0.12s;
+        }
+        /* hover = "inspect element" */
+        [data-el]:hover:not(:has([data-el]:hover)) { border-style: solid; border-color: var(--box); }
+        [data-el]:hover:not(:has([data-el]:hover))::before { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+        [data-el][data-size]::after {
+          content: attr(data-size) / '';
+          position: absolute;
+          inset-block-end: -1px; inset-inline-end: -1px;
+          font: 400 var(--tag)/1.6 var(--mono);
+          color: var(--dim);
+          padding: 0 0.45rem;
+          letter-spacing: normal;
+          background: var(--bg);
+        }
+        .flat { border: 0; padding: 0; }
+        .flat::before { position: static; display: inline-block; border: 0; padding: 0; margin-inline-end: 0.75ch; background: none; }
+      }
+
+      @layer components {
+        .shell { max-width: 90rem; margin-inline: auto; display: grid; gap: var(--pad); }
+
+        .bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1.5rem; }
+        .bar nav ul { display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; }
+        .flip { cursor: pointer; display: inline-flex; gap: 0.5ch; align-items: center; font-size: var(--tag); color: var(--dim); }
+        .flip input { appearance: none; width: 0.9rem; height: 0.9rem; border: 1px solid var(--fg); display: grid; place-content: center; }
+        .flip input:checked::before { content: ''; width: 0.5rem; height: 0.5rem; background: var(--fg); }
+
+        .hero { display: grid; gap: var(--pad); align-content: end; }
+        @media (width >= 56rem) { .hero { min-height: min(78svh, 46rem); } }
+        .hero h1 {
+          font: 750 clamp(3rem, 1rem + 10vw, 10.5rem) / 0.86 var(--sans);
+          font-variation-settings: 'opsz' 96;
+          letter-spacing: -0.045em;
+          text-wrap: balance;
+          text-transform: lowercase;
+        }
+        .hero h1 .lt { color: var(--dim); font-weight: 300; }
+        .caret { display: inline-block; width: 0.08em; height: 0.8em; background: var(--fg); margin-inline-start: 0.04em; animation: blink 1s steps(1) infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+        .hero__row { display: grid; gap: var(--pad); }
+        @media (width >= 56rem) { .hero__row { grid-template-columns: 1fr 1fr; } }
+        .lede { font: 400 clamp(1.15rem, 1rem + 0.6vw, 1.5rem)/1.4 var(--sans); max-width: 34ch; text-wrap: pretty; }
+        p { max-width: 64ch; text-wrap: pretty; }
+
+        .cols { display: grid; gap: var(--pad); }
+        @media (width >= 56rem) { .cols { grid-template-columns: 5fr 7fr; } }
+
+        h2 { font: 700 clamp(1.5rem, 1.1rem + 1.6vw, 2.6rem)/1 var(--sans); letter-spacing: -0.02em; margin-bottom: 1rem; }
+        h3 { font: 650 clamp(1.15rem, 1rem + 0.6vw, 1.5rem)/1.15 var(--sans); letter-spacing: -0.01em; }
+
+        /* projects: grid of inspected <article> boxes */
+        .grid { display: grid; gap: var(--pad); grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); }
+        .card { display: grid; gap: 0.75rem; align-content: start; container-type: inline-size; }
+        .card .meta { font-size: var(--tag); color: var(--dim); display: flex; justify-content: space-between; gap: 1rem; }
+        .card .shot {
+          aspect-ratio: 16 / 10;
+          border: 1px solid var(--hair);
+          display: grid; place-items: center;
+          font-size: var(--tag); color: var(--dim);
+          background:
+            linear-gradient(to top right, transparent calc(50% - 0.5px), var(--hair) 50%, transparent calc(50% + 0.5px)),
+            linear-gradient(to top left, transparent calc(50% - 0.5px), var(--hair) 50%, transparent calc(50% + 0.5px));
+        }
+        .card a { font-size: 0.9em; }
+
+        .timeline li { display: grid; grid-template-columns: 9.5rem 1fr; gap: 0.25rem 1rem; padding-block: 0.8rem; border-top: 1px solid var(--hair); }
+        .timeline li:first-child { border-top: 0; }
+        .timeline time { color: var(--dim); font-size: 0.9em; }
+        @media (width < 36rem) { .timeline li { grid-template-columns: 1fr; } }
+
+        .skills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .skills li { border: 1px solid var(--fg); padding: 0.1rem 0.6rem; font-size: 0.9em; }
+        .skills li:hover { background: var(--fg); color: var(--bg); }
+
+        .contact h2 { font-size: clamp(2rem, 1rem + 5.5vw, 6rem); line-height: 0.9; letter-spacing: -0.04em; overflow-wrap: anywhere; }
+        .contact h2 a { text-decoration-thickness: 2px; }
+
+        .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1.5rem; font-size: var(--tag); color: var(--dim); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell" data-el="body" data-size="100dvh">
+      <header class="bar" data-el="header.bar">
+        <nav class="flat" data-el="nav" aria-label="Primary">
+          <ul>
+            <li><a href="#work">work</a></li>
+            <li><a href="#experience">experience</a></li>
+            <li><a href="#skills">skills</a></li>
+            <li><a href="#contact">contact</a></li>
+          </ul>
+        </nav>
+        <label class="flip"><input type="checkbox" id="flip" /> invert color-scheme</label>
+      </header>
+
+      <main class="shell" style="max-width:none" data-el="main">
+        <section class="hero" data-el="section#about" data-size="1440 × 720">
+          <h1 data-el="h1"><span class="lt">&lt;</span>santiago betancur duque<span class="lt">/&gt;</span><span class="caret" aria-hidden="true"></span></h1>
+          <div class="hero__row">
+            <p class="lede flat" data-el="p.lede">Frontend Developer. I build fast, accessible, SEO-optimized interfaces with React, Next.js and Angular.</p>
+            <p class="flat" data-el="p">Computer Scientist based in Medellín, Colombia. I enjoy solving complex problems with concise solutions and working with teams that care about the details nobody sees until they break.</p>
+          </div>
+        </section>
+
+        <section data-el="section#work" id="work">
+          <h2>Selected work</h2>
+          <div class="grid">
+            <article class="card" data-el="article.card" data-size="2024">
+              <div class="shot" aria-hidden="true">img 1600 × 1000</div>
+              <h3>Agenda Comfama</h3>
+              <p>Scheduling platform rebuilt with SSR and a strict Core Web Vitals budget.</p>
+              <div class="meta"><span>next.js · ssr · cwv</span><a href="#">view →</a></div>
+            </article>
+            <article class="card" data-el="article.card" data-size="2023">
+              <div class="shot" aria-hidden="true">img 1600 × 1000</div>
+              <h3>Perfilador Financiero</h3>
+              <p>Investor risk-profiling flow, fully keyboard and screen-reader friendly.</p>
+              <div class="meta"><span>angular · a11y</span><a href="#">view →</a></div>
+            </article>
+            <article class="card" data-el="article.card" data-size="2022">
+              <div class="shot" aria-hidden="true">img 1600 × 1000</div>
+              <h3>BeatHub</h3>
+              <p>Music discovery side project. Mostly an excuse to play with audio APIs.</p>
+              <div class="meta"><span>react · node.js</span><a href="#">view →</a></div>
+            </article>
+          </div>
+        </section>
+
+        <div class="cols">
+          <section data-el="section#experience" id="experience">
+            <h2>Experience</h2>
+            <ol class="timeline">
+              <li><time>2022 — now</time><span><strong>Frontend Developer</strong> · <a href="https://www.pragma.co/es">Pragma</a></span></li>
+              <li><time>2021 — 2022</time><span><strong>Junior Developer</strong> · Example Studio</span></li>
+              <li><time>2016 — 2021</time><span><strong>B.Sc. Computer Science</strong> · Unilasallista</span></li>
+            </ol>
+          </section>
+          <section data-el="section#skills" id="skills">
+            <h2>Skills</h2>
+            <ul class="skills">
+              <li>react</li><li>next.js</li><li>angular</li><li>typescript</li><li>node.js</li><li>html</li><li>css</li><li>seo</li><li>core web vitals</li><li>accessibility</li><li>testing</li>
+            </ul>
+          </section>
+        </div>
+
+        <section class="contact" data-el="section#contact" id="contact">
+          <p style="color:var(--dim);margin-bottom:0.75rem">// open to roles &amp; collaborations</p>
+          <h2><a href="mailto:hello@example.dev">hello@example.dev</a></h2>
+        </section>
+      </main>
+
+      <footer class="foot" data-el="footer">
+        <span>© 2026 santiago betancur duque</span>
+        <span><a href="https://github.com/Saisho137">github</a> · <a href="https://www.linkedin.com/in/santiago-betancur-duque-79548024b/">linkedin</a></span>
+      </footer>
+    </div>
+  </body>
+</html>
