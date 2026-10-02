@@ -31,7 +31,7 @@ const Home: FC = () => {
           src={Photo}
           height={400}
           width={400}
-          priority
+          preload
         />
       </aside>
     </section>
