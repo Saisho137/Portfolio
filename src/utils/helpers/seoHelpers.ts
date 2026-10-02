@@ -32,6 +32,9 @@ export const generateJsonLd = () => ({
   }
 });
 
+// Escapes `<` so the payload can't close the <script> tag it lives in.
+export const serializeJsonLd = (data: object) => JSON.stringify(data).replace(/</g, '\\u003c');
+
 export const generateMetadata = ({
   title,
   description,
