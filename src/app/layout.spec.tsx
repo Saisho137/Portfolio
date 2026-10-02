@@ -2,6 +2,8 @@ import { render, screen } from '@testing-library/react';
 
 import RootLayout from './layout';
 
+jest.mock('@next/third-parties/google', () => ({ GoogleTagManager: () => null }));
+
 describe('RootLayout', () => {
   it('renders children correctly', () => {
     const childrenText = 'test content';
@@ -29,6 +31,6 @@ describe('RootLayout', () => {
     );
 
     const htmlElement = document.documentElement;
-    expect(htmlElement).toHaveAttribute('lang', 'es');
+    expect(htmlElement).toHaveAttribute('lang', 'en-US');
   });
 });
