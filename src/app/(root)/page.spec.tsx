@@ -3,9 +3,9 @@ import { render, screen } from '@testing-library/react';
 import Home from './page';
 
 describe('Home Page', () => {
-  it('renders the Home component', () => {
+  it('renders the main heading', () => {
     render(<Home />);
-    const heading = screen.getByRole('heading', { name: /Portfolio/i });
+    const heading = screen.getByRole('heading', { level: 1, name: /Santiago Betancur Duque/i });
     expect(heading).toBeInTheDocument();
   });
 });
