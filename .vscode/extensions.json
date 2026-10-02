@@ -5,6 +5,7 @@
     "deque-systems.vscode-axe-linter",
     "EditorConfig.EditorConfig",
     "usernamehw.errorlens",
-    "aaron-bond.better-comments"
+    "aaron-bond.better-comments",
+    "vitest.explorer"
   ]
 }
