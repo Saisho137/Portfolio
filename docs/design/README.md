@@ -30,7 +30,7 @@ Se aprueban **los tres** diseños como "skins" intercambiables de la misma pági
 
 - Único JS de la carga inicial. Recibe raw-bw como `children` (elemento RSC renderizado en el servidor), que nunca se descarta: volver a raw-bw no pide nada.
 - **Prefetch por intención**: `pointerenter` (hover en desktop), `focus` (teclado) y `touchstart` (móvil, sin hover) llaman al loader de la skin → se descarga en background su chunk JS + CSS + fuentes, una sola vez y cacheado en CDN. Sin prefetch en carga ni en idle.
-- **Selección**: se espera al loader y se cambia con `document.startViewTransition(() => flushSync(() => setSkin(x)))`. Sin la API o con `prefers-reduced-motion: reduce`, cambio directo sin animación. Si el `import()` falla, se mantiene la skin actual.
+- **Selección**: se espera al loader y se cambia con `document.startViewTransition(() => flushSync(() => setSkin(x)))`. No se usa `React.lazy`: suspende al menos un tick aunque el módulo esté en caché, y la transición capturaría el fallback; el componente ya resuelto se guarda en el estado. Sin la API o con `prefers-reduced-motion: reduce`, cambio directo sin animación. Si el `import()` falla, se mantiene la skin actual.
 - **Sin persistencia**: cada visita entra en raw-bw. Evita el flash al recargar y mantiene la página estática.
 - **Accesibilidad**: `<fieldset>` + `<legend>` oculto + 3 radios nativos con iconos SVG (pincel → brutalist, `</>` a color → raw-color, `</>` B&W → raw-bw), `aria-live="polite"` al cambiar, fijo fuera de las skins para no perder el foco, oculto sin JS con `@media (scripting: none)`.
 - Las fuentes de las skins lazy usan `next/font` con `preload: false`.
