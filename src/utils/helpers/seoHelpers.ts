@@ -26,7 +26,8 @@ export const buildSiteMetadata = (): Metadata => ({
   applicationName: profile.name,
   authors: [{ name: profile.name, url: HOME_URL }],
   creator: profile.name,
-  alternates: { canonical: '/' },
+  // Absolute and identical to the sitemap <loc>
+  alternates: { canonical: HOME_URL },
   robots: { index: true, follow: true },
   openGraph: {
     type: 'profile',
