@@ -46,6 +46,7 @@
     "npm": "11.19.0"
   },
   "allowScripts": {
-    "fsevents@2.3.3": true
+    "fsevents@2.3.3": true,
+    "unrs-resolver@1.12.2": true
   }
 }
