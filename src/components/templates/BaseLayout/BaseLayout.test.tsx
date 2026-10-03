@@ -1,16 +1,18 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 import BaseLayout from './BaseLayout';
 
-describe('BaseLayout Component', () => {
-  it('renders user information and breadcrumbs', () => {
+describe('BaseLayout', () => {
+  it('renders header, main content and footer', () => {
     render(
       <BaseLayout>
         <div>Test</div>
       </BaseLayout>
     );
 
-    expect(document.querySelector('.container')).toBeInTheDocument();
-    expect(document.querySelector('.container')).toHaveTextContent('Test');
+    expect(screen.getByRole('banner')).toBeInTheDocument();
+    expect(screen.getByRole('main')).toHaveTextContent('Test');
+    expect(screen.getByRole('contentinfo')).toBeInTheDocument();
   });
 });

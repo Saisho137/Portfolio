@@ -69,7 +69,7 @@ Con este proyecto se busca dar una guía auto explicativa para construir un Fron
 - [![NextJs]][next-url]
 - [![Typescript]][typescript-url]
 - [![Sass]][sass-url]
-- [![Jest]][jest-url]
+- [![Vitest]][vitest-url]
 - [![TestingLibrary]][testinglibrary-url]
 - [![ESLint]][eslint-url]
 
@@ -79,13 +79,11 @@ Para ejecutar este proyecto localmente, por favor siga las instrucciones a conti
 
 ### Prerrequisitos
 
-- Node.js
-  - Si usa [nvm](https://github.com/nvm-sh/nvm), ejecute `nvm use`
-  - Si no usa [nvm](https://github.com/nvm-sh/nvm) o no funcionó el comando anterior, instale la versión de NodeJS especificada en el archivo `.nvmrc`
-- npm
+- [Volta](https://volta.sh/): las versiones de Node.js y npm están fijadas en el campo `volta` del `package.json` (Node 24 LTS + npm 11). Con Volta instalado se usan automáticamente al entrar al proyecto.
   ```sh
-  npm install npm@latest -g
+  curl https://get.volta.sh | bash
   ```
+- Sin Volta: instale manualmente las versiones indicadas en `volta`.
 
 ### Instalación
 
@@ -97,21 +95,13 @@ Para ejecutar este proyecto localmente, por favor siga las instrucciones a conti
    ```sh
    cd ARCHETYPE_NEXTJS && npm install
    ```
-3. Validar/Agregar las variables de entorno
-   ```sh
-   src/env/.env.local
-   ```
-4. Iniciar el servidor local
+3. Iniciar el servidor local
    ```sh
    npm run dev
    ```
-5. Construir el archivo estático ("Compilar")
+4. Construir y servir el build de producción
    ```sh
-   npm run build
-   ```
-6. Levantar / servir el archivo estático
-   ```sh
-   npm run start:ssg
+   npm run build && npm run start
    ```
 
 ## Documentación
@@ -222,7 +212,7 @@ import styles from './Card.module.scss'
 Se utiliza ESLint para mantener los estándares de código uniformes. Además, se emplean Prettier y EditorConfig.
 
 - Las reglas de Prettier pueden verse en `.prettierrc`
-- Las reglas de Eslint pueden verse en `eslint.config.mjs` (`rules:`)
+- Las reglas de Eslint pueden verse en `eslint.config.mjs` (flat config nativo de `eslint-config-next` + `typescript-eslint` con reglas type-aware + `eslint-config-prettier`). Se usa ESLint 9 porque los plugins incluidos en `eslint-config-next` aún no son compatibles con ESLint 10.
 - Las propiedades del EditorConfig pueden verse en `.editorconfig`
 
 #### Estilos
@@ -248,14 +238,18 @@ Además, se recomienda validar métricas de SEO, accesibilidad y perfomance web 
 
 #### Testing
 
-Las pruebas unitarias se realizan con [Jest](https://jestjs.io/) y [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/). Los mocks se encuentran en `src/shared/mocks`, mientras que los tests de cada componente están ubicados en la carpeta correspondiente al componente, por ejemplo, `src/components/atoms/Image/Image.spec.tsx`.
+Las pruebas unitarias se realizan con [Vitest](https://vitest.dev/) (entorno `jsdom`, configurado en `vitest.config.mts`) y [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/). Los mocks se encuentran en `src/shared/mocks`, mientras que los tests de cada componente están ubicados en la carpeta correspondiente al componente, por ejemplo, `src/components/atoms/Image/Image.spec.tsx`.
 
 Para ejecutar las pruebas unitarias y obtener el coverage, ejecute:
 
 ```sh
-npm run test
-npm run test:coverage
+npm run test        # una ejecución, siempre con coverage v8 (umbral: 85% de líneas)
+npm run test:watch  # modo watch
 ```
+
+Otros scripts útiles: `npm run lint`, `npm run typecheck`, `npm run format:check`.
+
+Antes de hacer push, ejecute `npm run prepush`: corrige lo que pueda (`eslint --fix` y `prettier --write`) y luego corre typecheck, tests y build. Solo falla si queda algo que no se pudo corregir automáticamente.
 
 #### Archivos .env:
 
@@ -325,5 +319,5 @@ En caso de realizar alguna modificación importante, asegúrese de informar a lo
 [testinglibrary-url]: https://testing-library.com/
 [eslint]: https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white
 [eslint-url]: https://eslint.org/
-[jest]: https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white
-[jest-url]: https://jestjs.io/
+[vitest]: https://img.shields.io/badge/vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white
+[vitest-url]: https://vitest.dev/
