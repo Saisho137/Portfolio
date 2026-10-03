@@ -1,6 +1,6 @@
 # Portfolio — Santiago Betancur Duque
 
-Portfolio personal: [portfolio-six-blond-30.vercel.app](https://portfolio-six-blond-30.vercel.app).
+Portfolio personal: [santiago-betancur-duque.vercel.app](https://santiago-betancur-duque.vercel.app).
 
 Un solo contenido (`profile.json`) que se puede ver con tres estilos ("skins") bajo la misma URL: **raw-bw** (HTML crudo en blanco y negro, por defecto), **raw-color** (HTML crudo con etiquetas a color) y **brutalist** (inspirado en utrecht.jp). Todo con HTML y CSS nativos: sin Canvas, WebGL ni librerías de animación.
 
@@ -87,7 +87,9 @@ src/
 └── utils/                # Constantes y helpers de SEO
 ```
 
-No hay carpeta `public/`: favicon, manifest, robots, sitemap e imágenes sociales se generan desde `src/app/`.
+No hay carpeta `public/`: favicon (`icon.svg` con versión oscura + `favicon.ico`, `apple-icon.png`, `icon1/2.png` para el manifest), manifest, robots, sitemap e imágenes sociales viven en `src/app/`.
+
+El dominio anterior (`portfolio-six-blond-30.vercel.app`) redirige con un 308 al actual desde `next.config.ts`, para conservar lo que Google ya indexó.
 
 ## Guías
 
