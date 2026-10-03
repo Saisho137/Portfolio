@@ -1,10 +1,22 @@
 /* Lives outside every skin, so it uses system colors that follow color-scheme */
 @layer skin {
-  .switcher {
+  /* Fixed bar: skin radios + theme toggle */
+  .toolbar {
     position: fixed;
     inset-block-end: var(--switcher-offset);
     inset-inline-end: max(1rem, env(safe-area-inset-right));
     z-index: 100;
+    display: flex;
+    align-items: end;
+    gap: 0.75rem;
+
+    /* Without JS none of its controls can do anything */
+    @media (scripting: none) {
+      display: none;
+    }
+  }
+
+  .switcher {
     display: flex;
     gap: 0;
     padding: 0;
@@ -12,11 +24,6 @@
     background: Canvas;
     color: CanvasText;
     box-shadow: 4px 4px 0 color-mix(in oklab, CanvasText 85%, transparent);
-
-    /* Without JS the radios can't do anything */
-    @media (scripting: none) {
-      display: none;
-    }
   }
 
   .option {
@@ -76,5 +83,18 @@
   /* Keep the color icon legible on the inverted (checked) background */
   .option:has(:checked) :is(.codeLt, .codeSlash, .codeGt) {
     stroke: currentColor;
+  }
+
+  /* Windows High Contrast drops author backgrounds: mark the checked skin with system colors */
+  @media (forced-colors: active) {
+    .option:has(:checked) {
+      forced-color-adjust: none;
+      background: Highlight;
+      color: HighlightText;
+    }
+
+    .option :is(.codeLt, .codeSlash, .codeGt) {
+      stroke: currentColor;
+    }
   }
 }

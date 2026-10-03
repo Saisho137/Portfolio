@@ -30,6 +30,20 @@ describe('RootLayout', () => {
     expect(doc.documentElement.getAttribute('lang')).toBe('en');
   });
 
+  it('starts with a skip link to the main content', () => {
+    const doc = renderLayout();
+    const first = doc.body.querySelector('a');
+
+    expect(first?.getAttribute('href')).toBe('#main');
+    expect(first?.textContent).toBe('Skip to content');
+  });
+
+  it('runs the theme init script in <head>, before paint', () => {
+    const doc = renderLayout();
+
+    expect(doc.head.querySelector('script')?.textContent).toContain('dataset.theme');
+  });
+
   it('includes the JSON-LD graph', () => {
     const doc = renderLayout();
     const script = doc.querySelector('script[type="application/ld+json"]');

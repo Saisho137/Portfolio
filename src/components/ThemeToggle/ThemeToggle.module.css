@@ -1,0 +1,33 @@
+@layer skin {
+  .toggle {
+    display: grid;
+    place-items: center;
+    width: var(--switcher-option);
+    height: var(--switcher-option);
+    padding: 0;
+    border: 1px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+    box-shadow: 4px 4px 0 color-mix(in oklab, CanvasText 85%, transparent);
+    cursor: pointer;
+
+    & svg {
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 2;
+    }
+
+    &:focus-visible {
+      outline: 2px solid CanvasText;
+      outline-offset: 2px;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        background: color-mix(in oklab, CanvasText 10%, Canvas);
+      }
+    }
+  }
+}

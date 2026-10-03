@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 
 import { GTM_ID, SITE_LANG } from '@/utils/constants';
 import { buildSiteMetadata, generateJsonLd, serializeJsonLd } from '@/utils/helpers';
+import { THEME_INIT_SCRIPT } from '@/utils/theme';
 import '@/styles/globals.css';
 
 // Site-wide SEO lives here; metadataBase resolves relative URLs (canonical, og images)
@@ -26,9 +27,18 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang={SITE_LANG}>
+    // suppressHydrationWarning: THEME_INIT_SCRIPT sets data-theme on <html> before React
+    // hydrates. It only covers this element's attributes, not its children
+    <html lang={SITE_LANG} suppressHydrationWarning>
       <GoogleTagManager gtmId={GTM_ID} />
+      <head>
+        {/* Blocking on purpose: must run before first paint to avoid a theme flash */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body>
+        <a className='skip-link' href='#main'>
+          Skip to content
+        </a>
         <noscript>
           <iframe
             title='google tag manager'

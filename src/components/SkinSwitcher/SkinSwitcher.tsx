@@ -4,6 +4,8 @@ import { sendGTMEvent } from '@next/third-parties/google';
 import { ComponentType, FC, ReactNode, useState } from 'react';
 import { flushSync } from 'react-dom';
 
+import { ThemeToggle } from '@/components/ThemeToggle';
+
 import { BrushIcon, CodeBwIcon, CodeColorIcon } from './icons';
 import { DEFAULT_SKIN, isLazySkin, loadSkin, SKIN_LABELS, type SkinId } from './skins';
 
@@ -66,34 +68,37 @@ const SkinSwitcher: FC<SkinSwitcherProps> = ({ children }) => {
     <>
       {Component ? <Component /> : children}
 
-      <fieldset className={styles.switcher}>
-        <legend className='visually-hidden'>Page style</legend>
-        {OPTIONS.map(({ id, Icon }) => (
-          <label
-            key={id}
-            className={styles.option}
-            title={SKIN_LABELS[id]}
-            onPointerEnter={() => prefetch(id)}
-            onTouchStart={() => prefetch(id)}
-          >
-            <input
-              className={styles.radio}
-              type='radio'
-              name='skin'
-              value={id}
-              checked={skin.id === id}
-              onChange={() => void select(id)}
-              onFocus={() => prefetch(id)}
-            />
-            <Icon />
-            <span className='visually-hidden'>{SKIN_LABELS[id]}</span>
-          </label>
-        ))}
-      </fieldset>
-
-      <p className='visually-hidden' aria-live='polite'>
-        {announcement}
-      </p>
+      {/* Landmark so the controls aren't orphan content (axe `region`) */}
+      <aside className={styles.toolbar} aria-label='Page settings'>
+        <fieldset className={styles.switcher}>
+          <legend className='visually-hidden'>Page style</legend>
+          {OPTIONS.map(({ id, Icon }) => (
+            <label
+              key={id}
+              className={styles.option}
+              title={SKIN_LABELS[id]}
+              onPointerEnter={() => prefetch(id)}
+              onTouchStart={() => prefetch(id)}
+            >
+              <input
+                className={styles.radio}
+                type='radio'
+                name='skin'
+                value={id}
+                checked={skin.id === id}
+                onChange={() => void select(id)}
+                onFocus={() => prefetch(id)}
+              />
+              <Icon />
+              <span className='visually-hidden'>{SKIN_LABELS[id]}</span>
+            </label>
+          ))}
+        </fieldset>
+        <ThemeToggle />
+        <p className='visually-hidden' aria-live='polite'>
+          {announcement}
+        </p>
+      </aside>
     </>
   );
 };

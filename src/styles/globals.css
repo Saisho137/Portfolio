@@ -57,6 +57,16 @@
     --switcher-clearance: 0px;
   }
 
+  /* Manual theme (ThemeToggle + init script in <head>). Every skin paints with
+     light-dark(), so forcing color-scheme here re-themes the whole page */
+  :root[data-theme='light'] {
+    color-scheme: light;
+  }
+
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+  }
+
   /* The switcher only renders its controls with JS (it hides under scripting: none) */
   @media (scripting: enabled) {
     :root {
@@ -93,6 +103,28 @@
 }
 
 @layer utilities {
+  /* First focusable element: jumps over the nav to each skin's <main id="main"> */
+  .skip-link {
+    position: fixed;
+    inset-block-start: max(0.75rem, env(safe-area-inset-top));
+    inset-inline-start: max(0.75rem, env(safe-area-inset-left));
+    z-index: 200;
+    padding: 0.6rem 1rem;
+    border: 2px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+    font:
+      600 1rem / 1.2 system-ui,
+      sans-serif;
+    translate: 0 calc(-100% - 2rem);
+
+    &:focus-visible {
+      translate: 0;
+      outline: 2px solid CanvasText;
+      outline-offset: 2px;
+    }
+  }
+
   .visually-hidden {
     position: absolute;
     width: 1px;
