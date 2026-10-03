@@ -117,3 +117,4 @@ Un id inexistente rompe el build, y hay tests que verifican que no queden imáge
 - Estilos: CSS Modules nativos. Los selectores globales y los tokens comunes van en `globals.css`; cada skin define su paleta con `light-dark()` dentro de `@layer skin`.
 - Tests junto al archivo que prueban (`*.spec.ts(x)`).
 - Commits con [Conventional Commits](https://www.conventionalcommits.org/): `tipo(scope): descripción`.
+- Dependencias: Dependabot (`.github/dependabot.yml`) abre cada lunes un PR agrupado de minor/patch. ESLint, TypeScript y `@types/node` tienen los majors bloqueados (ver los motivos en el archivo).

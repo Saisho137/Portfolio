@@ -1,0 +1,26 @@
+# Weekly dependency PRs. Minor/patch updates are grouped into one PR so they can be
+# reviewed with a single `npm run prepush`; majors arrive one PR per package.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+    ignore:
+      # eslint-config-next 16 bundles eslint-plugin-react/import/jsx-a11y, which break on ESLint 10
+      - dependency-name: eslint
+        update-types: [version-update:semver-major]
+      # typescript-eslint supports typescript <6.1
+      - dependency-name: typescript
+        update-types: [version-update:semver-major]
+      # Must match the Node major pinned in package.json#volta (24)
+      - dependency-name: '@types/node'
+        update-types: [version-update:semver-major]
