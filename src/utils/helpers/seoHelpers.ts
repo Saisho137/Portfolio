@@ -6,8 +6,6 @@ interface MetadataInfo {
   title: string;
   description: string;
   url: string;
-  image: string;
-  imageAlt?: string;
   index?: boolean;
   follow?: boolean;
 }
@@ -35,12 +33,11 @@ export const generateJsonLd = () => ({
 // Escapes `<` so the payload can't close the <script> tag it lives in.
 export const serializeJsonLd = (data: object) => JSON.stringify(data).replace(/</g, '\\u003c');
 
+// og:image / twitter:image come from app/opengraph-image.tsx and app/twitter-image.tsx
 export const generateMetadata = ({
   title,
   description,
   url,
-  image,
-  imageAlt = 'Portfolio Image',
   index = true,
   follow = true
 }: MetadataInfo): Metadata => ({
@@ -58,13 +55,11 @@ export const generateMetadata = ({
     description,
     url,
     siteName: title,
-    images: [{ url: image, alt: imageAlt }],
     type: 'website'
   },
   twitter: {
     card: 'summary_large_image',
     title,
-    description,
-    images: [image]
+    description
   }
 });

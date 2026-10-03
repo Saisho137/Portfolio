@@ -7,7 +7,6 @@ export const SITE_URL = 'https://portfolio-six-blond-30.vercel.app';
 export const SITE_NAME = `Portfolio | ${profile.name}`;
 export const SITE_DESCRIPTION = profile.summary;
 export const GTM_ID = 'GTM-KH8PJXT6';
-export const PROFILE_IMAGE = `${SITE_URL}${profile.photo.src}`;
 
 export const AUTHOR = {
   name: profile.name,

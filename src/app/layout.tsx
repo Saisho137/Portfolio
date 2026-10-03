@@ -1,9 +1,15 @@
 import { GoogleTagManager } from '@next/third-parties/google';
+import type { Metadata } from 'next';
 import { ReactNode } from 'react';
 
 import { GTM_ID, SITE_URL } from '@/utils/constants';
 import { generateJsonLd, serializeJsonLd } from '@/utils/helpers';
 import '@/styles/globals.css';
+
+// Resolves relative metadata URLs (e.g. the generated og/twitter images) to the real domain
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL)
+};
 
 export default function RootLayout({
   children
