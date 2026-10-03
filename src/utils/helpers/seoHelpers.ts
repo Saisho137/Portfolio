@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 
 import { profile } from '@/content';
 import {
+  GOOGLE_SITE_VERIFICATION,
   HOME_URL,
   OG_LOCALE,
   SITE_DESCRIPTION,
@@ -29,6 +30,7 @@ export const buildSiteMetadata = (): Metadata => ({
   // Absolute and identical to the sitemap <loc>
   alternates: { canonical: HOME_URL },
   robots: { index: true, follow: true },
+  verification: { google: GOOGLE_SITE_VERIFICATION },
   openGraph: {
     type: 'profile',
     firstName,

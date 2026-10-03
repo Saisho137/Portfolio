@@ -25,6 +25,10 @@ describe('buildSiteMetadata', () => {
     expect(metadata.openGraph).toMatchObject({ type: 'profile', firstName: 'Santiago' });
   });
 
+  it('verifies the Search Console property', () => {
+    expect(metadata.verification?.google).toBeTruthy();
+  });
+
   it('leaves og/twitter images to the file-based image routes', () => {
     expect(metadata.openGraph).not.toHaveProperty('images');
     expect(metadata.twitter).not.toHaveProperty('images');
