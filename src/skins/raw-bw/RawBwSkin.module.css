@@ -370,6 +370,27 @@
     color: var(--dim);
     font-size: var(--tag);
   }
+
+  /* More contrast: solid dim text, firmer box lines, no grain/scanline over the text */
+  @media (prefers-contrast: more) {
+    .skin {
+      --dim: var(--fg);
+      --hair: color-mix(in oklab, var(--fg) 70%, transparent);
+
+      &::before,
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+  /* Windows High Contrast: decorative overlays would paint as solid blocks */
+  @media (forced-colors: active) {
+    .skin::before,
+    .skin::after {
+      display: none;
+    }
+  }
 }
 
 @keyframes grain {

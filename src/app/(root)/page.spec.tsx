@@ -25,6 +25,6 @@ describe('Home Page', () => {
     );
     // Markers that only exist in raw-color / brutalist
     expect(html).not.toContain('view-source:');
-    expect(html).not.toContain('Información / Information');
+    expect(html).not.toContain('Selected Projects');
   });
 });

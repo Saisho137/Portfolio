@@ -22,7 +22,7 @@ const RawColorSkin: FC = () => {
 
   return (
     <div className={`${styles.skin} ${mono.variable} ${serif.variable}`}>
-      <div className={styles.chrome}>
+      <div className={styles.chrome} aria-hidden='true'>
         <span>
           view-source:<b>{SITE_URL}</b>
         </span>
@@ -59,7 +59,7 @@ const RawColorSkin: FC = () => {
           </nav>
         </header>
 
-        <main className={styles.b} data-t='main'>
+        <main id='main' className={styles.b} data-t='main'>
           <section id='about' className={styles.b} data-t='section' data-a=' id="about"'>
             <h1 className={styles.i} data-t='h1'>
               {name}
