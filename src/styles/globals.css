@@ -50,6 +50,18 @@
     color-scheme: light dark;
     --page-bg: light-dark(#ffffff, #0b0b0b);
     --page-fg: light-dark(#0b0b0b, #f2f2f0);
+
+    /* SkinSwitcher geometry, shared so skins can keep their last content clear of it */
+    --switcher-option: 2.75rem;
+    --switcher-offset: max(1rem, env(safe-area-inset-bottom));
+    --switcher-clearance: 0px;
+  }
+
+  /* The switcher only renders its controls with JS (it hides under scripting: none) */
+  @media (scripting: enabled) {
+    :root {
+      --switcher-clearance: calc(var(--switcher-option) + 2px + 1rem);
+    }
   }
 }
 

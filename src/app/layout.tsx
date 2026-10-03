@@ -1,5 +1,5 @@
 import { GoogleTagManager } from '@next/third-parties/google';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { ReactNode } from 'react';
 
 import { GTM_ID, SITE_URL } from '@/utils/constants';
@@ -9,6 +9,17 @@ import '@/styles/globals.css';
 // Resolves relative metadata URLs (e.g. the generated og/twitter images) to the real domain
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL)
+};
+
+export const viewport: Viewport = {
+  // Lets the skins paint under notches/home bar; they pad with env(safe-area-inset-*)
+  viewportFit: 'cover',
+  colorScheme: 'light dark',
+  // Browser UI tint, matching the default (raw-bw) skin background
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f2f2f0' },
+    { media: '(prefers-color-scheme: dark)', color: '#0b0b0b' }
+  ]
 };
 
 export default function RootLayout({

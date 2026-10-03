@@ -19,7 +19,8 @@
 
     min-height: 100dvh;
     padding: max(1.25rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right))
-      max(3rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+      calc(max(3rem, env(safe-area-inset-bottom)) + var(--switcher-clearance))
+      max(1rem, env(safe-area-inset-left));
     background: var(--paper);
     color: var(--ink);
     font: 400 clamp(1.05rem, 1rem + 0.3vw, 1.25rem) / 1.6 var(--serif);
@@ -50,8 +51,10 @@
       text-decoration-thickness: 1px;
       text-underline-offset: 0.18em;
 
-      &:hover {
-        text-decoration-color: currentColor;
+      @media (hover: hover) {
+        &:hover {
+          text-decoration-color: currentColor;
+        }
       }
     }
 
@@ -159,7 +162,7 @@
 
   .chrome {
     position: sticky;
-    top: 0;
+    top: env(safe-area-inset-top, 0);
     z-index: 2;
     display: flex;
     flex-wrap: wrap;
@@ -277,8 +280,10 @@
       white-space: nowrap;
     }
 
-    & tr:hover td {
-      background: color-mix(in oklab, var(--c-list) 8%, transparent);
+    @media (hover: hover) {
+      & tr:hover td {
+        background: color-mix(in oklab, var(--c-list) 8%, transparent);
+      }
     }
 
     @media (width < 40rem) {

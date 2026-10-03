@@ -2,7 +2,7 @@
 @layer skin {
   .switcher {
     position: fixed;
-    inset-block-end: max(1rem, env(safe-area-inset-bottom));
+    inset-block-end: var(--switcher-offset);
     inset-inline-end: max(1rem, env(safe-area-inset-right));
     z-index: 100;
     display: flex;
@@ -23,8 +23,8 @@
     position: relative;
     display: grid;
     place-items: center;
-    width: 2.75rem;
-    height: 2.75rem;
+    width: var(--switcher-option);
+    height: var(--switcher-option);
     cursor: pointer;
     transition:
       background 0.12s,
@@ -34,8 +34,10 @@
       border-inline-start: 1px solid CanvasText;
     }
 
-    &:hover {
-      background: color-mix(in oklab, CanvasText 10%, Canvas);
+    @media (hover: hover) {
+      &:hover {
+        background: color-mix(in oklab, CanvasText 10%, Canvas);
+      }
     }
 
     &:has(:checked) {
