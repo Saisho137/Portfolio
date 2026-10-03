@@ -33,7 +33,7 @@ export default defineConfig({
       enabled: true,
       provider: 'v8',
       include: ['src/**/*.{ts,tsx}'],
-      exclude: ['src/**/*.{spec,test}.{ts,tsx}', 'src/**/index.ts'],
+      exclude: ['src/**/*.{spec,test}.{ts,tsx}', 'src/**/index.ts', 'src/test/**'],
       reporter: ['text', 'html', 'lcov'],
       thresholds: { lines: 85 }
     }

@@ -8,7 +8,11 @@ const font = () => ({ className: 'font', variable: '--font', style: { fontFamily
 vi.mock('next/font/local', () => ({ default: font }));
 vi.mock('next/font/google', () => ({
   Bricolage_Grotesque: font,
-  Fragment_Mono: font
+  Caveat: font,
+  Fragment_Mono: font,
+  Martian_Mono: font,
+  Newsreader: font,
+  Schibsted_Grotesk: font
 }));
 
 afterEach(() => {

@@ -1,0 +1,376 @@
+@layer skin {
+  .skin {
+    --paper: light-dark(#f7f5ef, #101114);
+    --ink: light-dark(#1d1c1a, #e7e4dc);
+    --muted: light-dark(#6f6a60, #8b8d95);
+    --guide: light-dark(#e3dfd3, #23252b);
+    /* syntax palette: one hue per tag family */
+    --c-doc: var(--muted);
+    --c-head: light-dark(#7a52b3, #b99cf0);
+    --c-h: light-dark(#c2185b, #ff7aa8);
+    --c-p: light-dark(#1f6fb2, #7cc0ff);
+    --c-a: light-dark(#2e7d32, #86d993);
+    --c-sec: light-dark(#a35400, #ffb35c);
+    --c-list: light-dark(#00838f, #6fe0e8);
+    --mono: var(--raw-color-mono), ui-monospace, monospace;
+    --serif: var(--raw-color-serif), 'Times New Roman', serif;
+    --tag-size: clamp(0.66rem, 0.63rem + 0.15vw, 0.76rem);
+    --indent: clamp(1.1ch, 2.6vw, 2.25ch);
+
+    min-height: 100dvh;
+    padding: max(1.25rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right))
+      max(3rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+    background: var(--paper);
+    color: var(--ink);
+    font: 400 clamp(1.05rem, 1rem + 0.3vw, 1.25rem) / 1.6 var(--serif);
+    isolation: isolate;
+
+    & > * {
+      max-width: 72rem;
+      margin-inline: auto;
+    }
+
+    /* light static: SVG noise used as a mask so its tint follows the theme */
+    &::after {
+      --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+      content: '';
+      position: fixed;
+      inset: -50%;
+      z-index: -1;
+      pointer-events: none;
+      background: light-dark(#000, #fff);
+      mask: var(--noise);
+      opacity: 0.075;
+      animation: static 0.9s steps(6) infinite;
+    }
+
+    & a {
+      text-decoration-color: color-mix(in oklab, currentColor 40%, transparent);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.18em;
+
+      &:hover {
+        text-decoration-color: currentColor;
+      }
+    }
+
+    & :focus-visible {
+      outline: 2px dashed var(--c-a);
+      outline-offset: 3px;
+    }
+
+    & ::selection {
+      background: color-mix(in oklab, var(--c-h) 25%, transparent);
+    }
+
+    /* ── "View source" engine ── */
+    & [data-t]::before,
+    & [data-t]::after {
+      color: var(--c, var(--c-doc));
+      font: 400 var(--tag-size) / 1.9 var(--mono);
+      font-stretch: 87.5%;
+      letter-spacing: -0.01em;
+      white-space: pre-wrap;
+    }
+
+    /* `/ ''` = empty alt text, keeps the tags out of the accessibility tree */
+    & [data-t]::before {
+      content: '<' attr(data-t) attr(data-a) '>' / '';
+    }
+
+    & [data-t]::after {
+      content: '</' attr(data-t) '>' / '';
+    }
+
+    & [data-void]::after {
+      content: none;
+    }
+
+    & a[data-t]::before,
+    & a[data-t]::after {
+      display: inline-block;
+    }
+
+    & [data-t^='h'] {
+      --c: var(--c-h);
+    }
+
+    & :is([data-t='p'], [data-t='dt'], [data-t='dd']) {
+      --c: var(--c-p);
+    }
+
+    & [data-t='a'] {
+      --c: var(--c-a);
+    }
+
+    &
+      :is(
+        [data-t='section'],
+        [data-t='main'],
+        [data-t='header'],
+        [data-t='footer'],
+        [data-t='nav'],
+        [data-t='body']
+      ) {
+      --c: var(--c-sec);
+    }
+
+    & :is([data-t='ul'], [data-t='li'], [data-t='table'], [data-t='dl']) {
+      --c: var(--c-list);
+    }
+
+    & :is([data-t='head'], [data-t='title'], [data-t='meta']) {
+      --c: var(--c-head);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      &::after {
+        animation: none;
+      }
+    }
+  }
+
+  /* block element: tags on their own lines + indent guide */
+  .b {
+    display: block;
+    padding-inline-start: var(--indent);
+    border-inline-start: 1px solid var(--guide);
+
+    &::before,
+    &::after {
+      display: block;
+      margin-inline-start: calc(-1 * var(--indent) - 1px);
+    }
+  }
+
+  /* inline element: tags hug the content */
+  .i {
+    display: block;
+
+    &::before {
+      margin-inline-end: 0.35ch;
+    }
+
+    &::after {
+      margin-inline-start: 0.35ch;
+    }
+  }
+
+  .chrome {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    margin-bottom: 1.25rem;
+    padding-block: 0.6rem;
+    border-bottom: 1px solid var(--guide);
+    background: color-mix(in oklab, var(--paper) 88%, transparent);
+    backdrop-filter: blur(6px);
+    color: var(--muted);
+    font: 400 0.72rem / 1.6 var(--mono);
+
+    & b {
+      color: var(--ink);
+      font-weight: 500;
+    }
+  }
+
+  .doctype,
+  .comment {
+    display: block;
+    color: var(--muted);
+    font: 400 var(--tag-size) / 1.9 var(--mono);
+  }
+
+  .comment {
+    font-style: italic;
+  }
+
+  .titleLine {
+    font: 400 clamp(0.95rem, 0.9rem + 0.3vw, 1.1rem) / 1.6 var(--mono);
+  }
+
+  .skin section {
+    margin-block: 1.75rem;
+  }
+
+  .skin h1 {
+    padding-block: 0.15em;
+    font: 600 clamp(2.6rem, 1.4rem + 6vw, 6.25rem) / 0.95 var(--serif);
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+
+    &::before,
+    &::after {
+      display: block;
+    }
+  }
+
+  .skin h2 {
+    font: 600 clamp(1.6rem, 1.2rem + 1.6vw, 2.5rem) / 1.15 var(--serif);
+    letter-spacing: -0.01em;
+  }
+
+  .skin p {
+    max-width: 62ch;
+    text-wrap: pretty;
+  }
+
+  .lede {
+    max-width: 38ch;
+    font-size: clamp(1.2rem, 1.05rem + 0.6vw, 1.55rem);
+    line-height: 1.45;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 0.55ch;
+    height: 1em;
+    background: var(--c-h);
+    vertical-align: -0.12em;
+    animation: blink 1.1s steps(1) infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+
+  .navList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.5rem;
+
+    & li {
+      display: inline;
+    }
+  }
+
+  /* raw <table border="1"> look */
+  .table {
+    width: 100%;
+    border: 1px solid var(--ink);
+    border-collapse: collapse;
+    font-size: 0.95em;
+
+    & th,
+    & td {
+      padding: 0.45rem 0.7rem;
+      border: 1px solid var(--ink);
+      text-align: start;
+      vertical-align: top;
+    }
+
+    & th {
+      color: var(--c-list);
+      font: 500 var(--tag-size) / 1.6 var(--mono);
+      text-transform: lowercase;
+    }
+
+    & td:first-child {
+      width: 1%;
+      color: var(--muted);
+      font: 400 0.8em / 1.9 var(--mono);
+      white-space: nowrap;
+    }
+
+    & tr:hover td {
+      background: color-mix(in oklab, var(--c-list) 8%, transparent);
+    }
+
+    @media (width < 40rem) {
+      & thead {
+        display: none;
+      }
+
+      &,
+      & tbody,
+      & tr,
+      & td {
+        display: block;
+      }
+
+      & tr {
+        padding-block: 0.5rem;
+        border-bottom: 1px solid var(--ink);
+      }
+
+      & td {
+        padding: 0.15rem 0.7rem;
+        border: 0;
+      }
+    }
+  }
+
+  .dl > div {
+    display: grid;
+    grid-template-columns: minmax(8rem, 12rem) 1fr;
+    gap: 0 1.5rem;
+
+    @media (width < 40rem) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+
+    & li {
+      display: inline-block;
+
+      &::before {
+        content: '<li>' / '';
+      }
+
+      &::after {
+        content: '</li>' / '';
+      }
+
+      &::before,
+      &::after {
+        color: var(--c-list);
+        font: 400 var(--tag-size) / 1.9 var(--mono);
+      }
+    }
+  }
+
+  .contact {
+    display: grid;
+    gap: 0.25rem;
+    font: 600 clamp(1.8rem, 1rem + 4vw, 4rem) / 1.1 var(--serif);
+    letter-spacing: -0.02em;
+    overflow-wrap: anywhere;
+  }
+}
+
+@keyframes static {
+  0% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-4%, 3%);
+  }
+  40% {
+    transform: translate(3%, -5%);
+  }
+  60% {
+    transform: translate(-6%, -2%);
+  }
+  80% {
+    transform: translate(5%, 4%);
+  }
+  100% {
+    transform: translate(-2%, 6%);
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
