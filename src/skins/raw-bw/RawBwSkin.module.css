@@ -220,19 +220,7 @@
     align-items: start;
 
     @media (width >= 56rem) {
-      grid-template-columns: auto 1fr 1fr;
-    }
-  }
-
-  .avatar {
-    width: 8rem;
-    aspect-ratio: 1;
-    object-fit: cover;
-    border: 1px solid var(--hair);
-    filter: grayscale(1) contrast(1.1);
-
-    @media (width >= 56rem) {
-      width: 12rem;
+      grid-template-columns: 1fr 1fr;
     }
   }
 

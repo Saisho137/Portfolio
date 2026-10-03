@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { FC } from 'react';
 
-import { profile, SECTIONS } from '@/content';
+import { getProjectImage, profile, SECTIONS } from '@/content';
 
 import { mono, sans } from './fonts';
 
@@ -13,8 +13,7 @@ import styles from './RawBwSkin.module.css';
  * with the selector printed on its corner (decoration hidden from AT in CSS).
  */
 const RawBwSkin: FC = () => {
-  const { name, role, summary, about, photo, links, projects, experience, education, skills } =
-    profile;
+  const { name, role, summary, about, links, projects, experience, education, skills } = profile;
   const year = new Date().getFullYear();
 
   return (
@@ -44,14 +43,6 @@ const RawBwSkin: FC = () => {
             <span className={styles.caret} aria-hidden='true' />
           </h1>
           <div className={styles.heroRow}>
-            <Image
-              className={styles.avatar}
-              src={photo.src}
-              alt={photo.alt}
-              width={photo.width}
-              height={photo.height}
-              sizes='(width >= 56rem) 12rem, 8rem'
-            />
             <p className={`${styles.lede} ${styles.flat}`} data-el='p.lede'>
               <span className='visually-hidden'>{role}. </span>
               {summary}
@@ -72,10 +63,9 @@ const RawBwSkin: FC = () => {
                 {project.image ? (
                   <Image
                     className={styles.shot}
-                    src={project.image.src}
+                    src={getProjectImage(project.image.id)}
                     alt={project.image.alt}
-                    width={project.image.width}
-                    height={project.image.height}
+                    placeholder='blur'
                     sizes='(width >= 56rem) 30vw, 100vw'
                   />
                 ) : (

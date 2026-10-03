@@ -1,15 +1,14 @@
-export interface ImageAsset {
-  src: string;
+/** `id` must exist in `projectImages` (src/content/images.ts) */
+export interface ImageRef {
+  id: string;
   alt: string;
-  width: number;
-  height: number;
 }
 
 export interface Project {
   name: string;
   description?: string;
   url?: string;
-  image?: ImageAsset;
+  image?: ImageRef;
   tags?: string[];
 }
 
@@ -32,7 +31,6 @@ export interface Profile {
   role: string;
   summary: string;
   about: string[];
-  photo: ImageAsset;
   links: {
     github: string;
     linkedin: string;

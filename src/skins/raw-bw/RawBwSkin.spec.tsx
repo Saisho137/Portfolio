@@ -35,7 +35,9 @@ describe('RawBwSkin', () => {
       expect(screen.getByText(skill.toLowerCase())).toBeInTheDocument()
     );
     profile.experience.forEach((job) => expect(screen.getByText(job.role)).toBeInTheDocument());
-    expect(screen.getByRole('img', { name: profile.photo.alt })).toBeInTheDocument();
+    profile.projects
+      .flatMap((project) => project.image ?? [])
+      .forEach((image) => expect(screen.getByRole('img', { name: image.alt })).toBeInTheDocument());
   });
 
   it('shows a decorative placeholder for projects without image', () => {

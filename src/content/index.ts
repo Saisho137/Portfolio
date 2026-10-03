@@ -13,4 +13,5 @@ export const SECTIONS: { id: SectionId; label: string }[] = [
   { id: 'contact', label: 'contact' }
 ];
 
+export { getProjectImage, projectImages } from './images';
 export type * from './types';

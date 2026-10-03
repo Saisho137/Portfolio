@@ -6,12 +6,6 @@
     "👋 Hi! I'm a Computer Scientist and Frontend Developer with experience in building responsive, accessible, secure and SEO-optimized web applications using technologies like Angular and React.",
     "🌟 My passion lies in solving complex problems through concise solutions, focusing on creating seamless and user-friendly experiences. I enjoy collaborating in teams to drive projects toward success."
   ],
-  "photo": {
-    "src": "/images/profile-photo.png",
-    "alt": "Portrait of Santiago Betancur Duque",
-    "width": 854,
-    "height": 853
-  },
   "links": {
     "github": "https://github.com/Saisho137",
     "linkedin": "https://www.linkedin.com/in/santiago-betancur-duque-79548024b/"
@@ -20,10 +14,8 @@
     {
       "name": "Agenda Comfama",
       "image": {
-        "src": "/images/projects/agenda-comfama.png",
-        "alt": "Agenda Comfama screenshot",
-        "width": 3720,
-        "height": 2412
+        "id": "agenda-comfama",
+        "alt": "Agenda Comfama screenshot"
       }
     },
     {
@@ -32,10 +24,8 @@
     {
       "name": "BeatHub",
       "image": {
-        "src": "/images/projects/beathub.png",
-        "alt": "BeatHub screenshot",
-        "width": 3090,
-        "height": 2418
+        "id": "beathub",
+        "alt": "BeatHub screenshot"
       }
     }
   ],

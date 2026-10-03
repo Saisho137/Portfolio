@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { profile, SECTIONS } from '.';
+import { getProjectImage, profile, projectImages, SECTIONS } from '.';
 
 describe('profile content', () => {
   it('has the required identity fields', () => {
@@ -22,15 +22,23 @@ describe('profile content', () => {
     urls.forEach((url) => expect(url).toMatch(/^https:\/\//));
   });
 
-  it('serves every image from /public with its intrinsic size', () => {
-    const images = [profile.photo, ...profile.projects.flatMap((p) => p.image ?? [])];
+  it('references only registered project images, with alt text', () => {
+    profile.projects.forEach(({ image }) => {
+      if (!image) return;
 
-    images.forEach((image) => {
-      expect(image.src).toMatch(/^\/images\//);
+      expect(Object.keys(projectImages)).toContain(image.id);
       expect(image.alt).toBeTruthy();
-      expect(image.width).toBeGreaterThan(0);
-      expect(image.height).toBeGreaterThan(0);
     });
+  });
+
+  it('has no unused images in the registry', () => {
+    const used = profile.projects.flatMap((project) => project.image?.id ?? []);
+
+    expect(Object.keys(projectImages).sort()).toEqual([...new Set(used)].sort());
+  });
+
+  it('throws on unknown image ids', () => {
+    expect(() => getProjectImage('does-not-exist')).toThrow(/does-not-exist/);
   });
 
   it('has unique project names and skills', () => {
