@@ -11,7 +11,7 @@
     --c-p: light-dark(#1f6fb2, #7cc0ff);
     --c-a: light-dark(#2e7d32, #86d993);
     --c-sec: light-dark(#a35400, #ffb35c);
-    --c-list: light-dark(#00838f, #6fe0e8);
+    --c-list: light-dark(#00737d, #6fe0e8);
     --mono: var(--raw-color-mono), ui-monospace, monospace;
     --serif: var(--raw-color-serif), 'Times New Roman', serif;
     --tag-size: clamp(0.66rem, 0.63rem + 0.15vw, 0.76rem);
@@ -350,6 +350,25 @@
     font: 600 clamp(1.8rem, 1rem + 4vw, 4rem) / 1.1 var(--serif);
     letter-spacing: -0.02em;
     overflow-wrap: anywhere;
+  }
+
+  /* More contrast: darker muted text, visible guides, no static over the text */
+  @media (prefers-contrast: more) {
+    .skin {
+      --muted: var(--ink);
+      --guide: color-mix(in oklab, var(--ink) 50%, transparent);
+
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+  /* Windows High Contrast: the noise overlay would paint as a solid block */
+  @media (forced-colors: active) {
+    .skin::after {
+      display: none;
+    }
   }
 }
 

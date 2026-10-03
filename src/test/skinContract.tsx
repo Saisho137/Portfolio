@@ -1,4 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
+import axe from 'axe-core';
 import type { ComponentType } from 'react';
 import { expect, it } from 'vitest';
 
@@ -6,7 +7,8 @@ import { profile, SECTIONS } from '@/content';
 
 /**
  * Every skin renders the same profile.json with its own markup.
- * This is the shared contract: one h1, every section + nav anchor, all the content.
+ * This is the shared contract: one h1, a <main id="main"> for the skip link, every
+ * section + nav anchor, all the content, and no axe violations.
  */
 export const itFulfillsTheSkinContract = (Skin: ComponentType) => {
   it('renders a single h1 named after the profile', () => {
@@ -16,6 +18,22 @@ export const itFulfillsTheSkinContract = (Skin: ComponentType) => {
 
     expect(headings).toHaveLength(1);
     expect(headings[0]).toHaveAccessibleName(profile.name);
+  });
+
+  it('exposes <main id="main"> as the skip link target', () => {
+    render(<Skin />);
+
+    expect(screen.getByRole('main')).toHaveAttribute('id', 'main');
+  });
+
+  it('has no axe violations', async () => {
+    const { container } = render(<Skin />);
+    // jsdom has no layout/computed colors: contrast is checked in a real browser instead
+    const { violations } = await axe.run(container, {
+      rules: { 'color-contrast': { enabled: false } }
+    });
+
+    expect(violations.map(({ id, help, nodes }) => `${id}: ${help} (${nodes.length})`)).toEqual([]);
   });
 
   it('renders every shared section and a primary nav link to each', () => {

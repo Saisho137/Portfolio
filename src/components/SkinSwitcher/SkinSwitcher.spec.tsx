@@ -1,6 +1,8 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest';
 
+import { mockMatchMedia } from '../../../vitest.setup';
+
 import { loaders, resetSkinCache, SKIN_LABELS } from './skins';
 import SkinSwitcher from './SkinSwitcher';
 
@@ -27,11 +29,9 @@ describe('SkinSwitcher', () => {
     resetSkinCache();
     colorLoader = vi.spyOn(loaders, 'raw-color').mockResolvedValue({ default: FakeColorSkin });
     vi.spyOn(loaders, 'brutalist').mockResolvedValue({ default: FakeBrutalistSkin });
-    vi.stubGlobal('matchMedia', () => ({ matches: false }));
   });
 
   afterEach(() => {
-    vi.unstubAllGlobals();
     Reflect.deleteProperty(document, 'startViewTransition');
   });
 
@@ -115,7 +115,10 @@ describe('SkinSwitcher', () => {
   it('skips the View Transition with prefers-reduced-motion', async () => {
     const startViewTransition = vi.fn((update: () => void) => update());
     Object.assign(document, { startViewTransition });
-    vi.stubGlobal('matchMedia', () => ({ matches: true }));
+    vi.stubGlobal(
+      'matchMedia',
+      mockMatchMedia(() => true)
+    );
     renderSwitcher();
 
     fireEvent.click(radio('raw-color'));

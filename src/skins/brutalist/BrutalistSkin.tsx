@@ -95,13 +95,15 @@ const BrutalistSkin: FC = () => {
         </nav>
       </header>
 
-      <main className={styles.main}>
+      <main id='main' className={styles.main}>
         <section id='about' className={styles.entry}>
           <div className={styles.doodleWrap}>
             <Doodle />
           </div>
           <div>
-            <p className={styles.kicker}>Información / Information</p>
+            <p className={styles.kicker}>
+              <span lang='es'>Información</span> / Information
+            </p>
             <h1 className={styles.title}>{name}</h1>
             <p className={styles.lede}>
               <span className='visually-hidden'>{role}. </span>
@@ -131,7 +133,9 @@ const BrutalistSkin: FC = () => {
         <section id='work' className={styles.entry}>
           <div className={styles.listing}>
             <div className={styles.listingHead}>
-              <h2 className={styles.kicker}>Proyectos / Selected Projects</h2>
+              <h2 className={styles.kicker}>
+                <span lang='es'>Proyectos</span> / Selected Projects
+              </h2>
               <span aria-hidden='true'>( {String(projects.length).padStart(2, '0')} )</span>
             </div>
             <ol className={styles.list}>
@@ -163,7 +167,9 @@ const BrutalistSkin: FC = () => {
 
         <div className={styles.entry}>
           <section id='experience'>
-            <h2 className={styles.kicker}>Experiencia / Experience</h2>
+            <h2 className={styles.kicker}>
+              <span lang='es'>Experiencia</span> / Experience
+            </h2>
             <dl className={styles.credits}>
               {experience.map((job) => (
                 <div key={`${job.company}-${job.role}`}>
@@ -193,7 +199,9 @@ const BrutalistSkin: FC = () => {
             </dl>
           </section>
           <section id='skills'>
-            <h2 className={styles.kicker}>Habilidades / Skills</h2>
+            <h2 className={styles.kicker}>
+              <span lang='es'>Habilidades</span> / Skills
+            </h2>
             <ul className={styles.tags}>
               {skills.map((skill) => (
                 <li key={skill}>{skill}</li>
@@ -203,7 +211,9 @@ const BrutalistSkin: FC = () => {
         </div>
 
         <section id='contact' className={styles.entry}>
-          <h2 className={styles.kicker}>Contacto / Contact</h2>
+          <h2 className={styles.kicker}>
+            <span lang='es'>Contacto</span> / Contact
+          </h2>
           <div>
             <ul className={styles.bigLinks}>
               {links.email && (

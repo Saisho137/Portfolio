@@ -30,7 +30,7 @@ const RawBwSkin: FC = () => {
         </nav>
       </header>
 
-      <main className={styles.main} data-el='main'>
+      <main id='main' className={styles.main} data-el='main'>
         <section id='about' className={styles.hero} data-el='section#about'>
           <h1 data-el='h1'>
             <span className={styles.bracket} aria-hidden='true'>
