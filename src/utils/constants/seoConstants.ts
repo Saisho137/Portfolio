@@ -1,6 +1,8 @@
 import { profile } from '@/content';
 
-export const SITE_URL = 'https://portfolio-six-blond-30.vercel.app';
+import { SITE_URL } from './site';
+
+export { LEGACY_HOST, SITE_URL } from './site';
 /** Canonical URL of the home page (next.config uses trailingSlash) */
 export const HOME_URL = `${SITE_URL}/`;
 export const SITE_TITLE = `${profile.name} — ${profile.role}`;
