@@ -45,7 +45,7 @@ Un solo contenido (`profile.json`) que se puede ver con tres estilos ("skins") b
 
 `src/content/profile.json` es la única fuente de verdad: perfil, about, proyectos, experiencia, educación, skills y enlaces. `src/content/index.ts` lo exporta tipado con `Profile` (si el JSON se desvía del esquema, falla `tsc`) junto con `SECTIONS`, los IDs de sección que comparten todas las skins (`about`, `work`, `experience`, `skills`, `contact`).
 
-La metadata, el JSON-LD y la imagen social (`src/app/(root)/opengraph-image.tsx`, generada en build) también salen de este JSON.
+La metadata (`buildSiteMetadata` en el root layout), el JSON-LD (`WebSite` + `ProfilePage` + `Person`) y la imagen social (`src/app/opengraph-image.tsx`, generada en build) también salen de este JSON.
 
 ### Skins
 
@@ -66,8 +66,8 @@ El detalle de la decisión y las alternativas descartadas está en [`docs/design
 
 ```
 src/
-├── app/                  # Rutas (App Router): layout, page, manifest, robots, sitemap
-│   └── (root)/           # Página principal + imágenes sociales generadas
+├── app/                  # App Router: layout (metadata), manifest, robots, sitemap, imágenes sociales
+│   └── (root)/           # Página principal
 ├── assets/
 │   ├── fonts/og/         # TTF solo para la imagen social (next/og no lee woff2)
 │   └── images/projects/  # Screenshots, importados estáticamente
