@@ -1,1 +1,9 @@
-export { SITE_URL, SITE_NAME, SITE_DESCRIPTION, AUTHOR, GTM_ID } from './seoConstants';
+export {
+  GTM_ID,
+  HOME_URL,
+  OG_LOCALE,
+  SITE_DESCRIPTION,
+  SITE_LANG,
+  SITE_TITLE,
+  SITE_URL
+} from './seoConstants';
