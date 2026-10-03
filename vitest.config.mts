@@ -14,6 +14,7 @@ export default defineConfig({
     // Keep CSS Module class names readable in test output
     css: { modules: { classNameStrategy: 'non-scoped' } },
     coverage: {
+      enabled: true,
       provider: 'v8',
       include: ['src/**/*.{ts,tsx}'],
       exclude: ['src/**/*.{spec,test}.{ts,tsx}', 'src/**/index.ts'],
