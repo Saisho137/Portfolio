@@ -27,13 +27,16 @@ describe('RootLayout', () => {
   it('sets the lang attribute on the html element', () => {
     const doc = renderLayout();
 
-    expect(doc.documentElement.getAttribute('lang')).toBe('en-US');
+    expect(doc.documentElement.getAttribute('lang')).toBe('en');
   });
 
-  it('includes the person JSON-LD', () => {
+  it('includes the JSON-LD graph', () => {
     const doc = renderLayout();
     const script = doc.querySelector('script[type="application/ld+json"]');
+    const { '@graph': graph } = JSON.parse(script?.textContent ?? '{}') as {
+      '@graph': { '@type': string }[];
+    };
 
-    expect(JSON.parse(script?.textContent ?? '{}')).toMatchObject({ '@type': 'Person' });
+    expect(graph.map((node) => node['@type'])).toEqual(['WebSite', 'ProfilePage', 'Person']);
   });
 });

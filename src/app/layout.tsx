@@ -2,14 +2,12 @@ import { GoogleTagManager } from '@next/third-parties/google';
 import type { Metadata, Viewport } from 'next';
 import { ReactNode } from 'react';
 
-import { GTM_ID, SITE_URL } from '@/utils/constants';
-import { generateJsonLd, serializeJsonLd } from '@/utils/helpers';
+import { GTM_ID, SITE_LANG } from '@/utils/constants';
+import { buildSiteMetadata, generateJsonLd, serializeJsonLd } from '@/utils/helpers';
 import '@/styles/globals.css';
 
-// Resolves relative metadata URLs (e.g. the generated og/twitter images) to the real domain
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL)
-};
+// Site-wide SEO lives here; metadataBase resolves relative URLs (canonical, og images)
+export const metadata: Metadata = buildSiteMetadata();
 
 export const viewport: Viewport = {
   // Lets the skins paint under notches/home bar; they pad with env(safe-area-inset-*)
@@ -28,11 +26,8 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang='en-US' data-testid='root-html'>
+    <html lang={SITE_LANG}>
       <GoogleTagManager gtmId={GTM_ID} />
-      <head>
-        <link rel='sitemap' type='application/xml' href={`${SITE_URL}/sitemap.xml`} />
-      </head>
       <body>
         <noscript>
           <iframe

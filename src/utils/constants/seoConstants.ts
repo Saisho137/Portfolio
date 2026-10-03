@@ -1,25 +1,10 @@
 import { profile } from '@/content';
 
-const [currentJob] = profile.experience;
-const [university] = profile.education;
-
 export const SITE_URL = 'https://portfolio-six-blond-30.vercel.app';
-export const SITE_NAME = `Portfolio | ${profile.name}`;
+/** Canonical URL of the home page (next.config uses trailingSlash) */
+export const HOME_URL = `${SITE_URL}/`;
+export const SITE_TITLE = `${profile.name} — ${profile.role}`;
 export const SITE_DESCRIPTION = profile.summary;
+export const SITE_LANG = 'en';
+export const OG_LOCALE = 'en_US';
 export const GTM_ID = 'GTM-KH8PJXT6';
-
-export const AUTHOR = {
-  name: profile.name,
-  jobTitle: profile.role,
-  github: profile.links.github,
-  linkedin: profile.links.linkedin,
-  skills: profile.skills,
-  company: {
-    name: currentJob.company,
-    url: currentJob.url
-  },
-  university: {
-    name: university.institution,
-    url: university.url
-  }
-};

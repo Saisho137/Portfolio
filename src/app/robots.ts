@@ -1,12 +1,11 @@
 import type { MetadataRoute } from 'next';
 
+import { SITE_URL } from '@/utils/constants';
+
+// Everything is public, AI crawlers included (blocking them drops the site from their citations)
 export default function robots(): MetadataRoute.Robots {
   return {
-    host: 'https://portfolio-six-blond-30.vercel.app',
-    sitemap: 'https://portfolio-six-blond-30.vercel.app/sitemap.xml',
-    rules: {
-      userAgent: '*',
-      allow: '/'
-    }
+    rules: { userAgent: '*', allow: '/' },
+    sitemap: `${SITE_URL}/sitemap.xml`
   };
 }

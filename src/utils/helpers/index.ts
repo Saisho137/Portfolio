@@ -1,1 +1,1 @@
-export { generateJsonLd, generateMetadata, serializeJsonLd } from './seoHelpers';
+export { buildSiteMetadata, generateJsonLd, serializeJsonLd } from './seoHelpers';
