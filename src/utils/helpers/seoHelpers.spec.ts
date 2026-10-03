@@ -20,7 +20,7 @@ describe('buildSiteMetadata', () => {
   });
 
   it('declares a self-referencing canonical and an indexable profile page', () => {
-    expect(metadata.alternates?.canonical).toBe('/');
+    expect(metadata.alternates?.canonical).toBe(HOME_URL);
     expect(metadata.robots).toEqual({ index: true, follow: true });
     expect(metadata.openGraph).toMatchObject({ type: 'profile', firstName: 'Santiago' });
   });
