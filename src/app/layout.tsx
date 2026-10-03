@@ -1,11 +1,9 @@
 import { GoogleTagManager } from '@next/third-parties/google';
 import { ReactNode } from 'react';
 
-import { BaseLayout } from '@/components/templates';
-import { roboto } from '@/config/fonts';
 import { GTM_ID, SITE_URL } from '@/utils/constants';
 import { generateJsonLd, serializeJsonLd } from '@/utils/helpers';
-import '@/styles/globals.scss';
+import '@/styles/globals.css';
 
 export default function RootLayout({
   children
@@ -18,7 +16,7 @@ export default function RootLayout({
       <head>
         <link rel='sitemap' type='application/xml' href={`${SITE_URL}/sitemap.xml`} />
       </head>
-      <body className={`${roboto.variable}`}>
+      <body>
         <noscript>
           <iframe
             title='google tag manager'
@@ -32,7 +30,7 @@ export default function RootLayout({
           type='application/ld+json'
           dangerouslySetInnerHTML={{ __html: serializeJsonLd(generateJsonLd()) }}
         />
-        <BaseLayout>{children}</BaseLayout>
+        {children}
       </body>
     </html>
   );

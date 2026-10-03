@@ -28,7 +28,7 @@ export default defineConfig([
           groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
           pathGroups: [
             { pattern: '@/**', group: 'internal', position: 'after' },
-            { pattern: './*.module.{css,scss}', group: 'sibling', position: 'after' }
+            { pattern: './*.module.css', group: 'sibling', position: 'after' }
           ],
           'newlines-between': 'always',
           alphabetize: { order: 'asc', caseInsensitive: true }

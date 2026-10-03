@@ -1,0 +1,86 @@
+/*
+ * Cascade order for the whole app. Skins put their rules in `skin`,
+ * so anything unlayered (none, ideally) or in `utilities` wins over them.
+ */
+@layer reset, tokens, base, skin, utilities;
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  img,
+  svg,
+  picture {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Only styled lists lose their markers, so plain lists keep list semantics in Safari */
+  ul[class],
+  ol[class] {
+    list-style: none;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+}
+
+@layer tokens {
+  :root {
+    color-scheme: light dark;
+    --page-bg: light-dark(#ffffff, #0b0b0b);
+    --page-fg: light-dark(#0b0b0b, #f2f2f0);
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100dvh;
+    background: var(--page-bg);
+    color: var(--page-fg);
+    font-family: system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@layer utilities {
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
