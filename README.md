@@ -83,7 +83,7 @@ Para ejecutar este proyecto localmente, por favor siga las instrucciones a conti
   ```sh
   curl https://get.volta.sh | bash
   ```
-- Sin Volta: instale manualmente las versiones indicadas en `volta` (`engines` define el rango aceptado).
+- Sin Volta: instale manualmente las versiones indicadas en `volta`.
 
 ### Instalación
 
@@ -243,12 +243,13 @@ Las pruebas unitarias se realizan con [Vitest](https://vitest.dev/) (entorno `js
 Para ejecutar las pruebas unitarias y obtener el coverage, ejecute:
 
 ```sh
-npm run test           # una ejecución
-npm run test:watch     # modo watch
-npm run test:coverage  # coverage v8 (umbral: 85% de líneas)
+npm run test        # una ejecución, siempre con coverage v8 (umbral: 85% de líneas)
+npm run test:watch  # modo watch
 ```
 
 Otros scripts útiles: `npm run lint`, `npm run typecheck`, `npm run format:check`.
+
+Antes de hacer push, ejecute `npm run prepush`: corre en conjunto format check, lint, typecheck, tests y build.
 
 #### Archivos .env:
 
