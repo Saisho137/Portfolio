@@ -249,7 +249,7 @@ npm run test:watch  # modo watch
 
 Otros scripts útiles: `npm run lint`, `npm run typecheck`, `npm run format:check`.
 
-Antes de hacer push, ejecute `npm run prepush`: corre en conjunto format check, lint, typecheck, tests y build.
+Antes de hacer push, ejecute `npm run prepush`: corrige lo que pueda (`eslint --fix` y `prettier --write`) y luego corre typecheck, tests y build. Solo falla si queda algo que no se pudo corregir automáticamente.
 
 #### Archivos .env:
 
