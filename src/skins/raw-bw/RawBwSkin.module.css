@@ -1,0 +1,401 @@
+@layer skin {
+  .skin {
+    --bg: light-dark(#f2f2f0, #0b0b0b);
+    --fg: light-dark(#0b0b0b, #f2f2f0);
+    --dim: light-dark(#5f5f5f, #9a9a9a);
+    --box: var(--fg);
+    --hair: light-dark(rgb(0 0 0 / 0.22), rgb(255 255 255 / 0.22));
+    --mono: var(--raw-bw-mono), ui-monospace, monospace;
+    --sans: var(--raw-bw-sans), system-ui, sans-serif;
+    --pad: clamp(0.9rem, 2.5vw, 1.75rem);
+    --tag: clamp(0.66rem, 0.64rem + 0.1vw, 0.74rem);
+
+    display: grid;
+    gap: var(--pad);
+    min-height: 100dvh;
+    padding: max(var(--pad), env(safe-area-inset-top)) max(var(--pad), env(safe-area-inset-right))
+      max(var(--pad), env(safe-area-inset-bottom)) max(var(--pad), env(safe-area-inset-left));
+    background: var(--bg);
+    color: var(--fg);
+    font: 400 clamp(1rem, 0.96rem + 0.2vw, 1.125rem) / 1.6 var(--mono);
+    isolation: isolate;
+
+    /* ── Static: SVG grain jittered with steps() + slow rolling scanline ── */
+    &::before,
+    &::after {
+      content: '';
+      position: fixed;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    &::before {
+      --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='turbulence' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+      inset: -50%;
+      background: var(--fg);
+      mask: var(--noise);
+      opacity: 0.09;
+      animation: grain 0.7s steps(5) infinite;
+    }
+
+    &::after {
+      inset: 0;
+      background:
+        repeating-linear-gradient(to bottom, transparent 0 2px, var(--hair) 2px 3px),
+        linear-gradient(
+          to bottom,
+          transparent 0%,
+          color-mix(in oklab, var(--fg) 6%, transparent) 50%,
+          transparent 100%
+        );
+      background-repeat: repeat, no-repeat;
+      background-size:
+        100% 3px,
+        100% 30vh;
+      opacity: 0.35;
+      animation: roll 9s linear infinite;
+    }
+
+    & a {
+      text-decoration: underline 1px;
+      text-underline-offset: 0.2em;
+
+      &:hover {
+        background: var(--fg);
+        color: var(--bg);
+        text-decoration: none;
+      }
+    }
+
+    & :focus-visible {
+      outline: 2px solid var(--fg);
+      outline-offset: 2px;
+    }
+
+    & ::selection {
+      background: var(--fg);
+      color: var(--bg);
+    }
+
+    /* ── Inspector engine: every [data-el] is an outlined box with its selector ── */
+    & [data-el] {
+      position: relative;
+      padding: calc(var(--pad) + 0.6rem) var(--pad) var(--pad);
+      border: 1px dashed var(--hair);
+      transition: border-color 0.12s;
+
+      /* `/ ''` = empty alt text, keeps the label out of the accessibility tree */
+      &::before {
+        content: attr(data-el) / '';
+        position: absolute;
+        inset-block-start: -1px;
+        inset-inline-start: -1px;
+        padding: 0.05rem 0.45rem;
+        border: 1px dashed var(--hair);
+        border-top-style: solid;
+        background: var(--bg);
+        color: var(--dim);
+        font: 400 var(--tag) / 1.6 var(--mono);
+        letter-spacing: normal;
+        text-transform: none;
+        white-space: nowrap;
+        transition:
+          background 0.12s,
+          color 0.12s;
+      }
+
+      /* hover = "inspect element", only on the innermost hovered box */
+      &:hover:not(:has([data-el]:hover)) {
+        border-style: solid;
+        border-color: var(--box);
+
+        &::before {
+          border-color: var(--fg);
+          background: var(--fg);
+          color: var(--bg);
+        }
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      &::before,
+      &::after {
+        animation: none;
+      }
+    }
+  }
+
+  /* Inline variant: label sits before the content instead of on the corner */
+  .flat.flat {
+    padding: 0;
+    border: 0;
+
+    &::before {
+      position: static;
+      display: inline-block;
+      margin-inline-end: 0.75ch;
+      padding: 0;
+      border: 0;
+      background: none;
+    }
+  }
+
+  /* ── Layout ── */
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+  }
+
+  .nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.5rem;
+  }
+
+  .main {
+    display: grid;
+    gap: var(--pad);
+  }
+
+  .skin h2 {
+    margin-bottom: 1rem;
+    font: 700 clamp(1.5rem, 1.1rem + 1.6vw, 2.6rem) / 1 var(--sans);
+    letter-spacing: -0.02em;
+  }
+
+  .skin h3 {
+    font: 650 clamp(1.15rem, 1rem + 0.6vw, 1.5rem) / 1.15 var(--sans);
+    letter-spacing: -0.01em;
+  }
+
+  .skin p {
+    max-width: 64ch;
+    text-wrap: pretty;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    display: grid;
+    align-content: end;
+    gap: var(--pad);
+
+    @media (width >= 56rem) {
+      min-height: min(78svh, 46rem);
+    }
+
+    & h1 {
+      font: 750 clamp(3rem, 1rem + 10vw, 10.5rem) / 0.86 var(--sans);
+      font-variation-settings: 'opsz' 96;
+      letter-spacing: -0.045em;
+      text-transform: lowercase;
+      text-wrap: balance;
+    }
+  }
+
+  .bracket {
+    color: var(--dim);
+    font-weight: 300;
+  }
+
+  .caret {
+    display: inline-block;
+    width: 0.08em;
+    height: 0.8em;
+    margin-inline-start: 0.04em;
+    background: var(--fg);
+    animation: blink 1s steps(1) infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+
+  .heroRow {
+    display: grid;
+    gap: var(--pad);
+    align-items: start;
+
+    @media (width >= 56rem) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .lede {
+    max-width: 34ch;
+    font: 400 clamp(1.15rem, 1rem + 0.6vw, 1.5rem) / 1.4 var(--sans);
+  }
+
+  .about {
+    display: grid;
+    gap: 1rem;
+  }
+
+  /* ── Work ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: var(--pad);
+  }
+
+  .card {
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+  }
+
+  .shot {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: top;
+    border: 1px solid var(--hair);
+    filter: grayscale(1) contrast(1.05);
+    transition: filter 0.2s;
+
+    .card:hover & {
+      filter: none;
+    }
+  }
+
+  .placeholder {
+    display: grid;
+    place-items: center;
+    background:
+      linear-gradient(
+        to top right,
+        transparent calc(50% - 0.5px),
+        var(--hair) 50%,
+        transparent calc(50% + 0.5px)
+      ),
+      linear-gradient(
+        to top left,
+        transparent calc(50% - 0.5px),
+        var(--hair) 50%,
+        transparent calc(50% + 0.5px)
+      );
+    color: var(--dim);
+    font-size: var(--tag);
+  }
+
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    color: var(--dim);
+    font-size: var(--tag);
+  }
+
+  /* ── Experience / skills ── */
+  .cols {
+    display: grid;
+    gap: var(--pad);
+
+    @media (width >= 56rem) {
+      grid-template-columns: 5fr 7fr;
+    }
+  }
+
+  .timeline li {
+    display: grid;
+    gap: 0.25rem 1rem;
+    padding-block: 0.8rem;
+    border-top: 1px solid var(--hair);
+
+    &:first-child {
+      border-top: 0;
+    }
+  }
+
+  .subhead {
+    margin-block: 1.5rem 0.25rem;
+  }
+
+  .dim {
+    color: var(--dim);
+  }
+
+  .skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    & li {
+      padding: 0.1rem 0.6rem;
+      border: 1px solid var(--fg);
+      font-size: 0.9em;
+
+      &:hover {
+        background: var(--fg);
+        color: var(--bg);
+      }
+    }
+  }
+
+  /* ── Contact / footer ── */
+  .contact h2 {
+    margin-bottom: 0.75rem;
+  }
+
+  .contactLinks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.5ch;
+    font: 750 clamp(2rem, 1rem + 5.5vw, 6rem) / 1 var(--sans);
+    letter-spacing: -0.04em;
+    overflow-wrap: anywhere;
+
+    & a {
+      text-decoration-thickness: 2px;
+    }
+  }
+
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    color: var(--dim);
+    font-size: var(--tag);
+  }
+}
+
+@keyframes grain {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-5%, 4%);
+  }
+  50% {
+    transform: translate(4%, -3%);
+  }
+  75% {
+    transform: translate(-3%, -6%);
+  }
+  100% {
+    transform: translate(6%, 2%);
+  }
+}
+
+@keyframes roll {
+  from {
+    background-position:
+      0 0,
+      0 -30vh;
+  }
+  to {
+    background-position:
+      0 0,
+      0 130vh;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}

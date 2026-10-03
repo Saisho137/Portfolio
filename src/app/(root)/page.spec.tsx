@@ -1,12 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
+import { profile } from '@/content';
+
 import Home from './page';
 
 describe('Home Page', () => {
-  it('renders the main heading', () => {
+  it('renders the raw-bw skin as default content', () => {
     render(<Home />);
-    const heading = screen.getByRole('heading', { level: 1, name: /Santiago Betancur Duque/i });
-    expect(heading).toBeInTheDocument();
+
+    expect(screen.getByRole('heading', { level: 1 })).toHaveAccessibleName(profile.name);
   });
 });

@@ -1,0 +1,60 @@
+{
+  "name": "Santiago Betancur Duque",
+  "role": "Frontend Developer",
+  "summary": "Frontend Developer with expertise in React, Next.js, SEO, and Performance Optimization. Passionate about building fast and accessible web applications.",
+  "about": [
+    "👋 Hi! I'm a Computer Scientist and Frontend Developer with experience in building responsive, accessible, secure and SEO-optimized web applications using technologies like Angular and React.",
+    "🌟 My passion lies in solving complex problems through concise solutions, focusing on creating seamless and user-friendly experiences. I enjoy collaborating in teams to drive projects toward success."
+  ],
+  "links": {
+    "github": "https://github.com/Saisho137",
+    "linkedin": "https://www.linkedin.com/in/santiago-betancur-duque-79548024b/"
+  },
+  "projects": [
+    {
+      "name": "Agenda Comfama",
+      "image": {
+        "id": "agenda-comfama",
+        "alt": "Agenda Comfama screenshot"
+      }
+    },
+    {
+      "name": "Perfilador Financiero"
+    },
+    {
+      "name": "BeatHub",
+      "image": {
+        "id": "beathub",
+        "alt": "BeatHub screenshot"
+      }
+    }
+  ],
+  "experience": [
+    {
+      "role": "Frontend Developer",
+      "company": "Pragma",
+      "url": "https://www.pragma.co/es"
+    }
+  ],
+  "education": [
+    {
+      "institution": "Unilasallista Corporacion Universitaria",
+      "url": "https://www.unilasallista.edu.co"
+    }
+  ],
+  "skills": [
+    "SEO",
+    "React",
+    "Next.js",
+    "Node.js",
+    "Angular",
+    "HTML",
+    "CSS",
+    "Sass",
+    "JavaScript",
+    "TypeScript",
+    "Core Web Vitals",
+    "Web Accessibility",
+    "Performance Optimization"
+  ]
+}

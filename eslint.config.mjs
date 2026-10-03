@@ -5,7 +5,7 @@ import prettier from 'eslint-config-prettier/flat';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig([
-  globalIgnores(['.next/**', 'out/**', 'coverage/**', 'public/**', 'next-env.d.ts']),
+  globalIgnores(['.next/**', 'out/**', 'coverage/**', 'next-env.d.ts']),
   ...nextVitals,
   ...nextTs,
   {
@@ -28,7 +28,7 @@ export default defineConfig([
           groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
           pathGroups: [
             { pattern: '@/**', group: 'internal', position: 'after' },
-            { pattern: './*.module.{css,scss}', group: 'sibling', position: 'after' }
+            { pattern: './*.module.css', group: 'sibling', position: 'after' }
           ],
           'newlines-between': 'always',
           alphabetize: { order: 'asc', caseInsensitive: true }

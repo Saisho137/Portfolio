@@ -3,7 +3,6 @@ package-lock.json
 .next
 out
 coverage
-public
 next-env.d.ts
 # hand-written standalone mockups
 docs/design/*.html
