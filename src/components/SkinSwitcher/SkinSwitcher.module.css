@@ -1,0 +1,78 @@
+/* Lives outside every skin, so it uses system colors that follow color-scheme */
+@layer skin {
+  .switcher {
+    position: fixed;
+    inset-block-end: max(1rem, env(safe-area-inset-bottom));
+    inset-inline-end: max(1rem, env(safe-area-inset-right));
+    z-index: 100;
+    display: flex;
+    gap: 0;
+    padding: 0;
+    border: 1px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+    box-shadow: 4px 4px 0 color-mix(in oklab, CanvasText 85%, transparent);
+
+    /* Without JS the radios can't do anything */
+    @media (scripting: none) {
+      display: none;
+    }
+  }
+
+  .option {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    cursor: pointer;
+    transition:
+      background 0.12s,
+      color 0.12s;
+
+    & + & {
+      border-inline-start: 1px solid CanvasText;
+    }
+
+    &:hover {
+      background: color-mix(in oklab, CanvasText 10%, Canvas);
+    }
+
+    &:has(:checked) {
+      background: CanvasText;
+      color: Canvas;
+    }
+
+    &:has(:focus-visible) {
+      outline: 2px solid CanvasText;
+      outline-offset: 2px;
+      z-index: 1;
+    }
+  }
+
+  /* Native radio kept for semantics and keyboard support, visually replaced by the icon */
+  .radio {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .codeLt {
+    stroke: light-dark(#c2185b, #ff7aa8);
+  }
+
+  .codeSlash {
+    stroke: light-dark(#1f6fb2, #7cc0ff);
+  }
+
+  .codeGt {
+    stroke: light-dark(#2e7d32, #86d993);
+  }
+
+  /* Keep the color icon legible on the inverted (checked) background */
+  .option:has(:checked) :is(.codeLt, .codeSlash, .codeGt) {
+    stroke: currentColor;
+  }
+}
