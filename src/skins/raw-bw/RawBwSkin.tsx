@@ -66,7 +66,7 @@ const RawBwSkin: FC = () => {
                     src={getProjectImage(project.image.id)}
                     alt={project.image.alt}
                     placeholder='blur'
-                    sizes='(width >= 56rem) 30vw, 100vw'
+                    sizes='(width >= 62rem) 30vw, (width >= 40rem) 45vw, 90vw'
                   />
                 ) : (
                   <div className={`${styles.shot} ${styles.placeholder}`} aria-hidden='true'>

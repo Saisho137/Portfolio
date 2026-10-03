@@ -14,7 +14,8 @@
     gap: var(--pad);
     min-height: 100dvh;
     padding: max(var(--pad), env(safe-area-inset-top)) max(var(--pad), env(safe-area-inset-right))
-      max(var(--pad), env(safe-area-inset-bottom)) max(var(--pad), env(safe-area-inset-left));
+      calc(max(var(--pad), env(safe-area-inset-bottom)) + var(--switcher-clearance))
+      max(var(--pad), env(safe-area-inset-left));
     background: var(--bg);
     color: var(--fg);
     font: 400 clamp(1rem, 0.96rem + 0.2vw, 1.125rem) / 1.6 var(--mono);
@@ -61,10 +62,12 @@
       text-decoration: underline 1px;
       text-underline-offset: 0.2em;
 
-      &:hover {
-        background: var(--fg);
-        color: var(--bg);
-        text-decoration: none;
+      @media (hover: hover) {
+        &:hover {
+          background: var(--fg);
+          color: var(--bg);
+          text-decoration: none;
+        }
       }
     }
 
@@ -106,14 +109,16 @@
       }
 
       /* hover = "inspect element", only on the innermost hovered box */
-      &:hover:not(:has([data-el]:hover)) {
-        border-style: solid;
-        border-color: var(--box);
+      @media (hover: hover) {
+        &:hover:not(:has([data-el]:hover)) {
+          border-style: solid;
+          border-color: var(--box);
 
-        &::before {
-          border-color: var(--fg);
-          background: var(--fg);
-          color: var(--bg);
+          &::before {
+            border-color: var(--fg);
+            background: var(--fg);
+            color: var(--bg);
+          }
         }
       }
     }
@@ -256,8 +261,10 @@
     filter: grayscale(1) contrast(1.05);
     transition: filter 0.2s;
 
-    .card:hover & {
-      filter: none;
+    @media (hover: hover) {
+      .card:hover & {
+        filter: none;
+      }
     }
   }
 
@@ -328,9 +335,11 @@
       border: 1px solid var(--fg);
       font-size: 0.9em;
 
-      &:hover {
-        background: var(--fg);
-        color: var(--bg);
+      @media (hover: hover) {
+        &:hover {
+          background: var(--fg);
+          color: var(--bg);
+        }
       }
     }
   }

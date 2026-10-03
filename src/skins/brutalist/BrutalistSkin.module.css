@@ -14,8 +14,9 @@
     display: grid;
     grid-template-columns: 1fr;
     min-height: 100dvh;
-    padding: clamp(1.25rem, 3vw, 3.5rem) max(var(--gutter), env(safe-area-inset-right))
-      calc(clamp(1.25rem, 3vw, 3.5rem) + env(safe-area-inset-bottom))
+    padding: calc(clamp(1.25rem, 3vw, 3.5rem) + env(safe-area-inset-top))
+      max(var(--gutter), env(safe-area-inset-right))
+      calc(clamp(1.25rem, 3vw, 3.5rem) + env(safe-area-inset-bottom) + var(--switcher-clearance))
       max(var(--gutter), env(safe-area-inset-left));
     background: var(--paper);
     color: var(--ink);
@@ -30,9 +31,11 @@
       text-decoration: none;
       text-underline-offset: 0.2em;
 
-      &:hover {
-        text-decoration: underline;
-        text-decoration-thickness: 1px;
+      @media (hover: hover) {
+        &:hover {
+          text-decoration: underline;
+          text-decoration-thickness: 1px;
+        }
       }
     }
 
@@ -68,7 +71,7 @@
 
     @media (width >= 60rem) {
       position: sticky;
-      top: clamp(1.25rem, 3vw, 3.5rem);
+      top: calc(clamp(1.25rem, 3vw, 3.5rem) + env(safe-area-inset-top));
       grid-row: 1 / span 4;
       flex-direction: column;
       height: fit-content;
@@ -158,9 +161,11 @@
       background 0.15s,
       color 0.15s;
 
-    &:hover {
-      background: var(--paper);
-      color: var(--ink);
+    @media (hover: hover) {
+      &:hover {
+        background: var(--paper);
+        color: var(--ink);
+      }
     }
   }
 
@@ -283,7 +288,9 @@
     }
   }
 
+  /* Columns follow the listing's own width (the rail eats space on desktop) */
   .list {
+    container: listing / inline-size;
     border-top: var(--line);
   }
 
@@ -298,15 +305,21 @@
       background 0.15s,
       color 0.15s;
 
-    @media (width >= 52rem) {
+    @container listing (width >= 52rem) {
       grid-template-columns: 4rem minmax(0, 1.4fr) minmax(0, 2fr) 2rem;
       align-items: baseline;
     }
 
-    &:hover,
     &:focus-within {
       background: var(--ink);
       color: var(--paper);
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        background: var(--ink);
+        color: var(--paper);
+      }
     }
 
     /* the whole row is the link's hit area */
@@ -316,8 +329,10 @@
       inset: 0;
     }
 
-    & a:hover {
-      text-decoration: none;
+    @media (hover: hover) {
+      & a:hover {
+        text-decoration: none;
+      }
     }
   }
 
@@ -333,7 +348,7 @@
   .meta {
     grid-column: 2;
 
-    @media (width >= 52rem) {
+    @container listing (width >= 52rem) {
       grid-column: auto;
     }
   }
@@ -341,7 +356,7 @@
   .arrow {
     display: none;
 
-    @media (width >= 52rem) {
+    @container listing (width >= 52rem) {
       display: block;
       grid-column: 4;
       text-align: end;
