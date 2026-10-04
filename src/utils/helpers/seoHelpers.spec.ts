@@ -1,28 +1,43 @@
 import { describe, expect, it } from 'vitest';
 
-import { profile } from '@/content';
-import { HOME_URL, SITE_DESCRIPTION, SITE_TITLE } from '@/utils/constants';
+import { getProfile } from '@/content';
+import { LOCALES } from '@/i18n/config';
+import { SITE_URL } from '@/utils/constants';
 
-import { buildSiteMetadata, generateJsonLd, serializeJsonLd } from './seoHelpers';
+import { buildSiteMetadata, generateJsonLd, getSiteTitle, serializeJsonLd } from './seoHelpers';
 
-describe('buildSiteMetadata', () => {
-  const metadata = buildSiteMetadata();
+const URLS = { en: SITE_URL, es: `${SITE_URL}/es` };
+const LANGUAGES = { ...URLS, 'x-default': SITE_URL };
+
+describe.each(LOCALES)('buildSiteMetadata("%s")', (lang) => {
+  const profile = getProfile(lang);
+  const metadata = buildSiteMetadata(lang);
+  const title = getSiteTitle(profile);
 
   it('uses name + role as default title and the profile summary as description', () => {
-    expect(metadata.title).toEqual({ default: SITE_TITLE, template: `%s | ${profile.name}` });
-    expect(metadata.description).toBe(SITE_DESCRIPTION);
+    expect(metadata.title).toEqual({ default: title, template: `%s | ${profile.name}` });
+    expect(metadata.description).toBe(profile.summary);
   });
 
   it('keeps title and description within what search engines display', () => {
-    expect(SITE_TITLE.length).toBeLessThanOrEqual(60);
-    expect(SITE_DESCRIPTION.length).toBeGreaterThanOrEqual(50);
-    expect(SITE_DESCRIPTION.length).toBeLessThanOrEqual(160);
+    expect(title.length).toBeLessThanOrEqual(60);
+    expect(profile.summary.length).toBeGreaterThanOrEqual(50);
+    expect(profile.summary.length).toBeLessThanOrEqual(160);
   });
 
-  it('declares a self-referencing canonical and an indexable profile page', () => {
-    expect(metadata.alternates?.canonical).toBe(HOME_URL);
+  it('declares a self-referencing canonical plus every hreflang version and x-default', () => {
+    expect(metadata.alternates).toEqual({ canonical: URLS[lang], languages: LANGUAGES });
     expect(metadata.robots).toEqual({ index: true, follow: true });
-    expect(metadata.openGraph).toMatchObject({ type: 'profile', firstName: 'Santiago' });
+  });
+
+  it('describes the page language in Open Graph, with the other one as alternate', () => {
+    expect(metadata.openGraph).toMatchObject({
+      type: 'profile',
+      firstName: 'Santiago',
+      url: URLS[lang],
+      locale: lang === 'en' ? 'en_US' : 'es_CO',
+      alternateLocale: [lang === 'en' ? 'es_CO' : 'en_US']
+    });
   });
 
   it('verifies the Search Console property', () => {
@@ -35,21 +50,29 @@ describe('buildSiteMetadata', () => {
   });
 });
 
-describe('generateJsonLd', () => {
-  const { '@graph': graph } = generateJsonLd();
+describe.each(LOCALES)('generateJsonLd("%s")', (lang) => {
+  const profile = getProfile(lang);
+  const { '@graph': graph } = generateJsonLd(lang);
   const byType = (type: string) => graph.find((node) => node['@type'] === type);
 
-  it('links website, profile page and person by @id', () => {
+  it('links website, profile page and person by @id, the same entities in every language', () => {
     const person = byType('Person');
 
+    expect(person?.['@id']).toBe(`${SITE_URL}#person`);
     expect(byType('WebSite')).toMatchObject({
-      url: HOME_URL,
+      url: SITE_URL,
+      inLanguage: ['en', 'es'],
       publisher: { '@id': person?.['@id'] }
     });
-    expect(byType('ProfilePage')).toMatchObject({ mainEntity: { '@id': person?.['@id'] } });
+    expect(byType('ProfilePage')).toMatchObject({
+      '@id': `${URLS[lang]}#profile`,
+      url: URLS[lang],
+      inLanguage: lang,
+      mainEntity: { '@id': person?.['@id'] }
+    });
   });
 
-  it('describes the person from profile.json, without a personal image', () => {
+  it('describes the person from that language profile, without a personal image', () => {
     expect(byType('Person')).toMatchObject({
       name: profile.name,
       jobTitle: profile.role,

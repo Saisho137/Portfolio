@@ -1,58 +1,63 @@
 import type { Metadata } from 'next';
 
-import { profile } from '@/content';
+import { getProfile, type Profile } from '@/content';
 import {
-  GOOGLE_SITE_VERIFICATION,
-  HOME_URL,
-  OG_LOCALE,
-  SITE_DESCRIPTION,
-  SITE_LANG,
-  SITE_TITLE,
-  SITE_URL
-} from '@/utils/constants';
+  DEFAULT_LOCALE,
+  languageAlternates,
+  LOCALES,
+  localeUrl,
+  OG_LOCALES,
+  otherLocales,
+  type Locale
+} from '@/i18n/config';
+import { GOOGLE_SITE_VERIFICATION, SITE_URL } from '@/utils/constants';
 
-const [firstName, ...lastNames] = profile.name.split(' ');
+export const getSiteTitle = ({ name, role }: Profile) => `${name} — ${role}`;
 
 /**
- * Site-wide metadata for the root layout. og:image / twitter:image are not set here:
- * they come from the file-based app/opengraph-image.tsx and app/twitter-image.tsx.
+ * Site-wide metadata for the [lang] root layout. og:image / twitter:image are not set
+ * here: they come from the file-based [lang]/opengraph-image.tsx and twitter-image.tsx.
  */
-export const buildSiteMetadata = (): Metadata => ({
-  metadataBase: new URL(SITE_URL),
-  title: {
-    default: SITE_TITLE,
-    template: `%s | ${profile.name}`
-  },
-  description: SITE_DESCRIPTION,
-  applicationName: profile.name,
-  authors: [{ name: profile.name, url: HOME_URL }],
-  creator: profile.name,
-  // Absolute and identical to the sitemap <loc>
-  alternates: { canonical: HOME_URL },
-  robots: { index: true, follow: true },
-  verification: { google: GOOGLE_SITE_VERIFICATION },
-  openGraph: {
-    type: 'profile',
-    firstName,
-    lastName: lastNames.join(' '),
-    url: '/',
-    siteName: profile.name,
-    title: SITE_TITLE,
-    description: SITE_DESCRIPTION,
-    locale: OG_LOCALE
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: SITE_TITLE,
-    description: SITE_DESCRIPTION
-  }
-});
+export const buildSiteMetadata = (lang: Locale): Metadata => {
+  const profile = getProfile(lang);
+  const [firstName, ...lastNames] = profile.name.split(' ');
+  const title = getSiteTitle(profile);
+  const url = localeUrl(lang);
 
-const PERSON_ID = `${HOME_URL}#person`;
-const WEBSITE_ID = `${HOME_URL}#website`;
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: { default: title, template: `%s | ${profile.name}` },
+    description: profile.summary,
+    applicationName: profile.name,
+    authors: [{ name: profile.name, url }],
+    creator: profile.name,
+    // Absolute and identical to the sitemap <loc>; hreflang points to every version
+    alternates: { canonical: url, languages: languageAlternates() },
+    robots: { index: true, follow: true },
+    verification: { google: GOOGLE_SITE_VERIFICATION },
+    openGraph: {
+      type: 'profile',
+      firstName,
+      lastName: lastNames.join(' '),
+      url,
+      siteName: profile.name,
+      title,
+      description: profile.summary,
+      locale: OG_LOCALES[lang],
+      alternateLocale: otherLocales(lang).map((locale) => OG_LOCALES[locale])
+    },
+    twitter: { card: 'summary_large_image', title, description: profile.summary }
+  };
+};
+
+// Same entities in every language: only the page (and its texts) is per language
+const PERSON_ID = `${SITE_URL}#person`;
+const WEBSITE_ID = `${SITE_URL}#website`;
 
 /** schema.org graph: the site, the profile page and the person it is about */
-export const generateJsonLd = () => {
+export const generateJsonLd = (lang: Locale) => {
+  const profile = getProfile(lang);
+  const url = localeUrl(lang);
   const [currentJob] = profile.experience;
   const [university] = profile.education;
 
@@ -62,18 +67,18 @@ export const generateJsonLd = () => {
       {
         '@type': 'WebSite',
         '@id': WEBSITE_ID,
-        url: HOME_URL,
+        url: localeUrl(DEFAULT_LOCALE),
         name: profile.name,
-        description: SITE_DESCRIPTION,
-        inLanguage: SITE_LANG,
+        description: profile.summary,
+        inLanguage: [...LOCALES],
         publisher: { '@id': PERSON_ID }
       },
       {
         '@type': 'ProfilePage',
-        '@id': `${HOME_URL}#profile`,
-        url: HOME_URL,
-        name: SITE_TITLE,
-        inLanguage: SITE_LANG,
+        '@id': `${url}#profile`,
+        url,
+        name: getSiteTitle(profile),
+        inLanguage: lang,
         isPartOf: { '@id': WEBSITE_ID },
         mainEntity: { '@id': PERSON_ID }
       },
@@ -81,9 +86,9 @@ export const generateJsonLd = () => {
         '@type': 'Person',
         '@id': PERSON_ID,
         name: profile.name,
-        url: HOME_URL,
+        url,
         jobTitle: profile.role,
-        description: SITE_DESCRIPTION,
+        description: profile.summary,
         sameAs: [profile.links.github, profile.links.linkedin],
         knowsAbout: profile.skills,
         ...(profile.links.email && { email: `mailto:${profile.links.email}` }),
