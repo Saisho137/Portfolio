@@ -3,7 +3,8 @@
 import { FC, useSyncExternalStore } from 'react';
 import { flushSync } from 'react-dom';
 
-import { isTheme, THEME_STORAGE_KEY, type Theme } from '@/utils/theme';
+import type { Dictionary } from '@/i18n/dictionaries';
+import { isTheme, syncThemeColor, THEME_STORAGE_KEY, type Theme } from '@/utils/theme';
 
 import styles from './ThemeToggle.module.css';
 
@@ -32,6 +33,7 @@ const subscribe = (onChange: () => void) => {
 
 const applyTheme = (theme: Theme) => {
   document.documentElement.dataset.theme = theme;
+  syncThemeColor(theme);
   try {
     localStorage.setItem(THEME_STORAGE_KEY, theme);
   } catch {
@@ -52,7 +54,11 @@ const MoonIcon: FC = () => (
   </svg>
 );
 
-const ThemeToggle: FC = () => {
+interface ThemeToggleProps {
+  labels: Dictionary['settings']['theme'];
+}
+
+const ThemeToggle: FC<ThemeToggleProps> = ({ labels }) => {
   // null on the server: the real theme is only known in the browser
   const theme = useSyncExternalStore<Theme | null>(subscribe, getTheme, () => null);
   const next: Theme = theme === 'dark' ? 'light' : 'dark';
@@ -72,8 +78,8 @@ const ThemeToggle: FC = () => {
       type='button'
       className={styles.toggle}
       onClick={toggle}
-      aria-label={theme ? `Switch to ${next} theme` : 'Toggle color theme'}
-      title={theme ? `Switch to ${next} theme` : undefined}
+      aria-label={theme ? labels[next] : labels.toggle}
+      title={theme ? labels[next] : undefined}
     >
       {/* Shows the theme you get by pressing it */}
       {next === 'dark' ? <MoonIcon /> : <SunIcon />}

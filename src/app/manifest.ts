@@ -1,20 +1,24 @@
 import type { MetadataRoute } from 'next';
 
-import { profile } from '@/content';
-import { SITE_DESCRIPTION, SITE_LANG, SITE_TITLE } from '@/utils/constants';
+import { getProfile } from '@/content';
+import { DEFAULT_LOCALE } from '@/i18n/config';
+import { getSiteTitle } from '@/utils/helpers';
 
+// One manifest for the whole site, in the default language (it starts at `/`).
 // Colors of the default (raw-bw) skin. No `orientation`: locking it fails WCAG 1.3.4
 export default function manifest(): MetadataRoute.Manifest {
+  const profile = getProfile(DEFAULT_LOCALE);
+
   return {
-    name: SITE_TITLE,
+    name: getSiteTitle(profile),
     short_name: profile.name.split(' ')[0],
-    description: SITE_DESCRIPTION,
+    description: profile.summary,
     start_url: '/',
     scope: '/',
     display: 'standalone',
     background_color: '#0b0b0b',
     theme_color: '#0b0b0b',
-    lang: SITE_LANG,
+    lang: DEFAULT_LOCALE,
     dir: 'ltr',
     icons: [
       { src: '/icon.svg', sizes: 'any', type: 'image/svg+xml' },

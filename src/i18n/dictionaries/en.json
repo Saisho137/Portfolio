@@ -1,0 +1,102 @@
+{
+  "skipLink": "Skip to content",
+  "nav": {
+    "primary": "Primary",
+    "language": "Language"
+  },
+  "sections": {
+    "about": "about",
+    "work": "work",
+    "experience": "experience",
+    "skills": "skills",
+    "contact": "contact"
+  },
+  "settings": {
+    "label": "Page settings",
+    "style": "Page style",
+    "announce": "Style: {skin}",
+    "skins": {
+      "raw-bw": "Raw HTML, black and white",
+      "raw-color": "Raw HTML, color",
+      "brutalist": "Brutalist"
+    },
+    "theme": {
+      "toggle": "Toggle color theme",
+      "light": "Switch to light theme",
+      "dark": "Switch to dark theme"
+    }
+  },
+  "og": {
+    "alt": "{name} — {role}"
+  },
+  "rawBw": {
+    "work": "Selected work",
+    "noImage": "no image",
+    "view": "view",
+    "now": "now",
+    "experience": "Experience",
+    "education": "Education",
+    "skills": "Skills",
+    "contactNote": "// open to roles & collaborations",
+    "contact": "Contact"
+  },
+  "rawColor": {
+    "work": "Projects",
+    "workComment": "selected work",
+    "columns": {
+      "name": "name",
+      "what": "what",
+      "stack": "stack"
+    },
+    "experience": "Experience",
+    "role": "role",
+    "now": "now",
+    "at": "at",
+    "education": "education",
+    "skills": "Skills",
+    "contact": "Contact",
+    "contactNote": "Open to frontend roles and collaborations.",
+    "footerComment": "same content, different markup. try the other styles"
+  },
+  "brutalist": {
+    "greeting": "hello!!!",
+    "backToTop": "back to top",
+    "viewSource": "View source",
+    "nav": {
+      "about": "About",
+      "experience": "Experience",
+      "skills": "Skills",
+      "work": "All Projects",
+      "contact": "Contact"
+    },
+    "kickers": {
+      "altLang": "es",
+      "about": {
+        "main": "Information",
+        "alt": "Información"
+      },
+      "work": {
+        "main": "Selected Projects",
+        "alt": "Proyectos"
+      },
+      "experience": {
+        "main": "Experience",
+        "alt": "Experiencia"
+      },
+      "skills": {
+        "main": "Skills",
+        "alt": "Habilidades"
+      },
+      "contact": {
+        "main": "Contact",
+        "alt": "Contacto"
+      }
+    },
+    "currently": "Currently:",
+    "present": "Present",
+    "role": "Role",
+    "education": "Education:",
+    "contactNote": "Open to frontend roles and collaborations.",
+    "top": "Back to top"
+  }
+}

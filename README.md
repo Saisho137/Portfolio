@@ -2,7 +2,7 @@
 
 Portfolio personal: [santiago-betancur-duque.vercel.app](https://santiago-betancur-duque.vercel.app).
 
-Un solo contenido (`profile.json`) que se puede ver con tres estilos ("skins") bajo la misma URL: **raw-bw** (HTML crudo en blanco y negro, por defecto), **raw-color** (HTML crudo con etiquetas a color) y **brutalist** (inspirado en utrecht.jp). Todo con HTML y CSS nativos: sin Canvas, WebGL ni librerías de animación.
+Un solo contenido, en inglés (`/`) y español (`/es`), que se puede ver con tres estilos ("skins") bajo la misma URL: **raw-bw** (HTML crudo en blanco y negro, por defecto), **raw-color** (HTML crudo con etiquetas a color) y **brutalist** (inspirado en utrecht.jp). Todo con HTML y CSS nativos: sin Canvas, WebGL ni librerías de animación.
 
 ## Stack
 
@@ -50,9 +50,18 @@ Un solo contenido (`profile.json`) que se puede ver con tres estilos ("skins") b
 
 ### Contenido
 
-`src/content/profile.json` es la única fuente de verdad: perfil, about, proyectos, experiencia, educación, skills y enlaces. `src/content/index.ts` lo exporta tipado con `Profile` (si el JSON se desvía del esquema, falla `tsc`) junto con `SECTIONS`, los IDs de sección que comparten todas las skins (`about`, `work`, `experience`, `skills`, `contact`).
+`src/content/profile.{en,es}.json` son la única fuente de verdad: perfil, about, proyectos, experiencia, educación, skills y enlaces, uno por idioma. Ambos se tipan con `Profile` (si uno se desvía del esquema, falla `tsc`) y un test de paridad exige que URLs, fechas, ids de imagen, tags y cantidades coincidan: solo cambian los textos. `SECTION_IDS` son los IDs de sección que comparten todas las skins (`about`, `work`, `experience`, `skills`, `contact`).
 
-La metadata (`buildSiteMetadata` en el root layout), el JSON-LD (`WebSite` + `ProfilePage` + `Person`) y la imagen social (`src/app/opengraph-image.tsx`, generada en build) también salen de este JSON.
+La metadata (`buildSiteMetadata` en el layout), el JSON-LD (`WebSite` + `ProfilePage` + `Person`) y la imagen social (`src/app/[lang]/opengraph-image.tsx`, generada en build) salen del JSON de cada idioma.
+
+### Idiomas
+
+- **Rutas**: todo vive bajo `src/app/[lang]/` (`generateStaticParams` + `dynamicParams = false`): `/en` y `/es` se prerenderizan y cualquier otro segmento es 404. El inglés se sirve en `/` (la URL que Google ya tenía indexada) con un rewrite en `next.config.ts`, y `/en` redirige con 308 a `/` para no duplicar contenido. Todo lo aplica Vercel en el edge: no hay `proxy.ts` ni funciones.
+- **Sin detección automática**: no se redirige por `Accept-Language` (Googlebot casi nunca lo envía y Google desaconseja redirigir entre idiomas en URLs con contenido). El cambio es manual, con enlaces reales en cada skin (`<a hreflang lang>`, funcionan sin JS). Cambiar de idioma navega y vuelve a raw-bw.
+- **Textos de interfaz**: `src/i18n/dictionaries/{en,es}.json`; `en.json` define el tipo `Dictionary`, así que a `es.json` no le puede faltar una clave. `src/i18n/config.ts` tiene los idiomas, las rutas (`localePath`, `localeUrl`) y los enlaces de idioma.
+- **Server vs. cliente**: `getProfile` y `getDictionary` importan todos los idiomas y solo se usan en el servidor. Las skins lazy usan `loadProfile`/`loadDictionary` (`loaders.ts`), con un chunk por idioma: en `/es` nunca se descarga el inglés.
+- **SEO**: `<html lang>` por ruta, canonical por idioma, `hreflang` (`en`, `es`, `x-default` → `/`) en el `<head>` y en el sitemap, `og:locale` + `og:locale:alternate`, `inLanguage` en el JSON-LD (las entidades `WebSite` y `Person` son las mismas en ambos idiomas) e imagen social con texto y `alt` por idioma.
+- **404**: como el root layout está bajo `[lang]`, las URLs que no existen las atiende `src/app/global-not-found.tsx` (flag `experimental.globalNotFound`), bilingüe y con `lang`. Importa `globals.css` antes que su CSS Module: su CSS se incluye en todas las páginas y el orden de `@layer` lo fija la primera hoja.
 
 ### Skins
 
@@ -70,6 +79,7 @@ La metadata (`buildSiteMetadata` en el root layout), el JSON-LD (`WebSite` + `Pr
 ### Tema y accesibilidad
 
 - **Claro/oscuro**: por defecto sigue al sistema (`color-scheme: light dark`). Cada skin pinta con `light-dark()`, así que forzar `color-scheme` re-tematiza toda la página. El `ThemeToggle` (junto al selector de skins) guarda la elección en `localStorage` y la aplica en `<html data-theme>`. Un script inline en `<head>` (`src/utils/theme.ts`) la restaura antes del primer paint, sin flash. Sin JS, manda el sistema.
+- **Color de la UI del navegador**: las `<meta name="theme-color">` del viewport siguen al sistema con `media`. Con un tema elegido a mano se agrega otra meta sin `media` al inicio del `<head>` (el navegador usa la primera que aplica). Las de React no se editan: al hidratar, React agregaría copias.
 - **Preferencias del usuario**: `prefers-reduced-motion` desactiva animaciones y View Transitions; `prefers-contrast: more` quita la estática y refuerza los tonos atenuados; `forced-colors` (alto contraste de Windows) oculta los overlays y marca la skin activa con colores de sistema.
 - **Navegación**: skip link a `<main id="main">` (todas las skins lo tienen), foco visible, landmarks y radios nativos en el selector.
 - **Tests**: el contrato de skins corre `axe-core` sobre cada skin. El contraste se verifica en un navegador real (jsdom no calcula colores): todas las paletas cumplen WCAG AA en ambos temas.
@@ -80,14 +90,15 @@ El detalle de la decisión y las alternativas descartadas está en [`docs/design
 
 ```
 src/
-├── app/                  # App Router: layout (metadata), manifest, robots, sitemap, imágenes sociales
-│   └── (root)/           # Página principal
+├── app/                  # App Router: manifest, robots, sitemap, iconos, 404 global
+│   └── [lang]/           # Layout (metadata), página e imágenes sociales por idioma
 ├── assets/
 │   ├── fonts/og/         # TTF solo para la imagen social (next/og no lee woff2)
 │   └── images/projects/  # Screenshots, importados estáticamente
 ├── components/
 │   └── SkinSwitcher/     # Selector de skins (client)
-├── content/              # profile.json, tipos y registro de imágenes
+├── content/              # profile.{en,es}.json, tipos, loaders y registro de imágenes
+├── i18n/                 # Idiomas, rutas, diccionarios de UI y sus loaders
 ├── skins/                # Una carpeta por skin: componente, CSS Module y fuentes
 ├── styles/globals.css    # Reset, tokens y capas globales
 ├── test/                 # Utilidades de test compartidas (contrato de skins)
@@ -102,7 +113,7 @@ El dominio anterior (`portfolio-six-blond-30.vercel.app`) redirige con un 308 al
 
 ### Editar el contenido
 
-Solo se toca `src/content/profile.json`. Los campos opcionales (`description`, `url`, `tags`, fechas, `degree`, `email`) aparecen en las skins cuando tienen valor.
+Se tocan `src/content/profile.en.json` y `profile.es.json` (los textos traducidos; URLs, fechas, ids de imagen y tags iguales en ambos). Los textos de interfaz están en `src/i18n/dictionaries/`. Los campos opcionales (`description`, `url`, `tags`, fechas, `degree`, `email`) aparecen en las skins cuando tienen valor.
 
 Para agregar una imagen de proyecto:
 
@@ -114,9 +125,9 @@ Un id inexistente rompe el build, y hay tests que verifican que no queden imáge
 
 ### Agregar una skin
 
-1. Crear `src/skins/<nombre>/` con un componente `'use client'` exportado por defecto que lea `profile` y `SECTIONS` de `@/content`, su CSS Module dentro de `@layer skin` y sus fuentes con `next/font` y `preload: false`.
-2. Registrarla en `src/components/SkinSwitcher/skins.ts` (`SkinId`, `SKIN_LABELS`, `loaders`) y agregar su icono en `OPTIONS`.
-3. Agregar su spec usando `itFulfillsTheSkinContract` de `@/test/skinContract`: un `<h1>`, todas las secciones con su enlace en la nav principal y todo el contenido del JSON.
+1. Crear `src/skins/<nombre>/` con un componente `'use client'` exportado por defecto que reciba `SkinProps` (`profile`, `dict`, `lang`) y no importe `@/content` ni `@/i18n/dictionaries` (metería todos los idiomas en su chunk), su CSS Module dentro de `@layer skin` y sus fuentes con `next/font` y `preload: false`. Sus textos van en los diccionarios, y los enlaces de idioma salen de `getLanguageLinks`.
+2. Registrarla en `src/components/SkinSwitcher/skins.ts` (`SkinId`, `loaders`), su nombre en `settings.skins` de cada diccionario y agregar su icono en `OPTIONS`.
+3. Agregar su spec usando `itFulfillsTheSkinContract` de `@/test/skinContract`, que corre por idioma: un `<h1>`, todas las secciones con su enlace en la nav principal, todo el contenido del JSON, enlaces a cada idioma y ningún texto de otro idioma.
 
 ### Convenciones
 

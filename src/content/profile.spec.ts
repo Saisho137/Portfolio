@@ -1,8 +1,27 @@
 import { describe, expect, it } from 'vitest';
 
-import { getProjectImage, profile, projectImages, SECTIONS } from '.';
+import { LOCALES } from '@/i18n/config';
 
-describe('profile content', () => {
+import { getProjectImage, getProfile, projectImages, SECTION_IDS, type Profile } from '.';
+
+/** Everything that must not change between languages: only texts are translated */
+const languageNeutral = ({ name, links, projects, experience, education, skills }: Profile) => ({
+  name,
+  links,
+  projects: projects.map(({ name: project, url, image, tags }) => ({
+    project,
+    url,
+    image: image?.id,
+    tags
+  })),
+  experience: experience.map(({ company, url, start, end }) => ({ company, url, start, end })),
+  education: education.map(({ institution, url }) => ({ institution, url })),
+  skills: skills.length
+});
+
+describe.each(LOCALES)('profile content in "%s"', (lang) => {
+  const profile = getProfile(lang);
+
   it('has the required identity fields', () => {
     expect(profile.name).toBeTruthy();
     expect(profile.role).toBeTruthy();
@@ -31,8 +50,32 @@ describe('profile content', () => {
     });
   });
 
+  it('has unique project names and skills', () => {
+    const names = profile.projects.map((project) => project.name);
+
+    expect(new Set(names).size).toBe(names.length);
+    expect(new Set(profile.skills).size).toBe(profile.skills.length);
+  });
+});
+
+describe('profile translations', () => {
+  it('share every language-neutral field (URLs, dates, images, tags, counts)', () => {
+    const [reference, ...rest] = LOCALES.map((lang) => languageNeutral(getProfile(lang)));
+
+    rest.forEach((translation) => expect(translation).toEqual(reference));
+  });
+
+  it('are actually translated', () => {
+    const [en, es] = LOCALES.map(getProfile);
+
+    expect(es.summary).not.toBe(en.summary);
+    expect(es.role).not.toBe(en.role);
+  });
+});
+
+describe('project images', () => {
   it('has no unused images in the registry', () => {
-    const used = profile.projects.flatMap((project) => project.image?.id ?? []);
+    const used = getProfile('en').projects.flatMap((project) => project.image?.id ?? []);
 
     expect(Object.keys(projectImages).sort()).toEqual([...new Set(used)].sort());
   });
@@ -40,17 +83,10 @@ describe('profile content', () => {
   it('throws on unknown image ids', () => {
     expect(() => getProjectImage('does-not-exist')).toThrow(/does-not-exist/);
   });
+});
 
-  it('has unique project names and skills', () => {
-    const names = profile.projects.map((project) => project.name);
-
-    expect(new Set(names).size).toBe(names.length);
-    expect(new Set(profile.skills).size).toBe(profile.skills.length);
-  });
-
+describe('SECTION_IDS', () => {
   it('defines unique section ids', () => {
-    const ids = SECTIONS.map((section) => section.id);
-
-    expect(new Set(ids).size).toBe(ids.length);
+    expect(new Set(SECTION_IDS).size).toBe(SECTION_IDS.length);
   });
 });

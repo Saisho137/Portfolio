@@ -3,12 +3,26 @@ import { join } from 'node:path';
 
 import { ImageResponse } from 'next/og';
 
-import { profile } from '@/content';
-import { SITE_URL } from '@/utils/constants';
+import { getProfile } from '@/content';
+import { DEFAULT_LOCALE, hasLocale, localeUrl, type Locale } from '@/i18n/config';
+import { getDictionary } from '@/i18n/dictionaries';
+import { format } from '@/i18n/format';
 
-export const alt = `${profile.name} — ${profile.role}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
+
+// The file convention only accepts a static `alt`; this is how it varies per language.
+// Next hands the params here as a plain object (and as a promise to Image)
+const toLocale = (lang: string): Locale => (hasLocale(lang) ? lang : DEFAULT_LOCALE);
+
+export const generateImageMetadata = ({ params }: { params: { lang: string } }) => {
+  const lang = toLocale(params.lang);
+  const { name, role } = getProfile(lang);
+
+  return [
+    { id: 'card', alt: format(getDictionary(lang).og.alt, { name, role }), size, contentType }
+  ];
+};
 
 // next/og (satori) needs TTF/OTF data: it can't read the woff2 files next/font ships
 const FONTS_DIR = join(process.cwd(), 'src/assets/fonts/og');
@@ -21,12 +35,14 @@ const COLORS = {
 };
 
 /** Social card in the raw-bw style, prerendered at build time from profile.json */
-export default async function Image() {
+export default async function Image({ params }: { params: Promise<{ lang: string }> }) {
+  const lang = toLocale((await params).lang);
+  const profile = getProfile(lang);
   const [mono, sans] = await Promise.all([
     readFile(join(FONTS_DIR, 'FragmentMono-Regular.ttf')),
     readFile(join(FONTS_DIR, 'BricolageGrotesque-ExtraBold.ttf'))
   ]);
-  const host = new URL(SITE_URL).host;
+  const address = localeUrl(lang).replace('https://', '');
   const words = profile.name.toLowerCase().split(' ');
 
   return new ImageResponse(
@@ -97,7 +113,7 @@ export default async function Image() {
           }}
         >
           <span>{profile.role.toLowerCase()}</span>
-          <span style={{ color: COLORS.dim, fontSize: 22 }}>{host}</span>
+          <span style={{ color: COLORS.dim, fontSize: 22 }}>{address}</span>
         </div>
       </div>
     </div>,

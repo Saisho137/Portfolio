@@ -250,6 +250,12 @@
     & li {
       display: inline;
     }
+
+    /* Language links: the current one reads as selected text, not as a link */
+    & [aria-current='page'] {
+      font-weight: 700;
+      text-decoration: none;
+    }
   }
 
   /* raw <table border="1"> look */

@@ -1,11 +1,24 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { THEME_STORAGE_KEY } from '@/utils/theme';
+import { getDictionary } from '@/i18n/dictionaries';
+import { THEME_COLORS, THEME_STORAGE_KEY } from '@/utils/theme';
 
 import { mockMatchMedia } from '../../../vitest.setup';
 
 import ThemeToggle from './ThemeToggle';
+
+const labels = getDictionary('en').settings.theme;
+
+const renderToggle = () => render(<ThemeToggle labels={labels} />);
+
+const addThemeColorMetas = () =>
+  ['light', 'dark'].forEach((scheme) => {
+    const meta = document.createElement('meta');
+    meta.name = 'theme-color';
+    meta.setAttribute('media', `(prefers-color-scheme: ${scheme})`);
+    document.head.append(meta);
+  });
 
 const darkOS = () =>
   vi.stubGlobal(
@@ -16,24 +29,25 @@ const darkOS = () =>
 describe('ThemeToggle', () => {
   afterEach(() => {
     Reflect.deleteProperty(document, 'startViewTransition');
+    document.head.querySelectorAll('meta').forEach((meta) => meta.remove());
   });
 
   it('offers the opposite of the OS scheme when nothing is stored', () => {
     darkOS();
-    render(<ThemeToggle />);
+    renderToggle();
 
     expect(screen.getByRole('button', { name: 'Switch to light theme' })).toBeInTheDocument();
   });
 
   it('follows a theme already applied by the init script', () => {
     document.documentElement.dataset.theme = 'dark';
-    render(<ThemeToggle />);
+    renderToggle();
 
     expect(screen.getByRole('button', { name: 'Switch to light theme' })).toBeInTheDocument();
   });
 
   it('applies and persists the next theme on click', async () => {
-    render(<ThemeToggle />);
+    renderToggle();
 
     fireEvent.click(screen.getByRole('button', { name: 'Switch to dark theme' }));
     await act(() => Promise.resolve()); // MutationObserver notifies asynchronously
@@ -43,11 +57,28 @@ describe('ThemeToggle', () => {
     expect(screen.getByRole('button', { name: 'Switch to light theme' })).toBeInTheDocument();
   });
 
+  it('paints the browser UI (theme-color) with the chosen theme, whatever the OS says', () => {
+    addThemeColorMetas();
+    renderToggle();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Switch to dark theme' }));
+
+    expect(document.head.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.content).toBe(
+      THEME_COLORS.dark
+    );
+  });
+
+  it('uses the labels of the page language', () => {
+    render(<ThemeToggle labels={getDictionary('es').settings.theme} />);
+
+    expect(screen.getByRole('button', { name: 'Cambiar a tema oscuro' })).toBeInTheDocument();
+  });
+
   it('still applies the theme when storage is blocked', () => {
     vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
       throw new Error('blocked');
     });
-    render(<ThemeToggle />);
+    renderToggle();
 
     fireEvent.click(screen.getByRole('button'));
 
@@ -57,7 +88,7 @@ describe('ThemeToggle', () => {
   it('animates with a View Transition unless reduced motion is requested', () => {
     const startViewTransition = vi.fn((update: () => void) => update());
     Object.assign(document, { startViewTransition });
-    const { unmount } = render(<ThemeToggle />);
+    const { unmount } = renderToggle();
 
     fireEvent.click(screen.getByRole('button'));
     expect(startViewTransition).toHaveBeenCalledTimes(1);
@@ -67,7 +98,7 @@ describe('ThemeToggle', () => {
       'matchMedia',
       mockMatchMedia((q) => q.includes('reduce'))
     );
-    render(<ThemeToggle />);
+    renderToggle();
     fireEvent.click(screen.getByRole('button'));
     expect(startViewTransition).toHaveBeenCalledTimes(1);
   });

@@ -1,5 +1,10 @@
 import type { ComponentType } from 'react';
 
+import { loadProfile } from '@/content/loaders';
+import type { Locale } from '@/i18n/config';
+import { loadDictionary } from '@/i18n/loaders';
+import type { SkinProps } from '@/skins/types';
+
 export type SkinId = 'raw-bw' | 'raw-color' | 'brutalist';
 export type LazySkinId = Exclude<SkinId, 'raw-bw'>;
 
@@ -7,39 +12,42 @@ export const DEFAULT_SKIN = 'raw-bw' satisfies SkinId;
 
 export const isLazySkin = (id: SkinId): id is LazySkinId => id !== DEFAULT_SKIN;
 
-export const SKIN_LABELS: Record<SkinId, string> = {
-  'raw-bw': 'Raw HTML, black and white',
-  'raw-color': 'Raw HTML, color',
-  brutalist: 'Brutalist'
-};
-
 /**
  * Dynamic imports = separate chunks (JS + CSS + fonts) that are only fetched
  * when called. The bundler caches each module after its first import().
  */
-export const loaders: Record<LazySkinId, () => Promise<{ default: ComponentType }>> = {
+export const loaders: Record<LazySkinId, () => Promise<{ default: ComponentType<SkinProps> }>> = {
   'raw-color': () => import('@/skins/raw-color/RawColorSkin'),
   brutalist: () => import('@/skins/brutalist/BrutalistSkin')
 };
 
-// Resolved components are handed to the switcher already loaded. Unlike React.lazy
-// this never suspends, so the View Transition snapshot always contains the new skin.
-const resolved = new Map<LazySkinId, ComponentType>();
-const pending = new Map<LazySkinId, Promise<ComponentType>>();
+/** A lazy skin ready to render: its component plus the content of one language */
+export interface LoadedSkin {
+  Component: ComponentType<SkinProps>;
+  props: SkinProps;
+}
 
-export const loadSkin = (id: LazySkinId): Promise<ComponentType> => {
-  const cached = resolved.get(id);
+// Resolved skins are handed to the switcher already loaded. Unlike React.lazy
+// this never suspends, so the View Transition snapshot always contains the new skin.
+const resolved = new Map<string, LoadedSkin>();
+const pending = new Map<string, Promise<LoadedSkin>>();
+
+/** Skin chunk, profile and dictionary in parallel; only the active language is fetched */
+export const loadSkin = (id: LazySkinId, lang: Locale): Promise<LoadedSkin> => {
+  const key = `${id}:${lang}`;
+  const cached = resolved.get(key);
   if (cached) return Promise.resolve(cached);
 
-  let request = pending.get(id);
+  let request = pending.get(key);
   if (!request) {
-    request = loaders[id]()
-      .then((module) => {
-        resolved.set(id, module.default);
-        return module.default;
+    request = Promise.all([loaders[id](), loadProfile(lang), loadDictionary(lang)])
+      .then(([module, profile, dict]) => {
+        const skin = { Component: module.default, props: { profile, dict, lang } };
+        resolved.set(key, skin);
+        return skin;
       })
-      .finally(() => pending.delete(id));
-    pending.set(id, request);
+      .finally(() => pending.delete(key));
+    pending.set(key, request);
   }
 
   return request;

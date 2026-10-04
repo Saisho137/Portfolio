@@ -2,8 +2,9 @@
 
 import { FC } from 'react';
 
-import { profile, SECTIONS } from '@/content';
-import { SITE_URL } from '@/utils/constants';
+import { SECTION_IDS } from '@/content/sections';
+import { getLanguageLinks, localeUrl } from '@/i18n/config';
+import type { SkinProps } from '@/skins/types';
 
 import { mono, serif } from './fonts';
 
@@ -14,8 +15,9 @@ import styles from './RawColorSkin.module.css';
  * Elements with `data-t` print their own open/close tags (and `data-a` attributes)
  * through ::before/::after; the decoration is hidden from assistive tech in CSS.
  */
-const RawColorSkin: FC = () => {
+const RawColorSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
   const { name, role, summary, about, links, projects, experience, education, skills } = profile;
+  const t = dict.rawColor;
   const year = new Date().getFullYear();
   const showDescription = projects.some((project) => project.description);
   const showStack = projects.some((project) => project.tags?.length);
@@ -24,7 +26,7 @@ const RawColorSkin: FC = () => {
     <div className={`${styles.skin} ${mono.variable} ${serif.variable}`}>
       <div className={styles.chrome} aria-hidden='true'>
         <span>
-          view-source:<b>{SITE_URL}</b>
+          view-source:<b>{localeUrl(lang)}</b>
         </span>
       </div>
 
@@ -46,12 +48,30 @@ const RawColorSkin: FC = () => {
 
       <div className={styles.b} data-t='body'>
         <header className={styles.b} data-t='header'>
-          <nav className={styles.b} data-t='nav' aria-label='Primary'>
+          <nav className={styles.b} data-t='nav' aria-label={dict.nav.primary}>
             <ul className={`${styles.b} ${styles.navList}`} data-t='ul'>
-              {SECTIONS.map(({ id, label }) => (
+              {SECTION_IDS.map((id) => (
                 <li key={id} className={styles.i} data-t='li'>
                   <a data-t='a' data-a={` href="#${id}"`} href={`#${id}`}>
-                    {label}
+                    {dict.sections[id]}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <nav className={styles.b} data-t='nav' aria-label={dict.nav.language}>
+            <ul className={`${styles.b} ${styles.navList}`} data-t='ul'>
+              {getLanguageLinks(lang).map(({ locale, href, name: language, current }) => (
+                <li key={locale} className={styles.i} data-t='li'>
+                  <a
+                    data-t='a'
+                    data-a={` hreflang="${locale}"`}
+                    href={href}
+                    hrefLang={locale}
+                    lang={locale}
+                    aria-current={current ? 'page' : undefined}
+                  >
+                    {language}
                   </a>
                 </li>
               ))}
@@ -78,19 +98,19 @@ const RawColorSkin: FC = () => {
 
           <section id='work' className={styles.b} data-t='section' data-a=' id="work"'>
             <h2 className={styles.i} data-t='h2'>
-              Projects
+              {t.work}
             </h2>
             <span className={styles.comment} aria-hidden='true'>
-              &lt;!-- selected work --&gt;
+              &lt;!-- {t.workComment} --&gt;
             </span>
             <div className={styles.b} data-t='table' data-a=' border="1"'>
               <table className={styles.table}>
                 <thead>
                   <tr>
                     <th scope='col'>#</th>
-                    <th scope='col'>name</th>
-                    {showDescription && <th scope='col'>what</th>}
-                    {showStack && <th scope='col'>stack</th>}
+                    <th scope='col'>{t.columns.name}</th>
+                    {showDescription && <th scope='col'>{t.columns.what}</th>}
+                    {showStack && <th scope='col'>{t.columns.stack}</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -113,16 +133,16 @@ const RawColorSkin: FC = () => {
 
           <section id='experience' className={styles.b} data-t='section' data-a=' id="experience"'>
             <h2 className={styles.i} data-t='h2'>
-              Experience
+              {t.experience}
             </h2>
             <dl className={`${styles.b} ${styles.dl}`} data-t='dl'>
               {experience.map((job) => (
                 <div key={`${job.company}-${job.role}`}>
                   <dt className={styles.i} data-t='dt'>
-                    {job.start || job.end ? `${job.start ?? ''} — ${job.end ?? 'now'}` : 'role'}
+                    {job.start || job.end ? `${job.start ?? ''} — ${job.end ?? t.now}` : t.role}
                   </dt>
                   <dd className={styles.i} data-t='dd'>
-                    <strong>{job.role}</strong> at{' '}
+                    <strong>{job.role}</strong> {t.at}{' '}
                     {job.url ? (
                       <a data-t='a' href={job.url}>
                         {job.company}
@@ -136,7 +156,7 @@ const RawColorSkin: FC = () => {
               {education.map((item) => (
                 <div key={item.institution}>
                   <dt className={styles.i} data-t='dt'>
-                    education
+                    {t.education}
                   </dt>
                   <dd className={styles.i} data-t='dd'>
                     {item.degree && <>{item.degree} — </>}
@@ -155,7 +175,7 @@ const RawColorSkin: FC = () => {
 
           <section id='skills' className={styles.b} data-t='section' data-a=' id="skills"'>
             <h2 className={styles.i} data-t='h2'>
-              Skills
+              {t.skills}
             </h2>
             <ul className={`${styles.b} ${styles.skills}`} data-t='ul'>
               {skills.map((skill) => (
@@ -166,10 +186,10 @@ const RawColorSkin: FC = () => {
 
           <section id='contact' className={styles.b} data-t='section' data-a=' id="contact"'>
             <h2 className={styles.i} data-t='h2'>
-              Contact
+              {t.contact}
             </h2>
             <p className={styles.i} data-t='p'>
-              Open to frontend roles and collaborations.
+              {t.contactNote}
             </p>
             <ul className={styles.contact}>
               {links.email && (
@@ -198,7 +218,7 @@ const RawColorSkin: FC = () => {
             © {year} {name}
           </p>
           <span className={styles.comment} aria-hidden='true'>
-            &lt;!-- same content, different markup. try the other styles --&gt;
+            &lt;!-- {t.footerComment} --&gt;
           </span>
         </footer>
       </div>

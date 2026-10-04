@@ -2,7 +2,10 @@
 
 import { FC } from 'react';
 
-import { profile } from '@/content';
+import type { SectionId } from '@/content/types';
+import { getLanguageLinks } from '@/i18n/config';
+import type { Dictionary } from '@/i18n/dictionaries';
+import type { SkinProps } from '@/skins/types';
 
 import { hand, sans } from './fonts';
 
@@ -15,11 +18,21 @@ const initials = (name: string) =>
     .join('')
     .toLowerCase();
 
+/** Bilingual label in the utrecht.jp way: active language first, the other one after */
+const Kicker: FC<{ kickers: Dictionary['brutalist']['kickers']; id: SectionId }> = ({
+  kickers,
+  id
+}) => (
+  <>
+    {kickers[id].main} / <span lang={kickers.altLang}>{kickers[id].alt}</span>
+  </>
+);
+
 /** Hand-drawn monitor; each path is stroked in with stroke-dashoffset on mount */
-const Doodle: FC = () => (
+const Doodle: FC<{ greeting: string }> = ({ greeting }) => (
   <svg className={styles.doodle} viewBox='0 0 420 380' aria-hidden='true'>
     <text x='40' y='70' transform='rotate(-4 40 70)'>
-      ¡hola!!!
+      {greeting}
     </text>
     <path
       className={styles.draw}
@@ -41,8 +54,9 @@ const Doodle: FC = () => (
  * Brutalist skin inspired by utrecht.jp, loaded on demand by the SkinSwitcher:
  * one ink color on paper, 1px rules as structure, catalogue-like listings.
  */
-const BrutalistSkin: FC = () => {
+const BrutalistSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
   const { name, role, summary, about, links, projects, experience, education, skills } = profile;
+  const t = dict.brutalist;
   const [currentJob] = experience;
   const year = new Date().getFullYear();
 
@@ -56,7 +70,7 @@ const BrutalistSkin: FC = () => {
       </svg>
 
       <aside className={styles.rail}>
-        <a className={styles.logo} href='#about' aria-label={`${name}, back to top`}>
+        <a className={styles.logo} href='#about' aria-label={`${name}, ${t.backToTop}`}>
           <span className={styles.logoWord}>{initials(name)}.</span>
           <svg viewBox='0 0 120 92' aria-hidden='true'>
             <path d='M6 10 Q60 2 114 10 L112 66 Q60 60 8 66 Z' />
@@ -68,16 +82,31 @@ const BrutalistSkin: FC = () => {
           <span>
             {name} / {role}
           </span>
-          <a href={links.github}>↓ {links.github.replace('https://', '')} / View source</a>
+          <a href={links.github}>
+            ↓ {links.github.replace('https://', '')} / {t.viewSource}
+          </a>
         </p>
       </aside>
 
       <header className={styles.masthead}>
-        <nav aria-label='Primary'>
+        <nav className={styles.languages} aria-label={dict.nav.language}>
+          {getLanguageLinks(lang).map(({ locale, href, name: language, current }) => (
+            <a
+              key={locale}
+              href={href}
+              hrefLang={locale}
+              lang={locale}
+              aria-current={current ? 'page' : undefined}
+            >
+              {language}
+            </a>
+          ))}
+        </nav>
+        <nav aria-label={dict.nav.primary}>
           <div className={styles.row}>
-            <a href='#about'>About</a>
-            <a href='#experience'>Experience</a>
-            <a href='#skills'>Skills</a>
+            <a href='#about'>{t.nav.about}</a>
+            <a href='#experience'>{t.nav.experience}</a>
+            <a href='#skills'>{t.nav.skills}</a>
             {links.email && <a href={`mailto:${links.email}`}>{links.email}</a>}
             <div className={styles.rowEnd}>
               <a href={links.linkedin}>LinkedIn</a>
@@ -85,10 +114,10 @@ const BrutalistSkin: FC = () => {
             </div>
           </div>
           <div className={`${styles.row} ${styles.rowPrimary}`}>
-            <a href='#work'>All Projects</a>
+            <a href='#work'>{t.nav.work}</a>
             <div className={styles.rowEnd}>
               <a className={styles.btn} href='#contact'>
-                Contact ( → )
+                {t.nav.contact} ( → )
               </a>
             </div>
           </div>
@@ -98,11 +127,11 @@ const BrutalistSkin: FC = () => {
       <main id='main' className={styles.main}>
         <section id='about' className={styles.entry}>
           <div className={styles.doodleWrap}>
-            <Doodle />
+            <Doodle greeting={t.greeting} />
           </div>
           <div>
             <p className={styles.kicker}>
-              <span lang='es'>Información</span> / Information
+              <Kicker kickers={t.kickers} id='about' />
             </p>
             <h1 className={styles.title}>{name}</h1>
             <p className={styles.lede}>
@@ -115,7 +144,7 @@ const BrutalistSkin: FC = () => {
             <dl className={styles.credits}>
               {currentJob && (
                 <div>
-                  <dt>Currently:</dt>
+                  <dt>{t.currently}</dt>
                   <dd>
                     {currentJob.role} @{' '}
                     {currentJob.url ? (
@@ -134,7 +163,7 @@ const BrutalistSkin: FC = () => {
           <div className={styles.listing}>
             <div className={styles.listingHead}>
               <h2 className={styles.kicker}>
-                <span lang='es'>Proyectos</span> / Selected Projects
+                <Kicker kickers={t.kickers} id='work' />
               </h2>
               <span aria-hidden='true'>( {String(projects.length).padStart(2, '0')} )</span>
             </div>
@@ -168,13 +197,13 @@ const BrutalistSkin: FC = () => {
         <div className={styles.entry}>
           <section id='experience'>
             <h2 className={styles.kicker}>
-              <span lang='es'>Experiencia</span> / Experience
+              <Kicker kickers={t.kickers} id='experience' />
             </h2>
             <dl className={styles.credits}>
               {experience.map((job) => (
                 <div key={`${job.company}-${job.role}`}>
                   <dt>
-                    {job.start || job.end ? `${job.start ?? ''} — ${job.end ?? 'Present'}` : 'Role'}
+                    {job.start || job.end ? `${job.start ?? ''} — ${job.end ?? t.present}` : t.role}
                   </dt>
                   <dd>
                     <strong>{job.role}</strong>,{' '}
@@ -184,7 +213,7 @@ const BrutalistSkin: FC = () => {
               ))}
               {education.map((item) => (
                 <div key={item.institution}>
-                  <dt>Education:</dt>
+                  <dt>{t.education}</dt>
                   <dd>
                     {item.degree && (
                       <>
@@ -200,7 +229,7 @@ const BrutalistSkin: FC = () => {
           </section>
           <section id='skills'>
             <h2 className={styles.kicker}>
-              <span lang='es'>Habilidades</span> / Skills
+              <Kicker kickers={t.kickers} id='skills' />
             </h2>
             <ul className={styles.tags}>
               {skills.map((skill) => (
@@ -212,7 +241,7 @@ const BrutalistSkin: FC = () => {
 
         <section id='contact' className={styles.entry}>
           <h2 className={styles.kicker}>
-            <span lang='es'>Contacto</span> / Contact
+            <Kicker kickers={t.kickers} id='contact' />
           </h2>
           <div>
             <ul className={styles.bigLinks}>
@@ -228,7 +257,7 @@ const BrutalistSkin: FC = () => {
                 <a href={links.github}>GitHub</a>
               </li>
             </ul>
-            <p>Open to frontend roles and collaborations.</p>
+            <p>{t.contactNote}</p>
           </div>
         </section>
       </main>
@@ -237,7 +266,7 @@ const BrutalistSkin: FC = () => {
         <span>
           © {year} {name}
         </span>
-        <a href='#about'>↑ Back to top</a>
+        <a href='#about'>↑ {t.top}</a>
         <div className={styles.rowEnd}>
           <a href={links.linkedin}>LinkedIn</a>
           <a href={links.github}>GitHub</a>

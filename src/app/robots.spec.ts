@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { HOME_URL, SITE_URL } from '@/utils/constants';
+import { SITE_URL } from '@/utils/constants';
 
 import robots from './robots';
 import sitemap from './sitemap';
@@ -15,7 +15,12 @@ describe('robots.txt', () => {
 });
 
 describe('sitemap.xml', () => {
-  it('lists the canonical home URL without a per-build lastmod', () => {
-    expect(sitemap()).toEqual([{ url: HOME_URL }]);
+  it('lists each language canonical with every hreflang version, without lastmod', () => {
+    const languages = { en: SITE_URL, es: `${SITE_URL}/es`, 'x-default': SITE_URL };
+
+    expect(sitemap()).toEqual([
+      { url: SITE_URL, alternates: { languages } },
+      { url: `${SITE_URL}/es`, alternates: { languages } }
+    ]);
   });
 });
