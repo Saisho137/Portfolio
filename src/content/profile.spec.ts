@@ -58,6 +58,10 @@ describe.each(LOCALES)('profile content in "%s"', (lang) => {
     expect(starts).toEqual([...starts].sort().reverse());
   });
 
+  it('uses no emoji (they render inconsistently across the skins fonts)', () => {
+    expect(JSON.stringify(profile)).not.toMatch(/\p{Extended_Pictographic}/u);
+  });
+
   it('has unique project names and skills', () => {
     const names = profile.projects.map((project) => project.name);
 
