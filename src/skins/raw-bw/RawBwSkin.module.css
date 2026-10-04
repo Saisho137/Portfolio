@@ -272,6 +272,19 @@
         filter: none;
       }
     }
+
+    /* Touch screens can't hover: the shot turns to color while it crosses the middle of
+       the viewport. Without scroll-driven animations or with reduced motion: always color */
+    @media (hover: none) {
+      filter: none;
+
+      @supports (animation-timeline: view()) {
+        @media (prefers-reduced-motion: no-preference) {
+          animation: colorize linear both;
+          animation-timeline: view();
+        }
+      }
+    }
   }
 
   .placeholder {
@@ -433,5 +446,18 @@
 @keyframes blink {
   50% {
     opacity: 0;
+  }
+}
+
+/* Gray at the edges of the viewport, full color around its middle */
+@keyframes colorize {
+  0%,
+  100% {
+    filter: grayscale(1) contrast(1.05);
+  }
+
+  35%,
+  65% {
+    filter: none;
   }
 }
