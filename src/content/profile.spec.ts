@@ -50,6 +50,14 @@ describe.each(LOCALES)('profile content in "%s"', (lang) => {
     });
   });
 
+  it('dates positions as YYYY-MM, newest first', () => {
+    const dates = profile.experience.flatMap(({ start, end }) => [start, end]).filter(Boolean);
+    const starts = profile.experience.map(({ start }) => start ?? '');
+
+    dates.forEach((date) => expect(date).toMatch(/^\d{4}-(0[1-9]|1[0-2])$/));
+    expect(starts).toEqual([...starts].sort().reverse());
+  });
+
   it('has unique project names and skills', () => {
     const names = profile.projects.map((project) => project.name);
 
@@ -69,7 +77,7 @@ describe('profile translations', () => {
     const [en, es] = LOCALES.map(getProfile);
 
     expect(es.summary).not.toBe(en.summary);
-    expect(es.role).not.toBe(en.role);
+    es.about.forEach((paragraph, index) => expect(paragraph).not.toBe(en.about[index]));
   });
 });
 

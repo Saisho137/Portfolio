@@ -55,7 +55,7 @@
     "education": "education",
     "skills": "Skills",
     "contact": "Contact",
-    "contactNote": "Open to frontend roles and collaborations.",
+    "contactNote": "Open to roles and collaborations.",
     "footerComment": "same content, different markup. try the other styles"
   },
   "brutalist": {
@@ -96,7 +96,7 @@
     "present": "Present",
     "role": "Role",
     "education": "Education:",
-    "contactNote": "Open to frontend roles and collaborations.",
+    "contactNote": "Open to roles and collaborations.",
     "top": "Back to top"
   }
 }

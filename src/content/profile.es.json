@@ -1,60 +1,84 @@
 {
   "name": "Santiago Betancur Duque",
-  "role": "Desarrollador Frontend",
-  "summary": "Desarrollador Frontend con experiencia en React, Next.js, SEO y optimización de rendimiento. Me apasiona construir aplicaciones web rápidas y accesibles.",
+  "role": "Senior Software Engineer",
+  "summary": "Senior Software Engineer que entrega productos web rápidos, accesibles y seguros de punta a punta: React, Next.js y Angular, y servicios Spring Boot en AWS.",
   "about": [
-    "👋 ¡Hola! Soy Ingeniero en Ciencias de la Computación y Desarrollador Frontend con experiencia construyendo aplicaciones web responsive, accesibles, seguras y optimizadas para SEO con tecnologías como Angular y React.",
-    "🌟 Me apasiona resolver problemas complejos con soluciones concisas, enfocadas en crear experiencias fluidas y fáciles de usar. Disfruto colaborar en equipo para llevar los proyectos al éxito."
+    "👋 ¡Hola! Soy Ingeniero Informático y desarrollador full-stack de Medellín, Colombia, con más de 2 años y medio entregando software en producción en Pragma, desde interfaces en React, Next.js y Angular hasta servicios reactivos en Spring Boot sobre AWS.",
+    "🔎 Soy un solucionador de problemas, curioso por naturaleza: profundizo en la necesidad del negocio, diseño la solución correcta y la construyo con Arquitectura Limpia, EDA y DDD, con resultados medibles en rendimiento, seguridad y SEO.",
+    "🤝 Fui mentor en 3 ediciones del bootcamp full-stack de Pragma (más de 30 estudiantes contratados) y cofundé la iniciativa de IA del capítulo Frontend. Doble certificación AWS: Cloud Practitioner y AI Practitioner."
   ],
   "links": {
     "github": "https://github.com/Saisho137",
-    "linkedin": "https://www.linkedin.com/in/santiago-betancur-duque-79548024b/"
+    "linkedin": "https://www.linkedin.com/in/santiago-betancur-duque",
+    "email": "santib.2001@hotmail.com"
   },
   "projects": [
     {
       "name": "Agenda Comfama",
+      "description": "Blog de agenda cultural para un gran cliente colombiano: +22,66% de usuarios nuevos, +29,25% de sesiones con interacción y +34,45% de tiempo de interacción en 3 meses.",
+      "url": "https://www.comfama.com/agenda/",
       "image": {
         "id": "agenda-comfama",
         "alt": "Captura de pantalla de Agenda Comfama"
-      }
+      },
+      "tags": ["Gatsby", "GraphQL", "Contentful", "SEO", "ARIA"]
     },
     {
-      "name": "Perfilador Financiero"
-    },
-    {
-      "name": "BeatHub",
-      "image": {
-        "id": "beathub",
-        "alt": "Captura de pantalla de BeatHub"
-      }
+      "name": "Arka",
+      "description": "Backend para un distribuidor B2B de accesorios de PC: 9 microservicios dirigidos por eventos con sagas, CQRS y patrón outbox, bajo Arquitectura Limpia.",
+      "url": "https://github.com/Saisho137/Arka",
+      "tags": ["Java", "Spring WebFlux", "Kafka", "PostgreSQL", "MongoDB", "AWS"]
     }
   ],
   "experience": [
     {
-      "role": "Desarrollador Frontend",
+      "role": "Senior Software Engineer",
       "company": "Pragma",
-      "url": "https://www.pragma.co/es"
+      "url": "https://www.pragma.co/",
+      "start": "2026-03"
+    },
+    {
+      "role": "Desarrollador Full-Stack Mid-Senior",
+      "company": "Pragma",
+      "url": "https://www.pragma.co/",
+      "start": "2024-11",
+      "end": "2026-03"
+    },
+    {
+      "role": "Desarrollador Frontend (Practicante → Junior)",
+      "company": "Pragma",
+      "url": "https://www.pragma.co/",
+      "start": "2024-02",
+      "end": "2024-11"
     }
   ],
   "education": [
     {
-      "institution": "Unilasallista Corporacion Universitaria",
-      "url": "https://www.unilasallista.edu.co"
+      "institution": "Unilasallista Corporación Universitaria",
+      "url": "https://www.unilasallista.edu.co",
+      "degree": "Ingeniería Informática"
     }
   ],
   "skills": [
-    "SEO",
+    "TypeScript",
+    "JavaScript",
+    "Java",
     "React",
     "Next.js",
-    "Node.js",
     "Angular",
-    "HTML",
-    "CSS",
-    "Sass",
-    "JavaScript",
-    "TypeScript",
+    "Node.js",
+    "Spring Boot",
+    "Spring WebFlux",
+    "PostgreSQL",
+    "MongoDB",
+    "AWS",
+    "Terraform",
+    "Docker",
+    "Arquitectura limpia",
+    "Microservicios",
+    "SEO",
     "Core Web Vitals",
     "Accesibilidad web",
-    "Optimización de rendimiento"
+    "Testing"
   ]
 }

@@ -1,15 +1,13 @@
 import type { StaticImageData } from 'next/image';
 
 import agendaComfama from '@/assets/images/projects/agenda-comfama.png';
-import beathub from '@/assets/images/projects/beathub.png';
 
 /**
  * Static imports give next/image the intrinsic size, a blur placeholder and a
  * content-hashed file. profile.json references these by id.
  */
 export const projectImages: Record<string, StaticImageData> = {
-  'agenda-comfama': agendaComfama,
-  beathub
+  'agenda-comfama': agendaComfama
 };
 
 export const getProjectImage = (id: string): StaticImageData => {
