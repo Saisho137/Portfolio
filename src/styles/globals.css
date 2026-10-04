@@ -125,6 +125,24 @@
     }
   }
 
+  /* CopyEmail feedback: sits after the link in a fixed, readable size whatever the skin */
+  .copy-status {
+    display: inline-block;
+    margin-inline-start: 0.75ch;
+    font:
+      600 1rem / 1.4 system-ui,
+      sans-serif;
+    letter-spacing: normal;
+    text-transform: none;
+    vertical-align: middle;
+
+    /* Out of the flow (no gap in flex rows) but still in the accessibility tree, so the
+       live region already exists when the message arrives */
+    &:empty {
+      position: absolute;
+    }
+  }
+
   .visually-hidden {
     position: absolute;
     width: 1px;

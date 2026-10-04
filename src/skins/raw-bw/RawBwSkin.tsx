@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { FC } from 'react';
 
-import { EmailAddress } from '@/components/EmailAddress';
+import { CopyEmail } from '@/components/CopyEmail';
 import { getProjectImage, SECTION_IDS } from '@/content';
 import { getLanguageLinks } from '@/i18n/config';
 import { formatPeriod } from '@/i18n/format';
@@ -157,9 +157,7 @@ const RawBwSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
           <ul className={styles.contactLinks}>
             {links.email && (
               <li>
-                <a href={`mailto:${links.email}`}>
-                  <EmailAddress email={links.email} />
-                </a>
+                <CopyEmail email={links.email} labels={dict.email} />
               </li>
             )}
             <li>

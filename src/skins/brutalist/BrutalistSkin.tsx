@@ -2,7 +2,7 @@
 
 import { FC } from 'react';
 
-import { EmailAddress } from '@/components/EmailAddress';
+import { CopyEmail } from '@/components/CopyEmail';
 import type { SectionId } from '@/content/types';
 import { getLanguageLinks } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/dictionaries';
@@ -109,7 +109,7 @@ const BrutalistSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
             <a href='#about'>{t.nav.about}</a>
             <a href='#experience'>{t.nav.experience}</a>
             <a href='#skills'>{t.nav.skills}</a>
-            {links.email && <a href={`mailto:${links.email}`}>{links.email}</a>}
+            {links.email && <CopyEmail email={links.email} labels={dict.email} />}
             <div className={styles.rowEnd}>
               <a href={links.linkedin}>LinkedIn</a>
               <a href={links.github}>GitHub</a>
@@ -247,9 +247,7 @@ const BrutalistSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
             <ul className={styles.bigLinks}>
               {links.email && (
                 <li>
-                  <a href={`mailto:${links.email}`}>
-                    <EmailAddress email={links.email} />
-                  </a>
+                  <CopyEmail email={links.email} labels={dict.email} />
                 </li>
               )}
               <li>

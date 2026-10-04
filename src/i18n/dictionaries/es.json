@@ -4,6 +4,10 @@
     "primary": "Principal",
     "language": "Idioma"
   },
+  "email": {
+    "copy": "Copiar el correo",
+    "copied": "Correo copiado"
+  },
   "sections": {
     "about": "sobre mí",
     "work": "proyectos",
