@@ -161,6 +161,12 @@
     gap: 0.25rem 1.5rem;
   }
 
+  /* Language links: the current one reads as selected text, not as a link */
+  .nav [aria-current='page'] {
+    font-weight: 700;
+    text-decoration: none;
+  }
+
   .main {
     display: grid;
     gap: var(--pad);

@@ -149,6 +149,20 @@
     }
   }
 
+  /* Language links: a thin row on top of the masthead, the current one in bold */
+  .languages {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.25rem;
+    padding-block: 0.6rem;
+    border-bottom: var(--line);
+    font-size: var(--step-0);
+
+    & [aria-current='page'] {
+      font-weight: 700;
+    }
+  }
+
   .btn {
     display: inline-flex;
     align-items: center;

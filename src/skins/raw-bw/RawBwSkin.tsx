@@ -1,7 +1,9 @@
 import Image from 'next/image';
 import { FC } from 'react';
 
-import { getProjectImage, profile, SECTIONS } from '@/content';
+import { getProjectImage, SECTION_IDS } from '@/content';
+import { getLanguageLinks } from '@/i18n/config';
+import type { SkinProps } from '@/skins/types';
 
 import { mono, sans } from './fonts';
 
@@ -12,18 +14,35 @@ import styles from './RawBwSkin.module.css';
  * Every element with `data-el` is drawn as a DevTools-like inspected box,
  * with the selector printed on its corner (decoration hidden from AT in CSS).
  */
-const RawBwSkin: FC = () => {
+const RawBwSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
   const { name, role, summary, about, links, projects, experience, education, skills } = profile;
+  const t = dict.rawBw;
   const year = new Date().getFullYear();
 
   return (
     <div className={`${styles.skin} ${mono.variable} ${sans.variable}`}>
       <header className={styles.bar} data-el='header.bar'>
-        <nav className={styles.flat} data-el='nav' aria-label='Primary'>
+        <nav className={styles.flat} data-el='nav' aria-label={dict.nav.primary}>
           <ul className={styles.nav}>
-            {SECTIONS.map(({ id, label }) => (
+            {SECTION_IDS.map((id) => (
               <li key={id}>
-                <a href={`#${id}`}>{label}</a>
+                <a href={`#${id}`}>{dict.sections[id]}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <nav className={styles.flat} data-el='nav.lang' aria-label={dict.nav.language}>
+          <ul className={styles.nav}>
+            {getLanguageLinks(lang).map(({ locale, href, name: language, current }) => (
+              <li key={locale}>
+                <a
+                  href={href}
+                  hrefLang={locale}
+                  lang={locale}
+                  aria-current={current ? 'page' : undefined}
+                >
+                  {language}
+                </a>
               </li>
             ))}
           </ul>
@@ -56,7 +75,7 @@ const RawBwSkin: FC = () => {
         </section>
 
         <section id='work' data-el='section#work'>
-          <h2>Selected work</h2>
+          <h2>{t.work}</h2>
           <div className={styles.grid}>
             {projects.map((project) => (
               <article key={project.name} className={styles.card} data-el='article.card'>
@@ -70,7 +89,7 @@ const RawBwSkin: FC = () => {
                   />
                 ) : (
                   <div className={`${styles.shot} ${styles.placeholder}`} aria-hidden='true'>
-                    no image
+                    {t.noImage}
                   </div>
                 )}
                 <h3>{project.name}</h3>
@@ -80,7 +99,8 @@ const RawBwSkin: FC = () => {
                     {project.tags && <span>{project.tags.join(' · ')}</span>}
                     {project.url && (
                       <a href={project.url}>
-                        view<span className='visually-hidden'> {project.name}</span> →
+                        {t.view}
+                        <span className='visually-hidden'> {project.name}</span> →
                       </a>
                     )}
                   </div>
@@ -92,13 +112,13 @@ const RawBwSkin: FC = () => {
 
         <div className={styles.cols}>
           <section id='experience' data-el='section#experience'>
-            <h2>Experience</h2>
+            <h2>{t.experience}</h2>
             <ol className={styles.timeline}>
               {experience.map((job) => (
                 <li key={`${job.company}-${job.role}`}>
                   {(job.start || job.end) && (
                     <span className={styles.dim}>
-                      {job.start} — {job.end ?? 'now'}
+                      {job.start} — {job.end ?? t.now}
                     </span>
                   )}
                   <span>
@@ -108,7 +128,7 @@ const RawBwSkin: FC = () => {
                 </li>
               ))}
             </ol>
-            <h3 className={styles.subhead}>Education</h3>
+            <h3 className={styles.subhead}>{t.education}</h3>
             <ul className={styles.timeline}>
               {education.map((item) => (
                 <li key={item.institution}>
@@ -122,7 +142,7 @@ const RawBwSkin: FC = () => {
           </section>
 
           <section id='skills' data-el='section#skills'>
-            <h2>Skills</h2>
+            <h2>{t.skills}</h2>
             <ul className={styles.skills}>
               {skills.map((skill) => (
                 <li key={skill}>{skill.toLowerCase()}</li>
@@ -132,8 +152,8 @@ const RawBwSkin: FC = () => {
         </div>
 
         <section id='contact' className={styles.contact} data-el='section#contact'>
-          <p className={styles.dim}>{'// open to roles & collaborations'}</p>
-          <h2>Contact</h2>
+          <p className={styles.dim}>{t.contactNote}</p>
+          <h2>{t.contact}</h2>
           <ul className={styles.contactLinks}>
             {links.email && (
               <li>
