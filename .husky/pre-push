@@ -1,0 +1,13 @@
+# Validates exactly what is being pushed: uncommitted work would be checked instead
+if [ -n "$(git status --porcelain)" ]; then
+  echo "pre-push: commit or stash your changes first (the checks run on the working tree)" >&2
+  exit 1
+fi
+
+npm run prepush
+
+# prepush auto-fixes lint/format: any change means the pushed commits weren't clean
+if ! git diff --exit-code --stat; then
+  echo "pre-push: prepush fixed the files above. Commit the fixes and push again" >&2
+  exit 1
+fi
