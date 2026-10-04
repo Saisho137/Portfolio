@@ -25,7 +25,7 @@ Un solo contenido (`profile.json`) que se puede ver con tres estilos ("skins") b
    ```sh
    npm run prepush
    ```
-   Corrige lo que pueda (`eslint --fix`, `prettier --write`) y luego corre typecheck, tests (con coverage, umbral 85% de líneas) y build. Solo falla si queda algo que no se pudo corregir automáticamente.
+   Corrige lo que pueda (`eslint --fix`, `prettier --write`) y luego corre typecheck, tests (con coverage, umbral 85% de líneas) y build. Solo falla si queda algo que no se pudo corregir automáticamente. El hook `pre-push` lo ejecuta solo (ver [Git hooks](#git-hooks)).
 
 | Script               | Qué hace                                     |
 | -------------------- | -------------------------------------------- |
@@ -38,6 +38,13 @@ Un solo contenido (`profile.json`) que se puede ver con tres estilos ("skins") b
 | `npm run test:watch` | Vitest en modo watch                         |
 | `npm run format`     | Prettier (`format:check` solo verifica)      |
 | `npm run prepush`    | Lint fix + format + typecheck + test + build |
+
+### Git hooks
+
+[Husky](https://typicode.github.io/husky/) los instala al hacer `npm ci` (script `prepare`):
+
+- **`commit-msg`**: [commitlint](https://commitlint.js.org/) valida [Conventional Commits](https://www.conventionalcommits.org/) (`tipo(scope): descripción`, scope opcional) con la descripción en menos de 40 caracteres (`commitlint.config.mjs`).
+- **`pre-push`**: exige el árbol limpio (si no, validaría el trabajo sin commitear en vez de lo que se sube), corre `npm run prepush` y falla si este corrigió archivos: hay que commitear las correcciones y volver a hacer push.
 
 ## Arquitectura
 
@@ -117,4 +124,4 @@ Un id inexistente rompe el build, y hay tests que verifican que no queden imáge
 - Estilos: CSS Modules nativos. Los selectores globales y los tokens comunes van en `globals.css`; cada skin define su paleta con `light-dark()` dentro de `@layer skin`.
 - Tests junto al archivo que prueban (`*.spec.ts(x)`).
 - Commits con [Conventional Commits](https://www.conventionalcommits.org/): `tipo(scope): descripción`.
-- Dependencias: Dependabot (`.github/dependabot.yml`) abre cada lunes un PR agrupado de minor/patch. ESLint, TypeScript y `@types/node` tienen los majors bloqueados (ver los motivos en el archivo).
+- Dependencias: versiones exactas. `.npmrc` fija `min-release-age=3`: `npm install` solo resuelve versiones publicadas hace más de 3 días (defensa ante paquetes comprometidos que se retiran en horas). `npm ci` no se ve afectado porque respeta el lockfile. Dependabot (`.github/dependabot.yml`) abre cada lunes un PR agrupado de minor/patch, con el mismo margen de 3 días (`cooldown`). ESLint, TypeScript y `@types/node` tienen los majors bloqueados (ver los motivos en el archivo).
