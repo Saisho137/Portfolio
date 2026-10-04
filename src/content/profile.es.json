@@ -1,0 +1,60 @@
+{
+  "name": "Santiago Betancur Duque",
+  "role": "Desarrollador Frontend",
+  "summary": "Desarrollador Frontend con experiencia en React, Next.js, SEO y optimización de rendimiento. Me apasiona construir aplicaciones web rápidas y accesibles.",
+  "about": [
+    "👋 ¡Hola! Soy Ingeniero en Ciencias de la Computación y Desarrollador Frontend con experiencia construyendo aplicaciones web responsive, accesibles, seguras y optimizadas para SEO con tecnologías como Angular y React.",
+    "🌟 Me apasiona resolver problemas complejos con soluciones concisas, enfocadas en crear experiencias fluidas y fáciles de usar. Disfruto colaborar en equipo para llevar los proyectos al éxito."
+  ],
+  "links": {
+    "github": "https://github.com/Saisho137",
+    "linkedin": "https://www.linkedin.com/in/santiago-betancur-duque-79548024b/"
+  },
+  "projects": [
+    {
+      "name": "Agenda Comfama",
+      "image": {
+        "id": "agenda-comfama",
+        "alt": "Captura de pantalla de Agenda Comfama"
+      }
+    },
+    {
+      "name": "Perfilador Financiero"
+    },
+    {
+      "name": "BeatHub",
+      "image": {
+        "id": "beathub",
+        "alt": "Captura de pantalla de BeatHub"
+      }
+    }
+  ],
+  "experience": [
+    {
+      "role": "Desarrollador Frontend",
+      "company": "Pragma",
+      "url": "https://www.pragma.co/es"
+    }
+  ],
+  "education": [
+    {
+      "institution": "Unilasallista Corporacion Universitaria",
+      "url": "https://www.unilasallista.edu.co"
+    }
+  ],
+  "skills": [
+    "SEO",
+    "React",
+    "Next.js",
+    "Node.js",
+    "Angular",
+    "HTML",
+    "CSS",
+    "Sass",
+    "JavaScript",
+    "TypeScript",
+    "Core Web Vitals",
+    "Accesibilidad web",
+    "Optimización de rendimiento"
+  ]
+}
