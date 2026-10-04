@@ -27,6 +27,10 @@
       "name": "Arka",
       "description": "Backend para un distribuidor B2B de accesorios de PC: 9 microservicios dirigidos por eventos con sagas, CQRS y patrón outbox, bajo Arquitectura Limpia.",
       "url": "https://github.com/Saisho137/Arka",
+      "image": {
+        "id": "arka",
+        "alt": "Diagrama de contenedores de Arka (C4 nivel 2): API Gateway, microservicios y Apache Kafka"
+      },
       "tags": ["Java", "Spring WebFlux", "Kafka", "PostgreSQL", "MongoDB", "AWS"]
     }
   ],
