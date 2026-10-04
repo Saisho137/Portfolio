@@ -8,6 +8,9 @@ updates:
       interval: weekly
       day: monday
     open-pull-requests-limit: 5
+    # Same window as min-release-age in .npmrc: npm would reject anything newer
+    cooldown:
+      default-days: 3
     commit-message:
       prefix: chore
       include: scope
@@ -16,9 +19,10 @@ updates:
         update-types: [minor, patch]
     ignore:
       # eslint-config-next 16 bundles eslint-plugin-react/import/jsx-a11y, which break on ESLint 10
+      # (still true as of 2026-10: their peerDependencies stop at ESLint 9)
       - dependency-name: eslint
         update-types: [version-update:semver-major]
-      # typescript-eslint supports typescript <6.1
+      # typescript-eslint supports typescript <6.1 (still true as of 2026-10, 8.71.0)
       - dependency-name: typescript
         update-types: [version-update:semver-major]
       # Must match the Node major pinned in package.json#volta (24)
