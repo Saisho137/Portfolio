@@ -1,8 +1,10 @@
 import Image from 'next/image';
 import { FC } from 'react';
 
+import { EmailAddress } from '@/components/EmailAddress';
 import { getProjectImage, SECTION_IDS } from '@/content';
 import { getLanguageLinks } from '@/i18n/config';
+import { formatPeriod } from '@/i18n/format';
 import type { SkinProps } from '@/skins/types';
 
 import { mono, sans } from './fonts';
@@ -117,9 +119,7 @@ const RawBwSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
               {experience.map((job) => (
                 <li key={`${job.company}-${job.role}`}>
                   {(job.start || job.end) && (
-                    <span className={styles.dim}>
-                      {job.start} — {job.end ?? t.now}
-                    </span>
+                    <span className={styles.dim}>{formatPeriod(job, lang, t.now)}</span>
                   )}
                   <span>
                     <strong>{job.role}</strong> ·{' '}
@@ -157,7 +157,9 @@ const RawBwSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
           <ul className={styles.contactLinks}>
             {links.email && (
               <li>
-                <a href={`mailto:${links.email}`}>{links.email}</a>
+                <a href={`mailto:${links.email}`}>
+                  <EmailAddress email={links.email} />
+                </a>
               </li>
             )}
             <li>

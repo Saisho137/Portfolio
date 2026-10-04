@@ -55,7 +55,7 @@
     "education": "educación",
     "skills": "Habilidades",
     "contact": "Contacto",
-    "contactNote": "Abierto a roles frontend y colaboraciones.",
+    "contactNote": "Abierto a roles y colaboraciones.",
     "footerComment": "mismo contenido, otro marcado. prueba los otros estilos"
   },
   "brutalist": {
@@ -96,7 +96,7 @@
     "present": "Presente",
     "role": "Cargo",
     "education": "Educación:",
-    "contactNote": "Abierto a roles frontend y colaboraciones.",
+    "contactNote": "Abierto a roles y colaboraciones.",
     "top": "Volver arriba"
   }
 }

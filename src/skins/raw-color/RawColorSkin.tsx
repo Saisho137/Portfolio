@@ -2,8 +2,10 @@
 
 import { FC } from 'react';
 
+import { EmailAddress } from '@/components/EmailAddress';
 import { SECTION_IDS } from '@/content/sections';
 import { getLanguageLinks, localeUrl } from '@/i18n/config';
+import { formatPeriod } from '@/i18n/format';
 import type { SkinProps } from '@/skins/types';
 
 import { mono, serif } from './fonts';
@@ -139,7 +141,7 @@ const RawColorSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
               {experience.map((job) => (
                 <div key={`${job.company}-${job.role}`}>
                   <dt className={styles.i} data-t='dt'>
-                    {job.start || job.end ? `${job.start ?? ''} — ${job.end ?? t.now}` : t.role}
+                    {job.start || job.end ? formatPeriod(job, lang, t.now) : t.role}
                   </dt>
                   <dd className={styles.i} data-t='dd'>
                     <strong>{job.role}</strong> {t.at}{' '}
@@ -195,7 +197,7 @@ const RawColorSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
               {links.email && (
                 <li>
                   <a data-t='a' href={`mailto:${links.email}`}>
-                    {links.email}
+                    <EmailAddress email={links.email} />
                   </a>
                 </li>
               )}

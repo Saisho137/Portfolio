@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest';
 
+import { getProfile } from '@/content';
 import type { Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/dictionaries';
 import type { SkinProps } from '@/skins/types';
@@ -16,7 +17,7 @@ vi.mock('@next/third-parties/google', () => ({ sendGTMEvent }));
 const FakeColorSkin = () => <h1>color skin</h1>;
 const FakeBrutalistSkin = ({ profile, lang }: SkinProps) => (
   <h1>
-    brutalist skin {lang} {profile.role}
+    brutalist skin {lang} {profile.summary}
   </h1>
 );
 
@@ -96,7 +97,7 @@ describe('SkinSwitcher', () => {
     fireEvent.click(radio('brutalist', 'es'));
 
     expect(
-      await screen.findByRole('heading', { name: 'brutalist skin es Desarrollador Frontend' })
+      await screen.findByRole('heading', { name: `brutalist skin es ${getProfile('es').summary}` })
     ).toBeInTheDocument();
     expect(screen.getByText('Estilo: Brutalista')).toBeInTheDocument();
   });

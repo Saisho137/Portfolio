@@ -2,9 +2,11 @@
 
 import { FC } from 'react';
 
+import { EmailAddress } from '@/components/EmailAddress';
 import type { SectionId } from '@/content/types';
 import { getLanguageLinks } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/dictionaries';
+import { formatPeriod } from '@/i18n/format';
 import type { SkinProps } from '@/skins/types';
 
 import { hand, sans } from './fonts';
@@ -202,9 +204,7 @@ const BrutalistSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
             <dl className={styles.credits}>
               {experience.map((job) => (
                 <div key={`${job.company}-${job.role}`}>
-                  <dt>
-                    {job.start || job.end ? `${job.start ?? ''} — ${job.end ?? t.present}` : t.role}
-                  </dt>
+                  <dt>{job.start || job.end ? formatPeriod(job, lang, t.present) : t.role}</dt>
                   <dd>
                     <strong>{job.role}</strong>,{' '}
                     {job.url ? <a href={job.url}>{job.company}</a> : job.company}
@@ -247,7 +247,9 @@ const BrutalistSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
             <ul className={styles.bigLinks}>
               {links.email && (
                 <li>
-                  <a href={`mailto:${links.email}`}>{links.email}</a>
+                  <a href={`mailto:${links.email}`}>
+                    <EmailAddress email={links.email} />
+                  </a>
                 </li>
               )}
               <li>
