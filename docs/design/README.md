@@ -18,13 +18,13 @@ Se aprueban **los tres** diseños como "skins" intercambiables de la misma pági
 
 ### Contenido
 
-- Única fuente de verdad: `src/content/profile.json` (+ tipos en `src/content/types.ts`, accesible vía `@/content`). Metadata, JSON-LD y sitemap se derivan de él.
+- Única fuente de verdad: `src/content/profile.{en,es}.json`, uno por idioma (+ tipos en `src/content/types.ts`, accesible vía `@/content`). Metadata, JSON-LD y sitemap se derivan de ellos. Las skins reciben el perfil y los textos de interfaz por props (`SkinProps`); las lazy los cargan en el idioma activo junto con su chunk.
 - Las tres skins renderizan el mismo JSON, cada una con su propia estructura y CSS. Comparten IDs de sección (`about`, `work`, `experience`, `skills`, `contact`).
 
 ### Render
 
 - **raw-bw** (`src/skins/raw-bw/`): Server Components, prerenderizados en build. Es lo único que va en el HTML: lo que indexa Google y lo que ve quien navega sin JS. Un solo `<h1>`, sin contenido duplicado ni oculto.
-- **raw-color** y **brutalist** (`src/skins/raw-color/`, `src/skins/brutalist/`): Client Components cargados con `import()` dinámico solo si el usuario los pide. Importan el JSON ellos mismos, así el contenido no viaja duplicado en el payload inicial.
+- **raw-color** y **brutalist** (`src/skins/raw-color/`, `src/skins/brutalist/`): Client Components cargados con `import()` dinámico solo si el usuario los pide. El `SkinSwitcher` descarga, junto con su chunk, el JSON del idioma activo (`loadProfile`/`loadDictionary`), así el contenido no viaja duplicado en el payload inicial. En brutalist, los títulos bilingües del mockup quedan como "idioma activo / otro idioma", con `lang` en el secundario.
 
 ### Switcher (`src/components/SkinSwitcher/`)
 
