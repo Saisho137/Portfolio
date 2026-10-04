@@ -16,7 +16,9 @@ export interface Experience {
   role: string;
   company: string;
   url?: string;
+  /** Year and month, `YYYY-MM`: language-neutral, each skin formats it with Intl */
   start?: string;
+  /** `YYYY-MM`; missing = current position */
   end?: string;
 }
 

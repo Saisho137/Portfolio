@@ -10,7 +10,7 @@ import {
   localeUrl,
   otherLocales
 } from './config';
-import { format } from './format';
+import { format, formatPeriod, formatYearMonth } from './format';
 
 describe('i18n config', () => {
   it('only accepts the supported locales', () => {
@@ -45,5 +45,19 @@ describe('i18n config', () => {
 describe('format', () => {
   it('fills known placeholders and leaves unknown ones untouched', () => {
     expect(format('{a} y {b}', { a: 'uno' })).toBe('uno y {b}');
+  });
+});
+
+describe('formatYearMonth / formatPeriod', () => {
+  it('formats YYYY-MM in each language, without time-zone drift', () => {
+    expect(formatYearMonth('2024-02', 'en')).toBe('Feb 2024');
+    expect(formatYearMonth('2024-02', 'es')).toBe('feb 2024');
+  });
+
+  it('closes open periods with the current-position label', () => {
+    expect(formatPeriod({ start: '2026-03' }, 'en', 'now')).toBe('Mar 2026 — now');
+    expect(formatPeriod({ start: '2024-11', end: '2026-03' }, 'es', 'hoy')).toBe(
+      'nov 2024 — mar 2026'
+    );
   });
 });

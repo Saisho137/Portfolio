@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 
 import { SECTION_IDS } from '@/content';
 import { LOCALES, localePath, otherLocales } from '@/i18n/config';
+import { formatYearMonth } from '@/i18n/format';
 import type { SkinProps } from '@/skins/types';
 
 import { skinProps, textNodes, textsOnlyIn } from './skinProps';
@@ -76,6 +77,16 @@ export const itFulfillsTheSkinContract = (Skin: ComponentType<SkinProps>) => {
       ].forEach((value) => expect(text).toContain(value.toLowerCase()));
     });
 
+    it('dates every position in the page language', () => {
+      const { container } = renderSkin();
+      const text = container.textContent ?? '';
+
+      profile.experience
+        .flatMap(({ start, end }) => [start, end])
+        .filter((date): date is string => Boolean(date))
+        .forEach((date) => expect(text).toContain(formatYearMonth(date, lang)));
+    });
+
     it('links to every profile', () => {
       renderSkin();
 
@@ -83,6 +94,7 @@ export const itFulfillsTheSkinContract = (Skin: ComponentType<SkinProps>) => {
 
       expect(hrefs).toContain(profile.links.github);
       expect(hrefs).toContain(profile.links.linkedin);
+      if (profile.links.email) expect(hrefs).toContain(`mailto:${profile.links.email}`);
     });
 
     it('links to every language version with real links, marking the current one', () => {
