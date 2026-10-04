@@ -4,6 +4,10 @@
     "primary": "Primary",
     "language": "Language"
   },
+  "email": {
+    "copy": "Copy email address",
+    "copied": "Email address copied"
+  },
   "sections": {
     "about": "about",
     "work": "work",

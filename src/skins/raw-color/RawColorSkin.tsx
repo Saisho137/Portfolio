@@ -2,7 +2,7 @@
 
 import { FC } from 'react';
 
-import { EmailAddress } from '@/components/EmailAddress';
+import { CopyEmail } from '@/components/CopyEmail';
 import { SECTION_IDS } from '@/content/sections';
 import { getLanguageLinks, localeUrl } from '@/i18n/config';
 import { formatPeriod } from '@/i18n/format';
@@ -196,9 +196,7 @@ const RawColorSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
             <ul className={styles.contact}>
               {links.email && (
                 <li>
-                  <a data-t='a' href={`mailto:${links.email}`}>
-                    <EmailAddress email={links.email} />
-                  </a>
+                  <CopyEmail data-t='a' email={links.email} labels={dict.email} />
                 </li>
               )}
               <li>
