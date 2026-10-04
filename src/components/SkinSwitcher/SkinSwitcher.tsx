@@ -1,13 +1,16 @@
 'use client';
 
 import { sendGTMEvent } from '@next/third-parties/google';
-import { ComponentType, FC, ReactNode, useState } from 'react';
+import { FC, ReactNode, useState } from 'react';
 import { flushSync } from 'react-dom';
 
 import { ThemeToggle } from '@/components/ThemeToggle';
+import type { Locale } from '@/i18n/config';
+import type { Dictionary } from '@/i18n/dictionaries';
+import { format } from '@/i18n/format';
 
 import { BrushIcon, CodeBwIcon, CodeColorIcon } from './icons';
-import { DEFAULT_SKIN, isLazySkin, loadSkin, SKIN_LABELS, type SkinId } from './skins';
+import { DEFAULT_SKIN, isLazySkin, type LoadedSkin, loadSkin, type SkinId } from './skins';
 
 import styles from './SkinSwitcher.module.css';
 
@@ -22,34 +25,35 @@ const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: r
 interface SkinSwitcherProps {
   /** The default (raw-bw) skin, already rendered on the server. Never discarded. */
   children: ReactNode;
+  lang: Locale;
+  /** UI strings only: the lazy skins fetch their own content in the active language */
+  labels: Dictionary['settings'];
 }
 
-const SkinSwitcher: FC<SkinSwitcherProps> = ({ children }) => {
-  // Component is only set for lazy skins; raw-bw is always `children`
-  const [skin, setSkin] = useState<{ id: SkinId; Component?: ComponentType }>({
-    id: DEFAULT_SKIN
-  });
+const SkinSwitcher: FC<SkinSwitcherProps> = ({ children, lang, labels }) => {
+  // `loaded` is only set for lazy skins; raw-bw is always `children`
+  const [skin, setSkin] = useState<{ id: SkinId; loaded?: LoadedSkin }>({ id: DEFAULT_SKIN });
   const [announcement, setAnnouncement] = useState('');
 
   // Prefetch on intent: hover (desktop), focus (keyboard), touchstart (mobile, no hover)
   const prefetch = (id: SkinId) => {
-    if (isLazySkin(id)) loadSkin(id).catch(() => undefined);
+    if (isLazySkin(id)) loadSkin(id, lang).catch(() => undefined);
   };
 
   const select = async (id: SkinId) => {
     if (id === skin.id) return;
 
-    let Component: ComponentType | undefined;
+    let loaded: LoadedSkin | undefined;
     try {
       // Usually resolved already thanks to the prefetch
-      if (isLazySkin(id)) Component = await loadSkin(id);
+      if (isLazySkin(id)) loaded = await loadSkin(id, lang);
     } catch {
       return; // offline or chunk error: keep the current skin
     }
 
     const apply = () => {
-      setSkin({ id, Component });
-      setAnnouncement(`Style: ${SKIN_LABELS[id]}`);
+      setSkin({ id, loaded });
+      setAnnouncement(format(labels.announce, { skin: labels.skins[id] }));
     };
 
     if (typeof document.startViewTransition === 'function' && !prefersReducedMotion()) {
@@ -62,21 +66,21 @@ const SkinSwitcher: FC<SkinSwitcherProps> = ({ children }) => {
     sendGTMEvent({ event: 'skin_change', skin: id });
   };
 
-  const { Component } = skin;
+  const { loaded } = skin;
 
   return (
     <>
-      {Component ? <Component /> : children}
+      {loaded ? <loaded.Component {...loaded.props} /> : children}
 
       {/* Landmark so the controls aren't orphan content (axe `region`) */}
-      <aside className={styles.toolbar} aria-label='Page settings'>
+      <aside className={styles.toolbar} aria-label={labels.label}>
         <fieldset className={styles.switcher}>
-          <legend className='visually-hidden'>Page style</legend>
+          <legend className='visually-hidden'>{labels.style}</legend>
           {OPTIONS.map(({ id, Icon }) => (
             <label
               key={id}
               className={styles.option}
-              title={SKIN_LABELS[id]}
+              title={labels.skins[id]}
               onPointerEnter={() => prefetch(id)}
               onTouchStart={() => prefetch(id)}
             >
@@ -90,11 +94,11 @@ const SkinSwitcher: FC<SkinSwitcherProps> = ({ children }) => {
                 onFocus={() => prefetch(id)}
               />
               <Icon />
-              <span className='visually-hidden'>{SKIN_LABELS[id]}</span>
+              <span className='visually-hidden'>{labels.skins[id]}</span>
             </label>
           ))}
         </fieldset>
-        <ThemeToggle />
+        <ThemeToggle labels={labels.theme} />
         <p className='visually-hidden' aria-live='polite'>
           {announcement}
         </p>
