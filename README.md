@@ -113,7 +113,7 @@ El dominio anterior (`portfolio-six-blond-30.vercel.app`) redirige con un 308 al
 
 ### Editar el contenido
 
-Se tocan `src/content/profile.en.json` y `profile.es.json` (los textos traducidos; URLs, fechas, ids de imagen y tags iguales en ambos). Los textos de interfaz están en `src/i18n/dictionaries/`. Los campos opcionales (`description`, `url`, `tags`, fechas, `degree`, `email`) aparecen en las skins cuando tienen valor.
+Se tocan `src/content/profile.en.json` y `profile.es.json` (los textos traducidos; URLs, fechas, ids de imagen y tags iguales en ambos). Los textos de interfaz están en `src/i18n/dictionaries/`. Los campos opcionales (`description`, `url`, `tags`, fechas, `degree`, `email`) aparecen en las skins cuando tienen valor. Las fechas de experiencia van como `YYYY-MM` (sin `end` = cargo actual), del más reciente al más antiguo; cada skin las formatea con `Intl` en su idioma (`Mar 2026` / `mar 2026`).
 
 Para agregar una imagen de proyecto:
 
