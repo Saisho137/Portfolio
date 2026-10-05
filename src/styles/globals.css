@@ -125,21 +125,42 @@
     }
   }
 
-  /* CopyEmail feedback: sits after the link in a fixed, readable size whatever the skin */
+  /* CopyEmail feedback: a toast floating above the page settings bar, so it never moves
+     the content. System colors (like the switcher) keep it legible in every skin/theme */
   .copy-status {
-    display: inline-block;
-    margin-inline-start: 0.75ch;
+    position: fixed;
+    inset-block-end: calc(var(--switcher-offset) + var(--switcher-option) + 2px + 0.75rem);
+    inset-inline: 0;
+    z-index: 150;
+    width: fit-content;
+    max-width: calc(100% - 2rem);
+    margin-inline: auto;
+    padding: 0.6rem 1rem;
+    border: 1px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+    box-shadow: 4px 4px 0 color-mix(in oklab, CanvasText 85%, transparent);
     font:
       600 1rem / 1.4 system-ui,
       sans-serif;
     letter-spacing: normal;
+    text-align: center;
     text-transform: none;
-    vertical-align: middle;
+    animation: toast-in 0.2s ease-out;
 
-    /* Out of the flow (no gap in flex rows) but still in the accessibility tree, so the
-       live region already exists when the message arrives */
+    /* Invisible but kept in the accessibility tree: the live region must exist before
+       the message arrives for screen readers to announce it */
     &:empty {
-      position: absolute;
+      padding: 0;
+      border: 0;
+      box-shadow: none;
+      opacity: 0;
+      pointer-events: none;
+      animation: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
     }
   }
 
@@ -150,5 +171,12 @@
     overflow: hidden;
     clip-path: inset(50%);
     white-space: nowrap;
+  }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    translate: 0 0.5rem;
   }
 }
