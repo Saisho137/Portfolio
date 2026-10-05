@@ -24,6 +24,24 @@ describe('next.config', () => {
     const rewrites = await nextConfig.rewrites?.();
 
     expect(redirects).toContainEqual({ source: '/en', destination: '/', permanent: true });
-    expect(rewrites).toMatchObject({ beforeFiles: [{ source: '/', destination: '/en' }] });
+    expect(rewrites).toHaveProperty(
+      'beforeFiles',
+      expect.arrayContaining([{ source: '/', destination: '/en' }])
+    );
+  });
+
+  it('does the same for the other pages: /privacy is English, /en/privacy folds into it', async () => {
+    const redirects = (await nextConfig.redirects?.()) ?? [];
+    const rewrites = await nextConfig.rewrites?.();
+
+    expect(redirects).toContainEqual({
+      source: '/en/privacy',
+      destination: '/privacy',
+      permanent: true
+    });
+    expect(rewrites).toHaveProperty(
+      'beforeFiles',
+      expect.arrayContaining([{ source: '/privacy', destination: '/en/privacy' }])
+    );
   });
 });

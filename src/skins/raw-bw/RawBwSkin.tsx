@@ -3,7 +3,7 @@ import type { FC } from 'react';
 
 import { CopyEmail } from '@/components/CopyEmail';
 import { getProjectImage, SECTION_IDS } from '@/content';
-import { getLanguageLinks } from '@/i18n/config';
+import { getLanguageLinks, PAGES, pagePath } from '@/i18n/config';
 import { formatPeriod, formatYearMonth } from '@/i18n/format';
 import type { SkinProps } from '@/skins/types';
 
@@ -212,7 +212,8 @@ const RawBwSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
 
       <footer className={styles.foot} data-el='footer'>
         <span>
-          © {year} {name.toLowerCase()}
+          © {year} {name.toLowerCase()} ·{' '}
+          <a href={pagePath(lang, PAGES.privacy)}>{dict.legal.privacy.toLowerCase()}</a>
         </span>
         <span>
           <a href={links.github}>github</a> · <a href={links.linkedin}>linkedin</a>

@@ -8,6 +8,9 @@
     "copy": "Copiar el correo",
     "copied": "Correo copiado"
   },
+  "legal": {
+    "privacy": "Privacidad"
+  },
   "sections": {
     "about": "sobre mí",
     "work": "proyectos",

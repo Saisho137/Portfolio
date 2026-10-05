@@ -4,7 +4,7 @@ import type { ComponentType } from 'react';
 import { describe, expect, it } from 'vitest';
 
 import { SECTION_IDS } from '@/content';
-import { LOCALES, localePath, otherLocales } from '@/i18n/config';
+import { LOCALES, localePath, otherLocales, PAGES, pagePath } from '@/i18n/config';
 import { formatYearMonth } from '@/i18n/format';
 import type { SkinProps } from '@/skins/types';
 
@@ -104,6 +104,16 @@ export const itFulfillsTheSkinContract = (Skin: ComponentType<SkinProps>) => {
       expect(hrefs).toContain(profile.links.linkedin);
       if (profile.links.email) expect(hrefs).toContain(`mailto:${profile.links.email}`);
       profile.certifications.forEach(({ url }) => url && expect(hrefs).toContain(url));
+    });
+
+    it('links to the privacy notice in its language from the footer', () => {
+      renderSkin();
+
+      const footer = screen.getByRole('contentinfo');
+
+      expect(
+        within(footer).getByRole('link', { name: new RegExp(dict.legal.privacy, 'i') })
+      ).toHaveAttribute('href', pagePath(lang, PAGES.privacy));
     });
 
     it('links to every language version with real links, marking the current one', () => {

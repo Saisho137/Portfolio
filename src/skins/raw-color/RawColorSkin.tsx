@@ -4,7 +4,7 @@ import type { FC } from 'react';
 
 import { CopyEmail } from '@/components/CopyEmail';
 import { SECTION_IDS } from '@/content/sections';
-import { getLanguageLinks, localeUrl } from '@/i18n/config';
+import { getLanguageLinks, localeUrl, PAGES, pagePath } from '@/i18n/config';
 import { formatPeriod, formatYearMonth } from '@/i18n/format';
 import type { SkinProps } from '@/skins/types';
 
@@ -269,7 +269,10 @@ const RawColorSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
 
         <footer className={styles.b} data-t='footer'>
           <p className={styles.i} data-t='p'>
-            © {year} {name}
+            © {year} {name} ·{' '}
+            <a data-t='a' href={pagePath(lang, PAGES.privacy)}>
+              {dict.legal.privacy}
+            </a>
           </p>
           <span className={styles.comment} aria-hidden='true'>
             &lt;!-- {t.footerComment} --&gt;

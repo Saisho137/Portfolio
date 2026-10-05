@@ -20,6 +20,20 @@ export const otherLocales = (lang: Locale): Locale[] => LOCALES.filter((locale) 
 /** Public path of a locale's home: `/` for the default, `/es` for the rest */
 export const localePath = (lang: Locale) => (lang === DEFAULT_LOCALE ? '/' : `/${lang}`);
 
+/** Pages besides each language's home, by their path segment */
+export const PAGES = { privacy: 'privacy' } as const;
+export type Page = (typeof PAGES)[keyof typeof PAGES];
+
+/** Public path of a page: unprefixed in the default language (`/privacy`, `/es/privacy`) */
+export const pagePath = (lang: Locale, page: Page) =>
+  lang === DEFAULT_LOCALE ? `/${page}` : `/${lang}/${page}`;
+
+/** hreflang map of a page, like languageAlternates() for the home */
+export const pageAlternates = (page: Page): Record<string, string> => ({
+  ...Object.fromEntries(LOCALES.map((locale) => [locale, `${SITE_URL}${pagePath(locale, page)}`])),
+  'x-default': `${SITE_URL}${pagePath(DEFAULT_LOCALE, page)}`
+});
+
 /** Absolute canonical URL; no trailing slash on the root, as Next prints it */
 export const localeUrl = (lang: Locale) =>
   lang === DEFAULT_LOCALE ? SITE_URL : `${SITE_URL}${localePath(lang)}`;

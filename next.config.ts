@@ -1,6 +1,6 @@
 import type { NextConfig } from 'next';
 
-import { DEFAULT_LOCALE } from './src/i18n/config';
+import { DEFAULT_LOCALE, PAGES } from './src/i18n/config';
 import { LEGACY_HOST, SITE_URL } from './src/utils/constants/site';
 
 // No trailingSlash: it forced a 308 on extensionless routes such as the generated
@@ -25,13 +25,25 @@ const nextConfig: NextConfig = {
       },
       // The default language lives at `/` (the URL Google already indexed): its prefixed
       // twin would be duplicate content. Only the page; /en/opengraph-image/... stays
-      { source: `/${DEFAULT_LOCALE}`, destination: '/', permanent: true }
+      { source: `/${DEFAULT_LOCALE}`, destination: '/', permanent: true },
+      // Same for the other pages of the default language: /en/privacy → /privacy
+      ...Object.values(PAGES).map((page) => ({
+        source: `/${DEFAULT_LOCALE}/${page}`,
+        destination: `/${page}`,
+        permanent: true
+      }))
     ]);
   },
-  // `/` serves the prerendered default-language page; applied at the edge, no function
+  // `/` (and /privacy) serve the prerendered default-language pages; applied at the edge
   rewrites() {
     return Promise.resolve({
-      beforeFiles: [{ source: '/', destination: `/${DEFAULT_LOCALE}` }],
+      beforeFiles: [
+        { source: '/', destination: `/${DEFAULT_LOCALE}` },
+        ...Object.values(PAGES).map((page) => ({
+          source: `/${page}`,
+          destination: `/${DEFAULT_LOCALE}/${page}`
+        }))
+      ],
       afterFiles: [],
       fallback: []
     });

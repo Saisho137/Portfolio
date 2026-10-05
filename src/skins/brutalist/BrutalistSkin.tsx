@@ -4,7 +4,7 @@ import type { FC } from 'react';
 
 import { CopyEmail } from '@/components/CopyEmail';
 import type { SectionId } from '@/content/types';
-import { getLanguageLinks } from '@/i18n/config';
+import { getLanguageLinks, PAGES, pagePath } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/dictionaries';
 import { formatPeriod, formatYearMonth } from '@/i18n/format';
 import type { SkinProps } from '@/skins/types';
@@ -305,6 +305,7 @@ const BrutalistSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
         <span>
           © {year} {name}
         </span>
+        <a href={pagePath(lang, PAGES.privacy)}>{dict.legal.privacy}</a>
         <a href='#about'>↑ {t.top}</a>
         <div className={styles.rowEnd}>
           <a href={links.linkedin}>LinkedIn</a>

@@ -23,6 +23,28 @@ test.describe('routes', () => {
     expect(new URL(response.headers().location ?? '', 'http://x').pathname).toBe('/');
   });
 
+  for (const [path, lang] of [
+    ['/privacy', 'en'],
+    ['/es/privacy', 'es']
+  ] as const) {
+    test(`serves the "${lang}" privacy notice at ${path}, out of search results`, async ({
+      page
+    }) => {
+      const response = await page.goto(path);
+
+      expect(response?.status()).toBe(200);
+      await expect(page.locator('html')).toHaveAttribute('lang', lang);
+      await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+    });
+  }
+
+  test('folds /en/privacy into /privacy with a permanent redirect', async ({ request }) => {
+    const response = await request.get('/en/privacy', { maxRedirects: 0 });
+
+    expect(response.status()).toBe(308);
+    expect(new URL(response.headers().location ?? '', 'http://x').pathname).toBe('/privacy');
+  });
+
   for (const path of ['/fr', '/es/nope']) {
     test(`answers ${path} with a bilingual 404 that has a language`, async ({ page }) => {
       const response = await page.goto(path);

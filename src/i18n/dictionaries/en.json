@@ -8,6 +8,9 @@
     "copy": "Copy email address",
     "copied": "Email address copied"
   },
+  "legal": {
+    "privacy": "Privacy"
+  },
   "sections": {
     "about": "about",
     "work": "work",
