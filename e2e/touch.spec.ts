@@ -12,8 +12,9 @@ test.describe('screenshots on touch screens', () => {
     expect(await page.evaluate(() => matchMedia('(hover: none)').matches)).toBe(true);
     const shot = page.locator('#work img').first();
 
+    // Scroll-driven animations update on the next frame: poll instead of reading once
     await shot.evaluate((node) => node.scrollIntoView({ block: 'end' }));
-    expect(await filterOf(shot)).toContain('grayscale');
+    await expect.poll(() => filterOf(shot)).toContain('grayscale');
 
     await shot.evaluate((node) => node.scrollIntoView({ block: 'center' }));
     await expect.poll(() => filterOf(shot)).toBe('none');
