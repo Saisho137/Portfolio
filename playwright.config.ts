@@ -13,9 +13,7 @@ const baseURL = remoteUrl ?? `http://localhost:${PORT}`;
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
-  forbidOnly: Boolean(process.env.CI),
-  retries: process.env.CI ? 1 : 0,
-  reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : 'list',
+  reporter: 'list',
   use: { baseURL, trace: 'retain-on-failure' },
   projects: [
     {
@@ -39,6 +37,6 @@ export default defineConfig({
     : {
         command: `npx next start -p ${PORT}`,
         url: baseURL,
-        reuseExistingServer: !process.env.CI
+        reuseExistingServer: true
       }
 });
