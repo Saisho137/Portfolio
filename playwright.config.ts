@@ -18,13 +18,23 @@ export default defineConfig({
   projects: [
     {
       name: 'desktop',
-      testIgnore: /(touch|lighthouse)\.spec\.ts$/,
+      testIgnore: /(touch|lighthouse|visual)\.spec\.ts$/,
       use: { ...devices['Desktop Chrome'], channel: 'chrome' }
     },
     {
       name: 'mobile',
       testMatch: /touch\.spec\.ts$/,
       use: { ...devices['Pixel 7'], channel: 'chrome' }
+    },
+    {
+      // Pixel snapshots: fixed viewport so the baselines don't depend on the device preset
+      name: 'visual',
+      testMatch: /visual\.spec\.ts$/,
+      use: {
+        ...devices['Desktop Chrome'],
+        channel: 'chrome',
+        viewport: { width: 1280, height: 800 }
+      }
     },
     {
       // Launches its own Chrome for Lighthouse: no browser fixture needed
