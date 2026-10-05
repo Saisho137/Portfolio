@@ -8,9 +8,8 @@
     "countryCode": "CO"
   },
   "about": [
-    "Soy Ingeniero Informático y desarrollador full-stack de Medellín, Colombia, y desde 2024 entrego software en producción en Pragma, desde interfaces en React, Next.js y Angular hasta servicios reactivos en Spring Boot sobre AWS.",
-    "Soy un solucionador de problemas, curioso por naturaleza: profundizo en la necesidad del negocio, diseño la solución correcta y la construyo con Arquitectura Limpia, EDA y DDD, con resultados medibles en rendimiento, seguridad y SEO.",
-    "Fui mentor en 3 ediciones del bootcamp full-stack de Pragma (más de 30 estudiantes contratados) y cofundé la iniciativa de IA del capítulo Frontend. Doble certificación AWS: Cloud Practitioner y AI Practitioner."
+    "Ingeniero Informático de Medellín, Colombia, que construye software en producción en Pragma desde 2024: frontends en React, Next.js y Angular y servicios reactivos en Spring Boot sobre AWS.",
+    "Parto de la necesidad del negocio, elijo el diseño correcto y lo construyo con Arquitectura Limpia, EDA y DDD, midiendo los resultados en rendimiento, seguridad y SEO."
   ],
   "links": {
     "github": "https://github.com/Saisho137",
@@ -20,7 +19,7 @@
   "projects": [
     {
       "name": "Agenda Comfama",
-      "description": "Blog de agenda cultural para un gran cliente colombiano: +22,66% de usuarios nuevos, +29,25% de sesiones con interacción y +34,45% de tiempo de interacción en 3 meses.",
+      "description": "Agenda cultural para un gran cliente colombiano: +23% de usuarios nuevos, +29% de sesiones con interacción y +34% de tiempo de interacción en 3 meses.",
       "url": "https://www.comfama.com/agenda/",
       "image": {
         "id": "agenda-comfama",
@@ -30,7 +29,7 @@
     },
     {
       "name": "Portfolio",
-      "description": "Este sitio: una página bilingüe, prerenderizada como HTML estático, con tres estilos intercambiables hechos con HTML y CSS nativos, probada con Vitest, Playwright, axe y Lighthouse.",
+      "description": "Este sitio: una página estática y bilingüe con tres estilos intercambiables en HTML y CSS nativos, con 100 en accesibilidad, buenas prácticas y SEO de Lighthouse.",
       "url": "https://github.com/Saisho137/Portfolio",
       "image": {
         "id": "portfolio",
@@ -40,7 +39,7 @@
     },
     {
       "name": "Arka",
-      "description": "Proyecto final del curso AceleraTI: backend dirigido por eventos para un distribuidor B2B ficticio de accesorios de PC, con 9 microservicios, sagas, CQRS y patrón outbox bajo Arquitectura Limpia.",
+      "description": "Proyecto final de AceleraTI: backend dirigido por eventos para un distribuidor B2B ficticio, con 9 microservicios, sagas, CQRS y patrón outbox.",
       "url": "https://github.com/Saisho137/Arka",
       "image": {
         "id": "arka",
@@ -56,12 +55,10 @@
       "url": "https://www.pragma.co/",
       "start": "2024-02",
       "highlights": [
-        "Crecimiento de practicante (feb 2024) a Senior Software Engineer (mar 2026), entregando soluciones de punta a punta para el sector financiero, plataformas de contenido y herramientas internas.",
-        "Apoyé al líder técnico en el diseño y la construcción de un agente de IA interno sobre Slack (AWS Bedrock, Lambda, RDS + pgvector, Terraform) que automatiza flujos de TI, SAP y seguridad, y la búsqueda en bases de conocimiento de toda la compañía.",
-        "Diseñé y entregué en solitario, de punta a punta, un sitio público (Next.js 15 SSG, React 19, Spring Boot, PostgreSQL sobre AWS): Core Web Vitals 94–100, cobertura de pruebas unitarias superior al 96% y puntaje perfecto en SonarQube en frontend y backend.",
-        "Contribuí a +22,66% de usuarios nuevos, +29,25% de sesiones con interacción y +34,45% de tiempo de interacción en una plataforma de contenido de alto tráfico (Gatsby, GraphQL, Contentful) en tres meses.",
-        "Remedié vulnerabilidades críticas de auditorías externas de seguridad (DAST/SAST) para un cliente del sector financiero, migré reCAPTCHA v2 a v3 Enterprise y endurecí la aplicación con React Server Components.",
-        "Construí pipelines CI/CD (Azure DevOps → AWS S3/CloudFront), migré más de 330 pruebas unitarias y estandaricé prácticas de seguridad, versionamiento y documentación adoptadas por varios equipos."
+        "De practicante a Senior en dos años, en proyectos financieros, de contenido y herramientas internas.",
+        "Construí en solitario un sitio público (Next.js, Spring Boot, AWS): Core Web Vitals 94–100, más de 96% de cobertura de pruebas y puntaje perfecto en SonarQube.",
+        "Cerré hallazgos críticos de DAST/SAST para un cliente financiero y lo endurecí con reCAPTCHA v3 Enterprise y React Server Components.",
+        "Participé en un agente de IA interno sobre Slack (AWS Bedrock, pgvector, Terraform) que automatiza flujos de toda la compañía."
       ]
     },
     {
@@ -70,8 +67,7 @@
       "url": "https://www.pragma.co/",
       "start": "2025-06",
       "highlights": [
-        "Investigué y desplegué herramientas de IA (Amazon Q, GitHub Copilot, Windsurf, Cursor, Kiro y Claude Code) en la compañía a través del programa interno de adopción de IA.",
-        "Cofundé la iniciativa de IA del rol Frontend: más de 4 charlas técnicas, activos reutilizables y el rediseño del framework de madurez del rol."
+        "Llevé herramientas de IA para programar a toda la compañía y cofundé la iniciativa de IA de Frontend: más de 4 charlas y el rediseño del framework de madurez del rol."
       ]
     },
     {
@@ -81,9 +77,7 @@
       "start": "2024-04",
       "end": "2025-05",
       "highlights": [
-        "Mentor en 3 ediciones del bootcamp full-stack de Pragma (Angular + Spring Boot) con sesiones, revisiones de código y seguimiento personalizado: más de 30 estudiantes contratados de forma permanente.",
-        "Entrevistador técnico para vacantes de practicantes Frontend.",
-        "Mentoría 1:1 de tres meses a un perfil no técnico en transición hacia el desarrollo de software."
+        "Mentor de 3 cohortes del bootcamp full-stack (Angular + Spring Boot): más de 30 estudiantes contratados."
       ]
     }
   ],

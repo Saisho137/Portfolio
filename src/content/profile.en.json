@@ -8,9 +8,8 @@
     "countryCode": "CO"
   },
   "about": [
-    "I'm a Computer Engineer and full-stack developer from Medellín, Colombia, shipping production software at Pragma since 2024, from React, Next.js and Angular interfaces to reactive Spring Boot services on AWS.",
-    "A problem solver, curious by nature: I dig into the business need, design the right solution and build it with Clean Architecture, EDA and DDD, with measurable results in performance, security and SEO.",
-    "I mentored 3 editions of Pragma's full-stack bootcamp (30+ students hired) and co-founded the Frontend chapter's AI initiative. 2x AWS Certified: Cloud Practitioner and AI Practitioner."
+    "Computer Engineer from Medellín, Colombia, building production software at Pragma since 2024: React, Next.js and Angular frontends and reactive Spring Boot services on AWS.",
+    "I start from the business need, choose the right design and build it with Clean Architecture, EDA and DDD, measuring the results in performance, security and SEO."
   ],
   "links": {
     "github": "https://github.com/Saisho137",
@@ -20,7 +19,7 @@
   "projects": [
     {
       "name": "Agenda Comfama",
-      "description": "Cultural agenda blog for a major Colombian client: +22.66% new users, +29.25% engaged sessions and +34.45% interaction time in 3 months.",
+      "description": "Cultural agenda for a major Colombian client: +23% new users, +29% engaged sessions and +34% interaction time in 3 months.",
       "url": "https://www.comfama.com/agenda/",
       "image": {
         "id": "agenda-comfama",
@@ -30,7 +29,7 @@
     },
     {
       "name": "Portfolio",
-      "description": "This site: one bilingual page, prerendered as static HTML, with three swappable styles built with native HTML and CSS, tested with Vitest, Playwright, axe and Lighthouse.",
+      "description": "This site: one static, bilingual page with three swappable styles in native HTML and CSS, scoring 100 in Lighthouse accessibility, best practices and SEO.",
       "url": "https://github.com/Saisho137/Portfolio",
       "image": {
         "id": "portfolio",
@@ -40,7 +39,7 @@
     },
     {
       "name": "Arka",
-      "description": "AceleraTI course capstone: event-driven backend for a fictional B2B PC accessories distributor, with 9 microservices, sagas, CQRS and the outbox pattern under Clean Architecture.",
+      "description": "AceleraTI capstone: event-driven backend for a fictional B2B distributor, with 9 microservices, sagas, CQRS and the outbox pattern.",
       "url": "https://github.com/Saisho137/Arka",
       "image": {
         "id": "arka",
@@ -56,12 +55,10 @@
       "url": "https://www.pragma.co/",
       "start": "2024-02",
       "highlights": [
-        "Promoted from intern (Feb 2024) to Senior Software Engineer (Mar 2026), delivering end-to-end solutions for the financial sector, content platforms and internal tools.",
-        "Supported the tech lead in designing and building an internal AI agent on Slack (AWS Bedrock, Lambda, RDS + pgvector, Terraform) that automates IT, SAP and security workflows and company-wide knowledge search.",
-        "Designed and delivered a public website end to end on my own (Next.js 15 SSG, React 19, Spring Boot, PostgreSQL on AWS): Core Web Vitals 94–100, 96%+ unit test coverage and a perfect SonarQube score on frontend and backend.",
-        "Contributed to +22.66% new users, +29.25% engaged sessions and +34.45% interaction time on a high-traffic content platform (Gatsby, GraphQL, Contentful) in three months.",
-        "Remediated critical vulnerabilities from external security audits (DAST/SAST) for a financial-sector client, migrated reCAPTCHA v2 to v3 Enterprise and hardened the app with React Server Components.",
-        "Built CI/CD pipelines (Azure DevOps → AWS S3/CloudFront), migrated 330+ unit tests and standardized security, versioning and documentation practices adopted by multiple teams."
+        "Intern to Senior in two years, across financial, content and internal-tooling projects.",
+        "Built a public website solo (Next.js, Spring Boot, AWS): Core Web Vitals 94–100, 96%+ test coverage and a perfect SonarQube score.",
+        "Closed critical DAST/SAST findings for a financial client and hardened it with reCAPTCHA v3 Enterprise and React Server Components.",
+        "Helped build an internal AI agent on Slack (AWS Bedrock, pgvector, Terraform) that automates company-wide workflows."
       ]
     },
     {
@@ -70,8 +67,7 @@
       "url": "https://www.pragma.co/",
       "start": "2025-06",
       "highlights": [
-        "Researched and rolled out AI tools (Amazon Q, GitHub Copilot, Windsurf, Cursor, Kiro and Claude Code) across the company through the internal AI adoption program.",
-        "Co-founded the Frontend role's AI initiative: 4+ tech talks, reusable assets and the redesign of the role's maturity framework."
+        "Rolled out AI coding tools across the company and co-founded the Frontend AI initiative: 4+ talks and a redesigned role maturity framework."
       ]
     },
     {
@@ -81,9 +77,7 @@
       "start": "2024-04",
       "end": "2025-05",
       "highlights": [
-        "Mentored 3 editions of Pragma's full-stack bootcamp (Angular + Spring Boot) with sessions, code reviews and one-on-one follow-up: 30+ students hired permanently.",
-        "Technical interviewer for Frontend intern positions.",
-        "Three-month one-on-one mentorship for a non-technical professional moving into software development."
+        "Mentored 3 full-stack bootcamp cohorts (Angular + Spring Boot): 30+ students hired."
       ]
     }
   ],
