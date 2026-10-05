@@ -42,7 +42,9 @@
     "education": "Education",
     "skills": "Skills",
     "contactNote": "// open to roles & collaborations",
-    "contact": "Contact"
+    "contact": "Contact",
+    "certifications": "Certifications",
+    "languages": "Languages"
   },
   "rawColor": {
     "work": "Projects",
@@ -60,7 +62,9 @@
     "skills": "Skills",
     "contact": "Contact",
     "contactNote": "Open to roles and collaborations.",
-    "footerComment": "same content, different markup. try the other styles"
+    "footerComment": "same content, different markup. try the other styles",
+    "certifications": "certifications",
+    "languages": "languages"
   },
   "brutalist": {
     "greeting": "hello!!!",
@@ -101,6 +105,8 @@
     "role": "Role",
     "education": "Education:",
     "contactNote": "Open to roles and collaborations.",
-    "top": "Back to top"
+    "top": "Back to top",
+    "certification": "Certification:",
+    "languages": "Languages:"
   }
 }

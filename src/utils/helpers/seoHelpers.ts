@@ -90,7 +90,7 @@ export const generateJsonLd = (lang: Locale) => {
         jobTitle: profile.role,
         description: profile.summary,
         sameAs: [profile.links.github, profile.links.linkedin],
-        knowsAbout: profile.skills,
+        knowsAbout: profile.skills.flatMap(({ items }) => items),
         ...(profile.links.email && { email: `mailto:${profile.links.email}` }),
         ...(currentJob && {
           worksFor: { '@type': 'Organization', name: currentJob.company, url: currentJob.url }

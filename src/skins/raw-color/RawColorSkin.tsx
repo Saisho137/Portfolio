@@ -5,7 +5,7 @@ import type { FC } from 'react';
 import { CopyEmail } from '@/components/CopyEmail';
 import { SECTION_IDS } from '@/content/sections';
 import { getLanguageLinks, localeUrl } from '@/i18n/config';
-import { formatPeriod } from '@/i18n/format';
+import { formatPeriod, formatYearMonth } from '@/i18n/format';
 import type { SkinProps } from '@/skins/types';
 
 import { mono, serif } from './fonts';
@@ -18,7 +18,8 @@ import styles from './RawColorSkin.module.css';
  * through ::before/::after; the decoration is hidden from assistive tech in CSS.
  */
 const RawColorSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
-  const { name, role, summary, about, links, projects, experience, education, skills } = profile;
+  const { name, role, summary, about, links, projects, experience, education } = profile;
+  const { certifications, languages, skills } = profile;
   const t = dict.rawColor;
   const year = new Date().getFullYear();
   const showDescription = projects.some((project) => project.description);
@@ -152,6 +153,15 @@ const RawColorSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
                     ) : (
                       job.company
                     )}
+                    {job.highlights && (
+                      <ul className={`${styles.b} ${styles.highlights}`} data-t='ul'>
+                        {job.highlights.map((highlight) => (
+                          <li key={highlight} className={styles.i} data-t='li'>
+                            {highlight}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </dd>
                 </div>
               ))}
@@ -169,6 +179,32 @@ const RawColorSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
                     ) : (
                       item.institution
                     )}
+                    {item.end && <>, {formatYearMonth(item.end, lang)}</>}
+                    {item.honors && <span className={styles.note}>{item.honors.join(' · ')}</span>}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            <h3 className={styles.i} data-t='h3'>
+              {t.certifications}
+            </h3>
+            <dl className={`${styles.b} ${styles.dl}`} data-t='dl'>
+              {certifications.map((certification) => (
+                <div key={certification.name}>
+                  <dt className={styles.i} data-t='dt'>
+                    {formatYearMonth(certification.date, lang)}
+                  </dt>
+                  <dd className={styles.i} data-t='dd'>
+                    <strong>
+                      {certification.url ? (
+                        <a data-t='a' href={certification.url}>
+                          {certification.name}
+                        </a>
+                      ) : (
+                        certification.name
+                      )}
+                    </strong>{' '}
+                    — {certification.issuer}
                   </dd>
                 </div>
               ))}
@@ -179,9 +215,27 @@ const RawColorSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
             <h2 className={styles.i} data-t='h2'>
               {t.skills}
             </h2>
-            <ul className={`${styles.b} ${styles.skills}`} data-t='ul'>
-              {skills.map((skill) => (
-                <li key={skill}>{skill}</li>
+            {skills.map(({ category, items }) => (
+              <div key={category}>
+                <h3 className={styles.i} data-t='h3'>
+                  {category}
+                </h3>
+                <ul className={`${styles.b} ${styles.skills}`} data-t='ul'>
+                  {items.map((skill) => (
+                    <li key={skill}>{skill}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+            <h3 className={styles.i} data-t='h3'>
+              {t.languages}
+            </h3>
+            <ul className={styles.b} data-t='ul'>
+              {languages.map(({ name: language, level }) => (
+                // One text node: a language name alone could equal another language's label
+                <li key={language} className={styles.i} data-t='li'>
+                  {`${language} — ${level}`}
+                </li>
               ))}
             </ul>
           </section>

@@ -6,7 +6,7 @@ import { CopyEmail } from '@/components/CopyEmail';
 import type { SectionId } from '@/content/types';
 import { getLanguageLinks } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/dictionaries';
-import { formatPeriod } from '@/i18n/format';
+import { formatPeriod, formatYearMonth } from '@/i18n/format';
 import type { SkinProps } from '@/skins/types';
 
 import { hand, sans } from './fonts';
@@ -57,7 +57,8 @@ const Doodle: FC<{ greeting: string }> = ({ greeting }) => (
  * one ink color on paper, 1px rules as structure, catalogue-like listings.
  */
 const BrutalistSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
-  const { name, role, summary, about, links, projects, experience, education, skills } = profile;
+  const { name, role, summary, about, links, projects, experience, education } = profile;
+  const { certifications, languages, skills } = profile;
   const t = dict.brutalist;
   const [currentJob] = experience;
   const year = new Date().getFullYear();
@@ -208,6 +209,13 @@ const BrutalistSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
                   <dd>
                     <strong>{job.role}</strong>,{' '}
                     {job.url ? <a href={job.url}>{job.company}</a> : job.company}
+                    {job.highlights && (
+                      <ul>
+                        {job.highlights.map((highlight) => (
+                          <li key={highlight}>{highlight}</li>
+                        ))}
+                      </ul>
+                    )}
                   </dd>
                 </div>
               ))}
@@ -222,6 +230,23 @@ const BrutalistSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
                       </>
                     )}
                     {item.url ? <a href={item.url}>{item.institution}</a> : item.institution}
+                    {item.end && <>, {formatYearMonth(item.end, lang)}</>}
+                    {item.honors && <span className={styles.note}>{item.honors.join(' / ')}</span>}
+                  </dd>
+                </div>
+              ))}
+              {certifications.map((certification) => (
+                <div key={certification.name}>
+                  <dt>{t.certification}</dt>
+                  <dd>
+                    <strong>
+                      {certification.url ? (
+                        <a href={certification.url}>{certification.name}</a>
+                      ) : (
+                        certification.name
+                      )}
+                    </strong>
+                    , {certification.issuer}, {formatYearMonth(certification.date, lang)}
                   </dd>
                 </div>
               ))}
@@ -231,11 +256,25 @@ const BrutalistSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
             <h2 className={styles.kicker}>
               <Kicker kickers={t.kickers} id='skills' />
             </h2>
-            <ul className={styles.tags}>
-              {skills.map((skill) => (
-                <li key={skill}>{skill}</li>
-              ))}
-            </ul>
+            {skills.map(({ category, items }) => (
+              <div key={category} className={styles.group}>
+                <h3 className={styles.groupName}>{category}</h3>
+                <ul className={styles.tags}>
+                  {items.map((skill) => (
+                    <li key={skill}>{skill}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+            <dl className={styles.credits}>
+              <div>
+                <dt>{t.languages}</dt>
+                {languages.map(({ name: language, level }) => (
+                  // One text node: a language name alone could equal another language's label
+                  <dd key={language}>{`${language} — ${level}`}</dd>
+                ))}
+              </div>
+            </dl>
           </section>
         </div>
 

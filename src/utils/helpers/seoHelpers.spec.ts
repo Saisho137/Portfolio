@@ -77,7 +77,7 @@ describe.each(LOCALES)('generateJsonLd("%s")', (lang) => {
       name: profile.name,
       jobTitle: profile.role,
       sameAs: [profile.links.github, profile.links.linkedin],
-      knowsAbout: profile.skills
+      knowsAbout: profile.skills.flatMap(({ items }) => items)
     });
     expect(byType('Person')).not.toHaveProperty('image');
   });

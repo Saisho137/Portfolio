@@ -227,6 +227,20 @@
     & dd {
       margin: 0;
     }
+
+    /* Achievements: a plain (classless) list keeps its semantics in Safari */
+    & ul {
+      display: grid;
+      gap: 0.35rem;
+      margin-block-start: 0.5rem;
+      padding-inline-start: 2ch;
+      list-style: '– ';
+    }
+  }
+
+  .note {
+    display: block;
+    margin-block-start: 0.25rem;
   }
 
   /* hand-drawn doodle */
@@ -378,6 +392,16 @@
   }
 
   /* skills: inline list separated by slashes */
+  .group + .group {
+    margin-block-start: 1.25rem;
+  }
+
+  .groupName {
+    margin-bottom: 0.4rem;
+    font-size: var(--step-0);
+    font-weight: 600;
+  }
+
   .tags {
     display: flex;
     flex-wrap: wrap;

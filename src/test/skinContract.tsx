@@ -71,18 +71,26 @@ export const itFulfillsTheSkinContract = (Skin: ComponentType<SkinProps>) => {
         profile.summary,
         ...profile.about,
         ...profile.projects.map((project) => project.name),
-        ...profile.skills,
-        ...profile.experience.flatMap((job) => [job.role, job.company]),
-        ...profile.education.map((item) => item.institution)
+        ...profile.skills.flatMap(({ category, items }) => [category, ...items]),
+        ...profile.experience.flatMap((job) => [job.role, job.company, ...(job.highlights ?? [])]),
+        ...profile.education.flatMap((item) => [item.institution, ...(item.honors ?? [])]),
+        ...profile.certifications.flatMap((certification) => [
+          certification.name,
+          certification.issuer
+        ]),
+        ...profile.languages.flatMap((language) => [language.name, language.level])
       ].forEach((value) => expect(text).toContain(value.toLowerCase()));
     });
 
-    it('dates every position in the page language', () => {
+    it('dates positions, studies and certifications in the page language', () => {
       const { container } = renderSkin();
       const text = container.textContent ?? '';
 
-      profile.experience
-        .flatMap(({ start, end }) => [start, end])
+      [
+        ...profile.experience.flatMap(({ start, end }) => [start, end]),
+        ...profile.education.map(({ end }) => end),
+        ...profile.certifications.map(({ date }) => date)
+      ]
         .filter((date): date is string => Boolean(date))
         .forEach((date) => expect(text).toContain(formatYearMonth(date, lang)));
     });
@@ -95,6 +103,7 @@ export const itFulfillsTheSkinContract = (Skin: ComponentType<SkinProps>) => {
       expect(hrefs).toContain(profile.links.github);
       expect(hrefs).toContain(profile.links.linkedin);
       if (profile.links.email) expect(hrefs).toContain(`mailto:${profile.links.email}`);
+      profile.certifications.forEach(({ url }) => url && expect(hrefs).toContain(url));
     });
 
     it('links to every language version with real links, marking the current one', () => {
