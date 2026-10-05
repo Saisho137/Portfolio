@@ -1,10 +1,6 @@
 {
-  "embeddedLanguageFormatting": "auto",
-  "trailingComma": "none",
-  "jsxSingleQuote": true,
   "singleQuote": true,
-  "endOfLine": "lf",
-  "printWidth": 100,
-  "semi": true,
-  "tabWidth": 2
+  "jsxSingleQuote": true,
+  "trailingComma": "none",
+  "printWidth": 100
 }
