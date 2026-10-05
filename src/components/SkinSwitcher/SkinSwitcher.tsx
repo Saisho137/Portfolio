@@ -10,6 +10,7 @@ import { format } from '@/i18n/format';
 import { trackEvent } from '@/utils/analytics';
 
 import { BrushIcon, CodeBwIcon, CodeColorIcon } from './icons';
+import { SkinErrorBoundary } from './SkinErrorBoundary';
 import { DEFAULT_SKIN, isLazySkin, type LoadedSkin, loadSkin, type SkinId } from './skins';
 
 import styles from './SkinSwitcher.module.css';
@@ -66,11 +67,23 @@ const SkinSwitcher: FC<SkinSwitcherProps> = ({ children, lang, labels }) => {
     trackEvent('skin_change', { skin: id });
   };
 
+  // Render error in a lazy skin: back to the default one, announced like a manual change
+  const fallBack = () => {
+    setSkin({ id: DEFAULT_SKIN });
+    setAnnouncement(format(labels.announce, { skin: labels.skins[DEFAULT_SKIN] }));
+  };
+
   const { loaded } = skin;
 
   return (
     <>
-      {loaded ? <loaded.Component {...loaded.props} /> : children}
+      {loaded ? (
+        <SkinErrorBoundary key={skin.id} fallback={children} onError={fallBack}>
+          <loaded.Component {...loaded.props} />
+        </SkinErrorBoundary>
+      ) : (
+        children
+      )}
 
       {/* Landmark so the controls aren't orphan content (axe `region`) */}
       <aside className={styles.toolbar} aria-label={labels.label}>

@@ -58,6 +58,22 @@ describe('SkinSwitcher', () => {
     expect(colorLoader).not.toHaveBeenCalled();
   });
 
+  it('falls back to the default skin when a lazy one throws while rendering', async () => {
+    const Broken = () => {
+      throw new Error('render failed');
+    };
+    colorLoader.mockResolvedValue({ default: Broken });
+    // React reports the caught error on the console: expected here
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const { user } = renderSwitcher();
+
+    await user.click(radio('raw-color'));
+
+    await waitFor(() => expect(radio('raw-bw')).toBeChecked());
+    expect(screen.getByRole('heading', { name: 'default skin' })).toBeInTheDocument();
+    expect(screen.getByText(`Style: ${labels.skins['raw-bw']}`)).toBeInTheDocument();
+  });
+
   it('prefetches the skin on hover', async () => {
     const { user } = renderSwitcher();
 
