@@ -1,14 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { getProfile } from '@/content';
 import type { Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/dictionaries';
 
 import Home from './page';
-
-vi.mock('@next/third-parties/google', () => ({ sendGTMEvent: vi.fn() }));
 
 const renderHome = (lang: Locale) => Home({ params: Promise.resolve({ lang }) });
 

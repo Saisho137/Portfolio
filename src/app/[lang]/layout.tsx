@@ -1,9 +1,9 @@
-import { GoogleTagManager } from '@next/third-parties/google';
+import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 
 import { getDictionary } from '@/i18n/dictionaries';
-import { GTM_ID } from '@/utils/constants';
+import { GA_MEASUREMENT_ID, isAnalyticsEnabled } from '@/utils/analytics';
 import { buildSiteMetadata, generateJsonLd, serializeJsonLd } from '@/utils/helpers';
 import { THEME_COLORS, THEME_INIT_SCRIPT } from '@/utils/theme';
 
@@ -41,7 +41,6 @@ export default async function RootLayout({
     // suppressHydrationWarning: THEME_INIT_SCRIPT sets data-theme on <html> before React
     // hydrates. It only covers this element's attributes, not its children
     <html lang={lang} suppressHydrationWarning>
-      <GoogleTagManager gtmId={GTM_ID} />
       <head>
         {/* Blocking on purpose: must run before first paint to avoid a theme flash */}
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
@@ -50,22 +49,13 @@ export default async function RootLayout({
         <a className='skip-link' href='#main'>
           {dict.skipLink}
         </a>
-        <noscript>
-          <iframe
-            title='google tag manager'
-            // Only fires GTM's no-JS pixel: it needs no scripts, forms or same-origin access
-            sandbox=''
-            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
-            height='0'
-            width='0'
-            style={{ display: 'none', visibility: 'hidden' }}
-          />
-        </noscript>
         <script
           type='application/ld+json'
           dangerouslySetInnerHTML={{ __html: serializeJsonLd(generateJsonLd(lang)) }}
         />
         {children}
+        {/* Loads after hydration (async), never blocking the page. Production deploy only */}
+        {isAnalyticsEnabled() && <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />}
       </body>
     </html>
   );

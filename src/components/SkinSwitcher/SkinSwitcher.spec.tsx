@@ -12,8 +12,8 @@ import { mockMatchMedia } from '../../../vitest.setup';
 import { loaders, resetSkinCache, type SkinId } from './skins';
 import SkinSwitcher from './SkinSwitcher';
 
-const sendGTMEvent = vi.hoisted(() => vi.fn());
-vi.mock('@next/third-parties/google', () => ({ sendGTMEvent }));
+const trackEvent = vi.hoisted(() => vi.fn());
+vi.mock('@/utils/analytics', () => ({ trackEvent }));
 
 const FakeColorSkin = () => <h1>color skin</h1>;
 const FakeBrutalistSkin = ({ profile, lang }: SkinProps) => (
@@ -104,7 +104,7 @@ describe('SkinSwitcher', () => {
     expect(screen.queryByRole('heading', { name: 'default skin' })).not.toBeInTheDocument();
     expect(radio('brutalist')).toBeChecked();
     expect(screen.getByText(`Style: ${labels.skins.brutalist}`)).toBeInTheDocument();
-    expect(sendGTMEvent).toHaveBeenCalledWith({ event: 'skin_change', skin: 'brutalist' });
+    expect(trackEvent).toHaveBeenCalledWith('skin_change', { skin: 'brutalist' });
   });
 
   it('hands the lazy skin the content and UI of the page language', async () => {

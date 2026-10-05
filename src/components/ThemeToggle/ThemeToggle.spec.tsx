@@ -9,6 +9,9 @@ import { mockMatchMedia } from '../../../vitest.setup';
 
 import ThemeToggle from './ThemeToggle';
 
+const trackEvent = vi.hoisted(() => vi.fn());
+vi.mock('@/utils/analytics', () => ({ trackEvent }));
+
 const labels = getDictionary('en').settings.theme;
 
 const renderToggle = () => ({
@@ -58,6 +61,7 @@ describe('ThemeToggle', () => {
 
     expect(document.documentElement.dataset.theme).toBe('dark');
     expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('dark');
+    expect(trackEvent).toHaveBeenCalledWith('theme_change', { theme: 'dark' });
     expect(screen.getByRole('button', { name: 'Switch to light theme' })).toBeInTheDocument();
   });
 

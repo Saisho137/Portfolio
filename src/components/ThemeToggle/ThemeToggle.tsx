@@ -4,6 +4,7 @@ import { type FC, useSyncExternalStore } from 'react';
 import { flushSync } from 'react-dom';
 
 import type { Dictionary } from '@/i18n/dictionaries';
+import { trackEvent } from '@/utils/analytics';
 import { isTheme, syncThemeColor, THEME_STORAGE_KEY, type Theme } from '@/utils/theme';
 
 import styles from './ThemeToggle.module.css';
@@ -71,6 +72,8 @@ const ThemeToggle: FC<ThemeToggleProps> = ({ labels }) => {
     } else {
       applyTheme(next);
     }
+
+    trackEvent('theme_change', { theme: next });
   };
 
   return (

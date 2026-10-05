@@ -6,8 +6,8 @@ import { getDictionary } from '@/i18n/dictionaries';
 
 import CopyEmail from './CopyEmail';
 
-const sendGTMEvent = vi.hoisted(() => vi.fn());
-vi.mock('@next/third-parties/google', () => ({ sendGTMEvent }));
+const trackEvent = vi.hoisted(() => vi.fn());
+vi.mock('@/utils/analytics', () => ({ trackEvent }));
 
 const EMAIL = 'name@example.com';
 const labels = getDictionary('en').email;
@@ -61,7 +61,7 @@ describe('CopyEmail', () => {
     expect(lastClick.followed).toBe(false);
     expect(writeText).toHaveBeenCalledWith(EMAIL);
     expect(screen.getByRole('status')).toHaveTextContent(labels.copied);
-    expect(sendGTMEvent).toHaveBeenCalledWith({ event: 'email_copy' });
+    expect(trackEvent).toHaveBeenCalledWith('email_copy', {});
   });
 
   it('clears the message after a moment', async () => {
