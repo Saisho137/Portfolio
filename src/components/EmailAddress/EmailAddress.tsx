@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 
 /**
  * Email shown in display type: if it has to wrap, it breaks right after the `@`

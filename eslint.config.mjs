@@ -5,7 +5,14 @@ import prettier from 'eslint-config-prettier/flat';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig([
-  globalIgnores(['.next/**', 'out/**', 'coverage/**', 'next-env.d.ts']),
+  globalIgnores([
+    '.next/**',
+    'out/**',
+    'coverage/**',
+    'next-env.d.ts',
+    'test-results/**',
+    'playwright-report/**'
+  ]),
   ...nextVitals,
   ...nextTs,
   {
@@ -22,6 +29,15 @@ export default defineConfig([
     rules: {
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'error',
+      // Type-only imports are erased: they never pull a module into a client bundle
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        { prefer: 'type-imports', fixStyle: 'inline-type-imports' }
+      ],
+      // ...and an import with only inline `type` specifiers becomes `import type`
+      '@typescript-eslint/no-import-type-side-effects': 'error',
+      eqeqeq: ['error', 'always', { null: 'ignore' }],
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
       'import/order': [
         'error',
         {

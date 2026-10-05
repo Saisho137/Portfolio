@@ -1,6 +1,6 @@
 import { GoogleTagManager } from '@next/third-parties/google';
 import type { Metadata, Viewport } from 'next';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import { getDictionary } from '@/i18n/dictionaries';
 import { GTM_ID } from '@/utils/constants';

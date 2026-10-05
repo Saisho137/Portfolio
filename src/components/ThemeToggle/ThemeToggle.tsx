@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useSyncExternalStore } from 'react';
+import { type FC, useSyncExternalStore } from 'react';
 import { flushSync } from 'react-dom';
 
 import type { Dictionary } from '@/i18n/dictionaries';

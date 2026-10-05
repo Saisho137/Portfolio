@@ -1,7 +1,7 @@
 'use client';
 
 import { sendGTMEvent } from '@next/third-parties/google';
-import { FC, ReactNode, useState } from 'react';
+import { type FC, type ReactNode, useState } from 'react';
 import { flushSync } from 'react-dom';
 
 import { ThemeToggle } from '@/components/ThemeToggle';

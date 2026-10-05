@@ -1,7 +1,7 @@
 'use client';
 
 import { sendGTMEvent } from '@next/third-parties/google';
-import { AnchorHTMLAttributes, FC, MouseEvent, useEffect, useState } from 'react';
+import { type AnchorHTMLAttributes, type FC, type MouseEvent, useEffect, useState } from 'react';
 
 import { EmailAddress } from '@/components/EmailAddress';
 import type { Dictionary } from '@/i18n/dictionaries';
