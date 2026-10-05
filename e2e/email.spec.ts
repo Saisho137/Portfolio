@@ -25,6 +25,9 @@ for (const skin of SKINS) {
     await selectSkin(page, skin);
     const email = page.locator('#contact a[href^="mailto:"]');
     await email.scrollIntoViewIfNeeded();
+    // Lazy skins fetch their fonts on demand: over the network they swap in late and
+    // would move the layout between both measurements, toast or not
+    await page.evaluate(() => document.fonts.ready);
     const before = await contactLayout(page);
 
     await email.click();
