@@ -44,4 +44,21 @@ describe('next.config', () => {
       expect.arrayContaining([{ source: '/privacy', destination: '/en/privacy' }])
     );
   });
+
+  it('sends the security headers on every path', async () => {
+    const [rule, ...rest] = (await nextConfig.headers?.()) ?? [];
+    const headers = Object.fromEntries(rule?.headers.map(({ key, value }) => [key, value]) ?? []);
+
+    expect(rest).toEqual([]);
+    expect(rule?.source).toBe('/:path*');
+    expect(headers).toMatchObject({
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'Cross-Origin-Opener-Policy': 'same-origin'
+    });
+    expect(headers['Content-Security-Policy']).toContain("frame-ancestors 'none'");
+    // A script-src would block Next's inline scripts and GA on the prerendered pages
+    expect(headers['Content-Security-Policy']).not.toContain('script-src');
+  });
 });
