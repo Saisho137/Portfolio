@@ -5,8 +5,19 @@ import { LOCALES } from '@/i18n/config';
 import { getProjectImage, getProfile, projectImages, SECTION_IDS, type Profile } from '.';
 
 /** Everything that must not change between languages: only texts are translated */
-const languageNeutral = ({ name, links, projects, experience, education, skills }: Profile) => ({
+const languageNeutral = ({
   name,
+  location,
+  links,
+  projects,
+  experience,
+  education,
+  certifications,
+  languages,
+  skills
+}: Profile) => ({
+  name,
+  location,
   links,
   projects: projects.map(({ name: project, url, image, tags }) => ({
     project,
@@ -14,10 +25,27 @@ const languageNeutral = ({ name, links, projects, experience, education, skills 
     image: image?.id,
     tags
   })),
-  experience: experience.map(({ company, url, start, end }) => ({ company, url, start, end })),
-  education: education.map(({ institution, url }) => ({ institution, url })),
-  skills: skills.length
+  experience: experience.map(({ company, url, start, end, highlights }) => ({
+    company,
+    url,
+    start,
+    end,
+    highlights: highlights?.length
+  })),
+  education: education.map(({ institution, url, end, honors }) => ({
+    institution,
+    url,
+    end,
+    honors: honors?.length
+  })),
+  // Certification names are proper names: identical in every language
+  certifications,
+  languages: languages.map(({ code }) => code),
+  skills: skills.map(({ items }) => items.length)
 });
+
+const YEAR_MONTH = /^\d{4}-(0[1-9]|1[0-2])$/;
+const NOW = '9999-99';
 
 describe.each(LOCALES)('profile content in "%s"', (lang) => {
   const profile = getProfile(lang);
@@ -35,6 +63,7 @@ describe.each(LOCALES)('profile content in "%s"', (lang) => {
       profile.links.linkedin,
       ...profile.experience.map((job) => job.url),
       ...profile.education.map((item) => item.url),
+      ...profile.certifications.map((certification) => certification.url),
       ...profile.projects.map((project) => project.url)
     ].filter(Boolean);
 
@@ -50,23 +79,43 @@ describe.each(LOCALES)('profile content in "%s"', (lang) => {
     });
   });
 
-  it('dates positions as YYYY-MM, newest first', () => {
-    const dates = profile.experience.flatMap(({ start, end }) => [start, end]).filter(Boolean);
-    const starts = profile.experience.map(({ start }) => start ?? '');
+  it('dates everything as YYYY-MM', () => {
+    [
+      ...profile.experience.flatMap(({ start, end }) => [start, end]),
+      ...profile.education.map(({ end }) => end),
+      ...profile.certifications.map(({ date }) => date)
+    ]
+      .filter(Boolean)
+      .forEach((date) => expect(date).toMatch(YEAR_MONTH));
+  });
 
-    dates.forEach((date) => expect(date).toMatch(/^\d{4}-(0[1-9]|1[0-2])$/));
-    expect(starts).toEqual([...starts].sort().reverse());
+  // Current positions first (the first one is the main job: "Currently", JSON-LD worksFor),
+  // then by end date. Parallel roles keep the JSON order
+  it('lists current positions first, then the rest by end date, newest first', () => {
+    const ends = profile.experience.map(({ end }) => end ?? NOW);
+
+    expect(profile.experience[0]?.end).toBeUndefined();
+    expect(ends).toEqual([...ends].sort().reverse());
+  });
+
+  it('lists certifications newest first', () => {
+    const dates = profile.certifications.map(({ date }) => date);
+
+    expect(dates).toEqual([...dates].sort().reverse());
   });
 
   it('uses no emoji (they render inconsistently across the skins fonts)', () => {
     expect(JSON.stringify(profile)).not.toMatch(/\p{Extended_Pictographic}/u);
   });
 
-  it('has unique project names and skills', () => {
+  it('has unique project names, skill categories and skills', () => {
     const names = profile.projects.map((project) => project.name);
+    const categories = profile.skills.map(({ category }) => category);
+    const skills = profile.skills.flatMap(({ items }) => items);
 
     expect(new Set(names).size).toBe(names.length);
-    expect(new Set(profile.skills).size).toBe(profile.skills.length);
+    expect(new Set(categories).size).toBe(categories.length);
+    expect(new Set(skills).size).toBe(skills.length);
   });
 });
 
@@ -83,6 +132,11 @@ describe('profile translations', () => {
 
     expect(es.summary).not.toBe(en.summary);
     es.about.forEach((paragraph, index) => expect(paragraph).not.toBe(en.about[index]));
+    es.experience.forEach(({ highlights = [] }, job) =>
+      highlights.forEach((text, index) =>
+        expect(text).not.toBe(en.experience[job]?.highlights?.[index])
+      )
+    );
   });
 });
 

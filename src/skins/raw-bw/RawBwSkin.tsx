@@ -2,9 +2,10 @@ import Image from 'next/image';
 import type { FC } from 'react';
 
 import { CopyEmail } from '@/components/CopyEmail';
+import { CurrentYear } from '@/components/CurrentYear';
 import { getProjectImage, SECTION_IDS } from '@/content';
-import { getLanguageLinks } from '@/i18n/config';
-import { formatPeriod } from '@/i18n/format';
+import { getLanguageLinks, PAGES, pagePath } from '@/i18n/config';
+import { formatPeriod, formatYearMonth } from '@/i18n/format';
 import type { SkinProps } from '@/skins/types';
 
 import { mono, sans } from './fonts';
@@ -17,9 +18,11 @@ import styles from './RawBwSkin.module.css';
  * with the selector printed on its corner (decoration hidden from AT in CSS).
  */
 const RawBwSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
-  const { name, role, summary, about, links, projects, experience, education, skills } = profile;
+  const { name, role, summary, about, links, projects, experience, education } = profile;
+  const { certifications, languages, skills } = profile;
   const t = dict.rawBw;
-  const year = new Date().getFullYear();
+  // Prerendered: evaluated at build time, CurrentYear updates it in the browser
+  const buildYear = new Date().getFullYear();
 
   return (
     <div className={`${styles.skin} ${mono.variable} ${sans.variable}`}>
@@ -125,6 +128,13 @@ const RawBwSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
                     <strong>{job.role}</strong> ·{' '}
                     {job.url ? <a href={job.url}>{job.company}</a> : job.company}
                   </span>
+                  {job.highlights && (
+                    <ul>
+                      {job.highlights.map((highlight) => (
+                        <li key={highlight}>{highlight}</li>
+                      ))}
+                    </ul>
+                  )}
                 </li>
               ))}
             </ol>
@@ -132,10 +142,30 @@ const RawBwSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
             <ul className={styles.timeline}>
               {education.map((item) => (
                 <li key={item.institution}>
+                  {item.end && (
+                    <span className={styles.dim}>{formatYearMonth(item.end, lang)}</span>
+                  )}
                   {item.degree && <strong>{item.degree}</strong>}
                   <span>
                     {item.url ? <a href={item.url}>{item.institution}</a> : item.institution}
                   </span>
+                  {item.honors && <span className={styles.dim}>{item.honors.join(' · ')}</span>}
+                </li>
+              ))}
+            </ul>
+            <h3 className={styles.subhead}>{t.certifications}</h3>
+            <ul className={styles.timeline}>
+              {certifications.map((certification) => (
+                <li key={certification.name}>
+                  <span className={styles.dim}>{formatYearMonth(certification.date, lang)}</span>
+                  <strong>
+                    {certification.url ? (
+                      <a href={certification.url}>{certification.name}</a>
+                    ) : (
+                      certification.name
+                    )}
+                  </strong>
+                  <span>{certification.issuer}</span>
                 </li>
               ))}
             </ul>
@@ -143,9 +173,21 @@ const RawBwSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
 
           <section id='skills' data-el='section#skills'>
             <h2>{t.skills}</h2>
-            <ul className={styles.skills}>
-              {skills.map((skill) => (
-                <li key={skill}>{skill.toLowerCase()}</li>
+            {skills.map(({ category, items }) => (
+              <div key={category} className={styles.group}>
+                <h3 className={styles.groupName}>{category.toLowerCase()}</h3>
+                <ul className={styles.skills}>
+                  {items.map((skill) => (
+                    <li key={skill}>{skill.toLowerCase()}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+            <h3 className={styles.subhead}>{t.languages}</h3>
+            <ul className={styles.timeline}>
+              {languages.map(({ name: language, level }) => (
+                // One text node: a language name alone could equal another language's label
+                <li key={language}>{`${language} — ${level}`}</li>
               ))}
             </ul>
           </section>
@@ -172,11 +214,9 @@ const RawBwSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
 
       <footer className={styles.foot} data-el='footer'>
         <span>
-          © {year} {name.toLowerCase()}
+          © <CurrentYear buildYear={buildYear} /> {name.toLowerCase()}
         </span>
-        <span>
-          <a href={links.github}>github</a> · <a href={links.linkedin}>linkedin</a>
-        </span>
+        <a href={pagePath(lang, PAGES.privacy)}>{dict.legal.privacy.toLowerCase()}</a>
       </footer>
     </div>
   );

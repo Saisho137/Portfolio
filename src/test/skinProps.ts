@@ -1,5 +1,5 @@
 import { getProfile } from '@/content';
-import type { Locale } from '@/i18n/config';
+import { LOCALE_NAMES, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/dictionaries';
 import type { SkinProps } from '@/skins/types';
 
@@ -22,7 +22,10 @@ const leaves = (value: unknown): string[] =>
  * If one shows up while rendering `lang`, a string is hardcoded or leaked across languages.
  */
 export const textsOnlyIn = (other: Locale, lang: Locale): string[] => {
-  const own = new Set(leaves(skinProps(lang)).map((text) => text.toLowerCase()));
+  // Endonyms belong to every page: the language links name each language in itself
+  const own = new Set(
+    [...leaves(skinProps(lang)), ...Object.values(LOCALE_NAMES)].map((text) => text.toLowerCase())
+  );
 
   return [...new Set(leaves(skinProps(other)).map((text) => text.toLowerCase()))].filter(
     (text) => !own.has(text)

@@ -17,6 +17,7 @@
     "prepare": "husky",
     "knip": "knip",
     "test:e2e": "playwright test",
+    "test:visual": "playwright test --project=visual",
     "test:lighthouse": "BASE_URL=https://santiago-betancur-duque.vercel.app LH_STRICT=1 playwright test --project=lighthouse"
   },
   "dependencies": {

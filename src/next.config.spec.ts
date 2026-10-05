@@ -24,6 +24,41 @@ describe('next.config', () => {
     const rewrites = await nextConfig.rewrites?.();
 
     expect(redirects).toContainEqual({ source: '/en', destination: '/', permanent: true });
-    expect(rewrites).toMatchObject({ beforeFiles: [{ source: '/', destination: '/en' }] });
+    expect(rewrites).toHaveProperty(
+      'beforeFiles',
+      expect.arrayContaining([{ source: '/', destination: '/en' }])
+    );
+  });
+
+  it('does the same for the other pages: /privacy is English, /en/privacy folds into it', async () => {
+    const redirects = (await nextConfig.redirects?.()) ?? [];
+    const rewrites = await nextConfig.rewrites?.();
+
+    expect(redirects).toContainEqual({
+      source: '/en/privacy',
+      destination: '/privacy',
+      permanent: true
+    });
+    expect(rewrites).toHaveProperty(
+      'beforeFiles',
+      expect.arrayContaining([{ source: '/privacy', destination: '/en/privacy' }])
+    );
+  });
+
+  it('sends the security headers on every path', async () => {
+    const [rule, ...rest] = (await nextConfig.headers?.()) ?? [];
+    const headers = Object.fromEntries(rule?.headers.map(({ key, value }) => [key, value]) ?? []);
+
+    expect(rest).toEqual([]);
+    expect(rule?.source).toBe('/:path*');
+    expect(headers).toMatchObject({
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'Cross-Origin-Opener-Policy': 'same-origin'
+    });
+    expect(headers['Content-Security-Policy']).toContain("frame-ancestors 'none'");
+    // A script-src would block Next's inline scripts and GA on the prerendered pages
+    expect(headers['Content-Security-Policy']).not.toContain('script-src');
   });
 });

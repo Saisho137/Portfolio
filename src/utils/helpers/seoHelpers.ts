@@ -12,6 +12,8 @@ import {
 } from '@/i18n/config';
 import { GOOGLE_SITE_VERIFICATION, SITE_URL } from '@/utils/constants';
 
+import { getContentUpdatedAt } from './contentDate';
+
 export const getSiteTitle = ({ name, role }: Profile) => `${name} — ${role}`;
 
 /**
@@ -60,6 +62,7 @@ export const generateJsonLd = (lang: Locale) => {
   const url = localeUrl(lang);
   const [currentJob] = profile.experience;
   const [university] = profile.education;
+  const updatedAt = getContentUpdatedAt();
 
   return {
     '@context': 'https://schema.org',
@@ -80,7 +83,8 @@ export const generateJsonLd = (lang: Locale) => {
         name: getSiteTitle(profile),
         inLanguage: lang,
         isPartOf: { '@id': WEBSITE_ID },
-        mainEntity: { '@id': PERSON_ID }
+        mainEntity: { '@id': PERSON_ID },
+        ...(updatedAt && { dateModified: updatedAt })
       },
       {
         '@type': 'Person',
@@ -90,7 +94,29 @@ export const generateJsonLd = (lang: Locale) => {
         jobTitle: profile.role,
         description: profile.summary,
         sameAs: [profile.links.github, profile.links.linkedin],
-        knowsAbout: profile.skills,
+        knowsAbout: profile.skills.flatMap(({ items }) => items),
+        knowsLanguage: profile.languages.map(({ code, name }) => ({
+          '@type': 'Language',
+          name,
+          alternateName: code
+        })),
+        homeLocation: {
+          '@type': 'Place',
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: profile.location.city,
+            addressCountry: profile.location.countryCode
+          }
+        },
+        hasCredential: profile.certifications.map(({ name, issuer, date, url: credentialUrl }) => ({
+          '@type': 'EducationalOccupationalCredential',
+          name,
+          credentialCategory: 'certification',
+          recognizedBy: { '@type': 'Organization', name: issuer },
+          dateCreated: date,
+          ...(credentialUrl && { url: credentialUrl })
+        })),
+        award: profile.education.flatMap(({ honors = [] }) => honors),
         ...(profile.links.email && { email: `mailto:${profile.links.email}` }),
         ...(currentJob && {
           worksFor: { '@type': 'Organization', name: currentJob.company, url: currentJob.url }

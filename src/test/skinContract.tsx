@@ -4,7 +4,7 @@ import type { ComponentType } from 'react';
 import { describe, expect, it } from 'vitest';
 
 import { SECTION_IDS } from '@/content';
-import { LOCALES, localePath, otherLocales } from '@/i18n/config';
+import { LOCALES, localePath, otherLocales, PAGES, pagePath } from '@/i18n/config';
 import { formatYearMonth } from '@/i18n/format';
 import type { SkinProps } from '@/skins/types';
 
@@ -71,18 +71,26 @@ export const itFulfillsTheSkinContract = (Skin: ComponentType<SkinProps>) => {
         profile.summary,
         ...profile.about,
         ...profile.projects.map((project) => project.name),
-        ...profile.skills,
-        ...profile.experience.flatMap((job) => [job.role, job.company]),
-        ...profile.education.map((item) => item.institution)
+        ...profile.skills.flatMap(({ category, items }) => [category, ...items]),
+        ...profile.experience.flatMap((job) => [job.role, job.company, ...(job.highlights ?? [])]),
+        ...profile.education.flatMap((item) => [item.institution, ...(item.honors ?? [])]),
+        ...profile.certifications.flatMap((certification) => [
+          certification.name,
+          certification.issuer
+        ]),
+        ...profile.languages.flatMap((language) => [language.name, language.level])
       ].forEach((value) => expect(text).toContain(value.toLowerCase()));
     });
 
-    it('dates every position in the page language', () => {
+    it('dates positions, studies and certifications in the page language', () => {
       const { container } = renderSkin();
       const text = container.textContent ?? '';
 
-      profile.experience
-        .flatMap(({ start, end }) => [start, end])
+      [
+        ...profile.experience.flatMap(({ start, end }) => [start, end]),
+        ...profile.education.map(({ end }) => end),
+        ...profile.certifications.map(({ date }) => date)
+      ]
         .filter((date): date is string => Boolean(date))
         .forEach((date) => expect(text).toContain(formatYearMonth(date, lang)));
     });
@@ -95,6 +103,17 @@ export const itFulfillsTheSkinContract = (Skin: ComponentType<SkinProps>) => {
       expect(hrefs).toContain(profile.links.github);
       expect(hrefs).toContain(profile.links.linkedin);
       if (profile.links.email) expect(hrefs).toContain(`mailto:${profile.links.email}`);
+      profile.certifications.forEach(({ url }) => url && expect(hrefs).toContain(url));
+    });
+
+    it('links to the privacy notice in its language from the footer', () => {
+      renderSkin();
+
+      const footer = screen.getByRole('contentinfo');
+
+      expect(
+        within(footer).getByRole('link', { name: new RegExp(dict.legal.privacy, 'i') })
+      ).toHaveAttribute('href', pagePath(lang, PAGES.privacy));
     });
 
     it('links to every language version with real links, marking the current one', () => {

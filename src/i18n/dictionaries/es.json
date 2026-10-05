@@ -8,6 +8,9 @@
     "copy": "Copiar el correo",
     "copied": "Correo copiado"
   },
+  "legal": {
+    "privacy": "Privacidad"
+  },
   "sections": {
     "about": "sobre mí",
     "work": "proyectos",
@@ -42,7 +45,9 @@
     "education": "Educación",
     "skills": "Habilidades",
     "contactNote": "// abierto a roles y colaboraciones",
-    "contact": "Contacto"
+    "contact": "Contacto",
+    "certifications": "Certificaciones",
+    "languages": "Idiomas"
   },
   "rawColor": {
     "work": "Proyectos",
@@ -60,7 +65,9 @@
     "skills": "Habilidades",
     "contact": "Contacto",
     "contactNote": "Abierto a roles y colaboraciones.",
-    "footerComment": "mismo contenido, otro marcado. prueba los otros estilos"
+    "footerComment": "mismo contenido, otro marcado. prueba los otros estilos",
+    "certifications": "certificaciones",
+    "languages": "idiomas"
   },
   "brutalist": {
     "greeting": "¡hola!!!",
@@ -101,6 +108,8 @@
     "role": "Cargo",
     "education": "Educación:",
     "contactNote": "Abierto a roles y colaboraciones.",
-    "top": "Volver arriba"
+    "top": "Volver arriba",
+    "certification": "Certificación:",
+    "languages": "Idiomas:"
   }
 }

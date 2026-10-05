@@ -28,7 +28,7 @@ Un solo contenido, en inglés (`/`) y español (`/es`), que se puede ver con tre
    ```sh
    npm run prepush
    ```
-   Corrige lo que pueda (`eslint --fix`, `prettier --write`) y luego corre typecheck, tests (con coverage, umbral 85% de líneas) y build. Solo falla si queda algo que no se pudo corregir automáticamente. El hook `pre-push` lo ejecuta solo (ver [Git hooks](#git-hooks)).
+   Corrige lo que pueda (`eslint --fix`, `prettier --write`) y luego corre typecheck, tests (con coverage: umbral de 85% en líneas, sentencias y funciones, y 80% en ramas) y build. Solo falla si queda algo que no se pudo corregir automáticamente. El hook `pre-push` lo ejecuta solo (ver [Git hooks](#git-hooks)).
 
 | Script                    | Qué hace                                                                                    |
 | ------------------------- | ------------------------------------------------------------------------------------------- |
@@ -41,6 +41,7 @@ Un solo contenido, en inglés (`/`) y español (`/es`), que se puede ver con tre
 | `npm run test`            | Vitest una vez, siempre con coverage                                                        |
 | `npm run test:watch`      | Vitest en modo watch                                                                        |
 | `npm run test:e2e`        | Playwright contra el build local (correr `build` antes)                                     |
+| `npm run test:visual`     | Solo la regresión visual (`-- --update-snapshots` regenera las baselines)                   |
 | `npm run test:lighthouse` | Lighthouse estricto contra producción                                                       |
 | `npm run format`          | Prettier (`format:check` solo verifica)                                                     |
 | `npm run prepush`         | Lint fix + format + typecheck + test + build                                                |
@@ -49,8 +50,9 @@ Un solo contenido, en inglés (`/`) y español (`/es`), que se puede ver con tre
 
 Scripts manuales, fuera de `prepush`: se corren cuando se quiere validar en navegador. Playwright con el Chrome instalado (`channel: 'chrome'`, no descarga navegadores). Por defecto levanta `next start` en el puerto 3100, así que antes hay que correr `npm run build`. Con `BASE_URL` prueba un sitio desplegado.
 
-- **desktop**: rutas, redirects y 404; head SEO y JSON-LD por idioma; axe con contraste en las 3 skins × 2 idiomas × 2 temas; que las skins lazy solo descarguen el idioma activo; navegación sin JS; tema + `theme-color` + persistencia; copiar el email (portapapeles, toast que no mueve nada).
+- **desktop**: rutas, redirects, 404, aviso de privacidad y headers de seguridad; head SEO y JSON-LD por idioma; axe con contraste en las 3 skins × 2 idiomas × 2 temas; que las skins lazy solo descarguen el idioma activo; navegación sin JS; tema + `theme-color` + persistencia; copiar el email (portapapeles, toast que no mueve nada).
 - **mobile** (Pixel 7, táctil): las screenshots toman color al cruzar el centro de la pantalla, y quedan a color con reduced motion.
+- **visual**: captura de página completa de cada skin × tema × idioma, más el aviso de privacidad, comparada píxel a píxel (sin tolerancia) con las baselines de `e2e/visual.spec.ts-snapshots/`. Reloj fijo (el año del footer no cambia las capturas), sin animaciones y sin los overlays de grano/estática (ruido que solo engorda los PNG). Las baselines dependen del render de fuentes del sistema (sufijo `-darwin`): tras un cambio visual intencional se regeneran y se revisan antes del commit.
 - **lighthouse**: accesibilidad, buenas prácticas, SEO y agentic browsing en 100 siempre. Performance tiene margen porque medida desde una máquina varía con la red (el mismo deploy da 95–100 en corridas seguidas): ≥ 90 en local (sin CDN) y ≥ 95 con la mediana de 3 corridas en `test:lighthouse`. `LH_MIN_PERFORMANCE` cambia el umbral. Imprime los puntajes reales.
 
 ### Git hooks
@@ -64,9 +66,11 @@ Scripts manuales, fuera de `prepush`: se corren cuando se quiere validar en nave
 
 ### Contenido
 
-`src/content/profile.{en,es}.json` son la única fuente de verdad: perfil, about, proyectos, experiencia, educación, skills y enlaces, uno por idioma. Ambos se tipan con `Profile` (si uno se desvía del esquema, falla `tsc`) y un test de paridad exige que URLs, fechas, ids de imagen, tags y cantidades coincidan: solo cambian los textos. `SECTION_IDS` son los IDs de sección que comparten todas las skins (`about`, `work`, `experience`, `skills`, `contact`).
+`src/content/profile.{en,es}.json` son la única fuente de verdad: perfil, ubicación, about, proyectos, experiencia (con logros), educación (con honores), certificaciones, idiomas, skills por categoría y enlaces, uno por idioma. Ambos se tipan con `Profile` (si uno se desvía del esquema, falla `tsc`) y un test de paridad exige que URLs, fechas, ids de imagen, tags, certificaciones y cantidades coincidan: solo cambian los textos. `SECTION_IDS` son los IDs de sección que comparten todas las skins (`about`, `work`, `experience`, `skills`, `contact`).
 
-La metadata (`buildSiteMetadata` en el layout), el JSON-LD (`WebSite` + `ProfilePage` + `Person`) y la imagen social (`src/app/[lang]/opengraph-image.tsx`, generada en build) salen del JSON de cada idioma.
+La metadata (`buildSiteMetadata` en el layout), el JSON-LD (`WebSite` + `ProfilePage` + `Person` con idiomas, ubicación, credenciales verificables en Credly y honores) y la imagen social (`src/app/[lang]/opengraph-image.tsx`, generada en build) salen del JSON de cada idioma.
+
+`ProfilePage.dateModified` y el `lastmod` del sitemap son la fecha del último commit que cambió los JSON de perfil (`src/utils/helpers/contentDate.ts`, leída de git en el build). Nunca la fecha del build: sin git, o si ese commit queda fuera de un clon superficial (el borde de un clon superficial aparenta crear todos los archivos), se omiten.
 
 ### Idiomas
 
@@ -96,6 +100,13 @@ Google Analytics 4 directo (sin Tag Manager), con `GoogleAnalytics` de `@next/th
 
 - **Automático (medición mejorada de GA4)**: páginas vistas por idioma, fuente del tráfico, scroll y clics salientes (GitHub, LinkedIn, proyectos).
 - **Eventos propios** (`src/utils/analytics.ts`, tipados, sin datos personales): `email_copy` (evento clave: intención de contacto), `skin_change` (`skin`) y `theme_change` (`theme`). Los componentes llaman a `trackEvent`, no a la librería.
+- **Aviso de privacidad** (`src/app/[lang]/privacy/`): `/privacy` y `/es/privacy`, enlazado desde el footer de las 3 skins. Estático, sin JS, `noindex` y fuera del sitemap. Cubre el aviso de privacidad de la Ley 1581 de 2012 (Decreto 1377, art. 15) y la sección 7 de los términos de Google Analytics (aviso del uso de GA y sus cookies, y el enlace a "How Google uses information…"). Los textos viven en `notice.tsx`, no en los diccionarios (las skins lazy los cargarían sin usarlos); al cambiarlos se actualiza `NOTICE_UPDATED`. Declara una retención de 14 meses: debe coincidir con la de la propiedad de GA4 (Admin → Retención de datos). No hay banner de consentimiento: decisión consciente, que no cubre el opt-in que exige la UE/UK para la cookie `_ga`.
+
+### Seguridad y resiliencia
+
+- **Headers** (`next.config.ts`, en todas las rutas, aplicados por Vercel en el edge): `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy`, `X-Frame-Options` y una CSP con `frame-ancestors`, `object-src`, `base-uri` y `form-action`. Sin `script-src` a propósito: en una página prerenderizada los scripts inline de Next (y GA) exigirían `'unsafe-inline'`, y un nonce obligaría a renderizar en cada request.
+- **Skins que fallan**: si una skin lazy lanza un error al renderizar, `SkinErrorBoundary` vuelve a raw-bw (lo anuncia como un cambio normal) en vez de tumbar la página.
+- **Año del footer**: raw-bw está prerenderizada; `CurrentYear` hidrata con el año del build (sin mismatch) y luego muestra el año actual, sin redeploy.
 
 ### Tema y accesibilidad
 
@@ -114,7 +125,7 @@ El detalle de la decisión y las alternativas descartadas está en [`docs/design
 ```
 src/
 ├── app/                  # App Router: manifest, robots, sitemap, iconos, 404 global
-│   └── [lang]/           # Layout (metadata), página e imágenes sociales por idioma
+│   └── [lang]/           # Layout (metadata), página, aviso de privacidad e imágenes sociales
 ├── assets/
 │   ├── fonts/og/         # TTF solo para la imagen social (next/og no lee woff2)
 │   └── images/projects/  # Screenshots, importados estáticamente
@@ -137,7 +148,7 @@ El dominio anterior (`portfolio-six-blond-30.vercel.app`) redirige con un 308 al
 
 ### Editar el contenido
 
-Se tocan `src/content/profile.en.json` y `profile.es.json` (los textos traducidos; URLs, fechas, ids de imagen y tags iguales en ambos). Los textos de interfaz están en `src/i18n/dictionaries/`. Los campos opcionales (`description`, `url`, `tags`, fechas, `degree`, `email`) aparecen en las skins cuando tienen valor. Las fechas de experiencia van como `YYYY-MM` (sin `end` = cargo actual), del más reciente al más antiguo; cada skin las formatea con `Intl` en su idioma (`Mar 2026` / `mar 2026`).
+Se tocan `src/content/profile.en.json` y `profile.es.json` (los textos traducidos; URLs, fechas, ids de imagen, tags y certificaciones iguales en ambos, y la misma cantidad de logros, honores, idiomas y skills por categoría). Los textos de interfaz están en `src/i18n/dictionaries/`. Los campos opcionales (`description`, `url`, `tags`, fechas, `degree`, `highlights`, `honors`, `email`) aparecen en las skins cuando tienen valor. Todas las fechas van como `YYYY-MM` y cada skin las formatea con `Intl` en su idioma (`Mar 2026` / `mar 2026`). La experiencia va con los cargos actuales primero (sin `end`; el primero es el principal: "Currently" y `worksFor` del JSON-LD) y luego por fecha de fin; las certificaciones, de la más reciente a la más antigua. Los nombres de herramientas no se traducen; las categorías y los conceptos de skills sí.
 
 Para agregar una imagen de proyecto:
 
@@ -151,7 +162,7 @@ Un id inexistente rompe el build, y hay tests que verifican que no queden imáge
 
 1. Crear `src/skins/<nombre>/` con un componente `'use client'` exportado por defecto que reciba `SkinProps` (`profile`, `dict`, `lang`) y no importe `@/content` ni `@/i18n/dictionaries` (metería todos los idiomas en su chunk), su CSS Module dentro de `@layer skin` y sus fuentes con `next/font` y `preload: false`. Sus textos van en los diccionarios, y los enlaces de idioma salen de `getLanguageLinks`.
 2. Registrarla en `src/components/SkinSwitcher/skins.ts` (`SkinId`, `loaders`), su nombre en `settings.skins` de cada diccionario y agregar su icono en `OPTIONS`.
-3. Agregar su spec usando `itFulfillsTheSkinContract` de `@/test/skinContract`, que corre por idioma: un `<h1>`, todas las secciones con su enlace en la nav principal, todo el contenido del JSON, enlaces a cada idioma y ningún texto de otro idioma.
+3. Agregar su spec usando `itFulfillsTheSkinContract` de `@/test/skinContract`, que corre por idioma: un `<h1>`, todas las secciones con su enlace en la nav principal, todo el contenido del JSON, enlaces a cada idioma, el enlace al aviso de privacidad en el footer y ningún texto de otro idioma.
 
 ### Convenciones
 

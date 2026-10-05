@@ -1,0 +1,58 @@
+@layer skin {
+  .page {
+    display: grid;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 42rem;
+    margin-inline: auto;
+    padding: max(2rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right))
+      max(3rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+    font:
+      1rem / 1.65 ui-monospace,
+      monospace;
+
+    & h1 {
+      font-size: clamp(2.25rem, 1.75rem + 3vw, 3.5rem);
+      line-height: 1.05;
+    }
+
+    & h2 {
+      margin-block-end: 0.35rem;
+      font-size: 1.1rem;
+    }
+
+    & p {
+      text-wrap: pretty;
+    }
+
+    & a {
+      text-underline-offset: 0.2em;
+      overflow-wrap: anywhere;
+    }
+
+    & a:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+    }
+  }
+
+  .top ul {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: flex-end;
+
+    /* Blockified flex items lose the marker; the list keeps its semantics in Safari */
+    & li {
+      display: block;
+    }
+
+    & [aria-current='page'] {
+      font-weight: 700;
+      text-decoration: none;
+    }
+  }
+
+  .dim {
+    color: color-mix(in oklab, currentColor 70%, transparent);
+  }
+}

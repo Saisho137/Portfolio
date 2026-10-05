@@ -1,10 +1,13 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { getProfile } from '@/content';
 import { LOCALES } from '@/i18n/config';
 import { SITE_URL } from '@/utils/constants';
 
 import { buildSiteMetadata, generateJsonLd, getSiteTitle, serializeJsonLd } from './seoHelpers';
+
+const UPDATED_AT = '2026-10-04T21:00:00-05:00';
+vi.mock('./contentDate', () => ({ getContentUpdatedAt: () => UPDATED_AT }));
 
 const URLS = { en: SITE_URL, es: `${SITE_URL}/es` };
 const LANGUAGES = { ...URLS, 'x-default': SITE_URL };
@@ -68,7 +71,8 @@ describe.each(LOCALES)('generateJsonLd("%s")', (lang) => {
       '@id': `${URLS[lang]}#profile`,
       url: URLS[lang],
       inLanguage: lang,
-      mainEntity: { '@id': person?.['@id'] }
+      mainEntity: { '@id': person?.['@id'] },
+      dateModified: UPDATED_AT
     });
   });
 
@@ -77,9 +81,31 @@ describe.each(LOCALES)('generateJsonLd("%s")', (lang) => {
       name: profile.name,
       jobTitle: profile.role,
       sameAs: [profile.links.github, profile.links.linkedin],
-      knowsAbout: profile.skills
+      knowsAbout: profile.skills.flatMap(({ items }) => items)
     });
     expect(byType('Person')).not.toHaveProperty('image');
+  });
+
+  it('adds languages, location, verifiable credentials and honors to the person', () => {
+    const person = byType('Person');
+
+    expect(person).toMatchObject({
+      knowsLanguage: profile.languages.map(({ code, name }) => ({
+        '@type': 'Language',
+        name,
+        alternateName: code
+      })),
+      homeLocation: { address: { addressLocality: 'Medellín', addressCountry: 'CO' } },
+      hasCredential: profile.certifications.map(({ name, issuer, date, url }) => ({
+        '@type': 'EducationalOccupationalCredential',
+        name,
+        credentialCategory: 'certification',
+        recognizedBy: { '@type': 'Organization', name: issuer },
+        dateCreated: date,
+        ...(url && { url })
+      })),
+      award: profile.education.flatMap(({ honors = [] }) => honors)
+    });
   });
 });
 

@@ -2,10 +2,14 @@
   "name": "Santiago Betancur Duque",
   "role": "Senior Software Engineer",
   "summary": "Senior Software Engineer que entrega productos web rápidos, accesibles y seguros de punta a punta: React, Next.js y Angular, y servicios Spring Boot en AWS.",
+  "location": {
+    "city": "Medellín",
+    "country": "Colombia",
+    "countryCode": "CO"
+  },
   "about": [
-    "Soy Ingeniero Informático y desarrollador full-stack de Medellín, Colombia, con más de 2 años y medio entregando software en producción en Pragma, desde interfaces en React, Next.js y Angular hasta servicios reactivos en Spring Boot sobre AWS.",
-    "Soy un solucionador de problemas, curioso por naturaleza: profundizo en la necesidad del negocio, diseño la solución correcta y la construyo con Arquitectura Limpia, EDA y DDD, con resultados medibles en rendimiento, seguridad y SEO.",
-    "Fui mentor en 3 ediciones del bootcamp full-stack de Pragma (más de 30 estudiantes contratados) y cofundé la iniciativa de IA del capítulo Frontend. Doble certificación AWS: Cloud Practitioner y AI Practitioner."
+    "Ingeniero Informático de Medellín, Colombia, que construye software en producción en Pragma desde 2024: frontends en React, Next.js y Angular y servicios reactivos en Spring Boot sobre AWS.",
+    "Parto de la necesidad del negocio, elijo el diseño correcto y lo construyo con Arquitectura Limpia, EDA y DDD, midiendo los resultados en rendimiento, seguridad y SEO."
   ],
   "links": {
     "github": "https://github.com/Saisho137",
@@ -15,17 +19,27 @@
   "projects": [
     {
       "name": "Agenda Comfama",
-      "description": "Blog de agenda cultural para un gran cliente colombiano: +22,66% de usuarios nuevos, +29,25% de sesiones con interacción y +34,45% de tiempo de interacción en 3 meses.",
+      "description": "Agenda cultural para un gran cliente colombiano: +23% de usuarios nuevos, +29% de sesiones con interacción y +34% de tiempo de interacción en 3 meses.",
       "url": "https://www.comfama.com/agenda/",
       "image": {
         "id": "agenda-comfama",
-        "alt": "Captura de pantalla de Agenda Comfama"
+        "alt": "Página de inicio de Agenda Comfama"
       },
       "tags": ["Gatsby", "GraphQL", "Contentful", "SEO", "ARIA"]
     },
     {
+      "name": "Portfolio",
+      "description": "Este sitio: una página estática y bilingüe con tres estilos intercambiables en HTML y CSS nativos, con 100 en accesibilidad, buenas prácticas y SEO de Lighthouse.",
+      "url": "https://github.com/Saisho137/Portfolio",
+      "image": {
+        "id": "portfolio",
+        "alt": "Página de inicio del portafolio en el estilo HTML crudo en blanco y negro"
+      },
+      "tags": ["Next.js", "React", "TypeScript", "CSS", "Vitest", "Playwright"]
+    },
+    {
       "name": "Arka",
-      "description": "Backend para un distribuidor B2B de accesorios de PC: 9 microservicios dirigidos por eventos con sagas, CQRS y patrón outbox, bajo Arquitectura Limpia.",
+      "description": "Proyecto final de AceleraTI: backend dirigido por eventos para un distribuidor B2B ficticio, con 9 microservicios, sagas, CQRS y patrón outbox.",
       "url": "https://github.com/Saisho137/Arka",
       "image": {
         "id": "arka",
@@ -39,50 +53,159 @@
       "role": "Senior Software Engineer",
       "company": "Pragma",
       "url": "https://www.pragma.co/",
-      "start": "2026-03"
-    },
-    {
-      "role": "Desarrollador Full-Stack Mid-Senior",
-      "company": "Pragma",
-      "url": "https://www.pragma.co/",
-      "start": "2024-11",
-      "end": "2026-03"
-    },
-    {
-      "role": "Desarrollador Frontend (Practicante → Junior)",
-      "company": "Pragma",
-      "url": "https://www.pragma.co/",
       "start": "2024-02",
-      "end": "2024-11"
+      "highlights": [
+        "De practicante a Senior en dos años, en proyectos financieros, de contenido y herramientas internas.",
+        "Construí en solitario un sitio público (Next.js, Spring Boot, AWS): Core Web Vitals 94–100, más de 96% de cobertura de pruebas y puntaje perfecto en SonarQube.",
+        "Cerré hallazgos críticos de DAST/SAST para un cliente financiero y lo endurecí con reCAPTCHA v3 Enterprise y React Server Components.",
+        "Participé en un agente de IA interno sobre Slack (AWS Bedrock, pgvector, Terraform) que automatiza flujos de toda la compañía."
+      ]
+    },
+    {
+      "role": "Embajador de IA y cofundador de la iniciativa de IA Frontend",
+      "company": "Pragma",
+      "url": "https://www.pragma.co/",
+      "start": "2025-06",
+      "highlights": [
+        "Llevé herramientas de IA para programar a toda la compañía y cofundé la iniciativa de IA de Frontend: más de 4 charlas y el rediseño del framework de madurez del rol."
+      ]
+    },
+    {
+      "role": "Mentor Full-Stack, bootcamp interno",
+      "company": "Pragma",
+      "url": "https://www.pragma.co/",
+      "start": "2024-04",
+      "end": "2025-05",
+      "highlights": [
+        "Mentor de 3 cohortes del bootcamp full-stack (Angular + Spring Boot): más de 30 estudiantes contratados."
+      ]
     }
   ],
   "education": [
     {
       "institution": "Unilasallista Corporación Universitaria",
       "url": "https://www.unilasallista.edu.co",
-      "degree": "Ingeniería Informática"
+      "degree": "Ingeniería Informática",
+      "end": "2024-11",
+      "honors": ["Segundo mejor graduando", "Mejor puntaje Saber PRO", "Beca Municipal de Envigado"]
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Java Backend Development (160 h)",
+      "issuer": "AceleraTI (Bancolombia × Pragma)",
+      "date": "2026-04"
+    },
+    {
+      "name": "AWS Certified AI Practitioner",
+      "issuer": "Amazon Web Services",
+      "date": "2025-12",
+      "url": "https://www.credly.com/badges/e0a0544e-2197-4c33-92fa-ce449b69753f"
+    },
+    {
+      "name": "AWS Certified Cloud Practitioner",
+      "issuer": "Amazon Web Services",
+      "date": "2025-06",
+      "url": "https://www.credly.com/badges/9de734be-3deb-42e6-a7dc-4262f5fdb668"
+    }
+  ],
+  "languages": [
+    {
+      "code": "es",
+      "name": "Español",
+      "level": "nativo"
+    },
+    {
+      "code": "en",
+      "name": "Inglés",
+      "level": "profesional (B2)"
     }
   ],
   "skills": [
-    "TypeScript",
-    "JavaScript",
-    "Java",
-    "React",
-    "Next.js",
-    "Angular",
-    "Node.js",
-    "Spring Boot",
-    "Spring WebFlux",
-    "PostgreSQL",
-    "MongoDB",
-    "AWS",
-    "Terraform",
-    "Docker",
-    "Arquitectura limpia",
-    "Microservicios",
-    "SEO",
-    "Core Web Vitals",
-    "Accesibilidad web",
-    "Testing"
+    {
+      "category": "Lenguajes de programación",
+      "items": ["TypeScript", "JavaScript", "Java"]
+    },
+    {
+      "category": "Frontend",
+      "items": [
+        "React",
+        "Next.js",
+        "Angular",
+        "Redux",
+        "NgRx",
+        "Gatsby",
+        "GraphQL",
+        "Contentful",
+        "SCSS",
+        "Storybook"
+      ]
+    },
+    {
+      "category": "Backend",
+      "items": [
+        "Spring Boot",
+        "Spring WebFlux",
+        "Node.js",
+        "Express",
+        "REST",
+        "Kafka",
+        "PostgreSQL",
+        "MongoDB",
+        "DynamoDB"
+      ]
+    },
+    {
+      "category": "Cloud y DevOps",
+      "items": [
+        "AWS",
+        "Amazon Bedrock",
+        "AWS Lambda",
+        "Amazon S3",
+        "Amazon CloudFront",
+        "Amazon RDS",
+        "GCP",
+        "Docker",
+        "Terraform",
+        "Azure DevOps",
+        "Jenkins",
+        "GitHub Actions",
+        "Splunk"
+      ]
+    },
+    {
+      "category": "Testing y seguridad",
+      "items": [
+        "Jest",
+        "Vitest",
+        "Testing Library",
+        "Playwright",
+        "JUnit",
+        "Mockito",
+        "Stryker",
+        "Snyk",
+        "Fluid Attacks"
+      ]
+    },
+    {
+      "category": "Arquitectura y prácticas",
+      "items": [
+        "Arquitectura limpia",
+        "Arquitectura hexagonal",
+        "Microservicios",
+        "EDA",
+        "DDD",
+        "SSR/SSG",
+        "Scrum",
+        "Kanban",
+        "SEO",
+        "Core Web Vitals",
+        "Accesibilidad web"
+      ]
+    },
+    {
+      "category": "Herramientas de IA",
+      "items": ["GitHub Copilot", "Cursor", "Kiro", "Claude Code"]
+    }
   ]
 }
