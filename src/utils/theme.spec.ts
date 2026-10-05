@@ -65,10 +65,9 @@ describe('syncThemeColor', () => {
     syncThemeColor('dark');
     syncThemeColor('light');
 
-    const metas = document.head.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]');
-    expect(metas).toHaveLength(2);
-    expect(metas[0].content).toBe(THEME_COLORS.light);
-    expect(metas[0].hasAttribute('media')).toBe(false);
+    expect(document.head.querySelectorAll('meta[name="theme-color"]')).toHaveLength(2);
+    expect(firstThemeColor()?.content).toBe(THEME_COLORS.light);
+    expect(firstThemeColor()?.hasAttribute('media')).toBe(false);
   });
 });
 

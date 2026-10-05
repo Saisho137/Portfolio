@@ -59,7 +59,7 @@ describe('RootLayout', () => {
     };
 
     expect(graph.map((node) => node['@type'])).toEqual(['WebSite', 'ProfilePage', 'Person']);
-    expect(graph[1].inLanguage).toBe('es');
+    expect(graph.find((node) => node['@type'] === 'ProfilePage')?.inLanguage).toBe('es');
   });
 
   it('builds the metadata of the requested language', async () => {
