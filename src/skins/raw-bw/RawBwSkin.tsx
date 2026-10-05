@@ -214,12 +214,9 @@ const RawBwSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
 
       <footer className={styles.foot} data-el='footer'>
         <span>
-          © <CurrentYear buildYear={buildYear} /> {name.toLowerCase()} ·{' '}
-          <a href={pagePath(lang, PAGES.privacy)}>{dict.legal.privacy.toLowerCase()}</a>
+          © <CurrentYear buildYear={buildYear} /> {name.toLowerCase()}
         </span>
-        <span>
-          <a href={links.github}>github</a> · <a href={links.linkedin}>linkedin</a>
-        </span>
+        <a href={pagePath(lang, PAGES.privacy)}>{dict.legal.privacy.toLowerCase()}</a>
       </footer>
     </div>
   );

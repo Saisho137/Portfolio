@@ -305,11 +305,9 @@ const BrutalistSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
         <span>
           © {year} {name}
         </span>
-        <a href={pagePath(lang, PAGES.privacy)}>{dict.legal.privacy}</a>
         <a href='#about'>↑ {t.top}</a>
         <div className={styles.rowEnd}>
-          <a href={links.linkedin}>LinkedIn</a>
-          <a href={links.github}>GitHub</a>
+          <a href={pagePath(lang, PAGES.privacy)}>{dict.legal.privacy}</a>
         </div>
       </footer>
     </div>
