@@ -1,4 +1,5 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { getDictionary } from '@/i18n/dictionaries';
@@ -10,7 +11,10 @@ import ThemeToggle from './ThemeToggle';
 
 const labels = getDictionary('en').settings.theme;
 
-const renderToggle = () => render(<ThemeToggle labels={labels} />);
+const renderToggle = () => ({
+  user: userEvent.setup(),
+  ...render(<ThemeToggle labels={labels} />)
+});
 
 const addThemeColorMetas = () =>
   ['light', 'dark'].forEach((scheme) => {
@@ -47,9 +51,9 @@ describe('ThemeToggle', () => {
   });
 
   it('applies and persists the next theme on click', async () => {
-    renderToggle();
+    const { user } = renderToggle();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Switch to dark theme' }));
+    await user.click(screen.getByRole('button', { name: 'Switch to dark theme' }));
     await act(() => Promise.resolve()); // MutationObserver notifies asynchronously
 
     expect(document.documentElement.dataset.theme).toBe('dark');
@@ -57,11 +61,11 @@ describe('ThemeToggle', () => {
     expect(screen.getByRole('button', { name: 'Switch to light theme' })).toBeInTheDocument();
   });
 
-  it('paints the browser UI (theme-color) with the chosen theme, whatever the OS says', () => {
+  it('paints the browser UI (theme-color) with the chosen theme, whatever the OS says', async () => {
     addThemeColorMetas();
-    renderToggle();
+    const { user } = renderToggle();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Switch to dark theme' }));
+    await user.click(screen.getByRole('button', { name: 'Switch to dark theme' }));
 
     expect(document.head.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.content).toBe(
       THEME_COLORS.dark
@@ -74,23 +78,23 @@ describe('ThemeToggle', () => {
     expect(screen.getByRole('button', { name: 'Cambiar a tema oscuro' })).toBeInTheDocument();
   });
 
-  it('still applies the theme when storage is blocked', () => {
+  it('still applies the theme when storage is blocked', async () => {
     vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
       throw new Error('blocked');
     });
-    renderToggle();
+    const { user } = renderToggle();
 
-    fireEvent.click(screen.getByRole('button'));
+    await user.click(screen.getByRole('button'));
 
     expect(document.documentElement.dataset.theme).toBe('dark');
   });
 
-  it('animates with a View Transition unless reduced motion is requested', () => {
+  it('animates with a View Transition unless reduced motion is requested', async () => {
     const startViewTransition = vi.fn((update: () => void) => update());
     Object.assign(document, { startViewTransition });
-    const { unmount } = renderToggle();
+    const { user, unmount } = renderToggle();
 
-    fireEvent.click(screen.getByRole('button'));
+    await user.click(screen.getByRole('button'));
     expect(startViewTransition).toHaveBeenCalledTimes(1);
 
     unmount();
@@ -99,7 +103,7 @@ describe('ThemeToggle', () => {
       mockMatchMedia((q) => q.includes('reduce'))
     );
     renderToggle();
-    fireEvent.click(screen.getByRole('button'));
+    await user.click(screen.getByRole('button'));
     expect(startViewTransition).toHaveBeenCalledTimes(1);
   });
 });

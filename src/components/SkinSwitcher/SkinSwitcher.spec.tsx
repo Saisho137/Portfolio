@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest';
 
 import { getProfile } from '@/content';
@@ -23,12 +24,14 @@ const FakeBrutalistSkin = ({ profile, lang }: SkinProps) => (
 
 const labels = getDictionary('en').settings;
 
-const renderSwitcher = (lang: Locale = 'en') =>
-  render(
+const renderSwitcher = (lang: Locale = 'en') => ({
+  user: userEvent.setup(),
+  ...render(
     <SkinSwitcher lang={lang} labels={getDictionary(lang).settings}>
       <h1>default skin</h1>
     </SkinSwitcher>
-  );
+  )
+});
 
 const radio = (id: SkinId, lang: Locale = 'en') =>
   screen.getByRole('radio', { name: getDictionary(lang).settings.skins[id] });
@@ -55,33 +58,47 @@ describe('SkinSwitcher', () => {
     expect(colorLoader).not.toHaveBeenCalled();
   });
 
-  it.each([
-    ['pointerenter', (el: HTMLElement) => fireEvent.pointerEnter(el.closest('label')!)],
-    ['focus', (el: HTMLElement) => fireEvent.focus(el)],
-    ['touchstart', (el: HTMLElement) => fireEvent.touchStart(el.closest('label')!)]
-  ])('prefetches the skin on %s', (_, trigger) => {
+  it('prefetches the skin on hover', async () => {
+    const { user } = renderSwitcher();
+
+    await user.hover(radio('raw-color'));
+
+    expect(colorLoader).toHaveBeenCalledTimes(1);
+  });
+
+  it('prefetches the skin on keyboard focus', () => {
     renderSwitcher();
 
-    trigger(radio('raw-color'));
+    // Tab lands on the checked radio and arrows select: focus is the only way to reach it
+    act(() => radio('raw-color').focus());
+
+    expect(colorLoader).toHaveBeenCalledTimes(1);
+  });
+
+  it('prefetches the skin on touchstart', () => {
+    renderSwitcher();
+
+    // user-event has no touch API (its pointer events never fire `touchstart`)
+    fireEvent.touchStart(radio('raw-color'));
 
     expect(colorLoader).toHaveBeenCalledTimes(1);
   });
 
   it('downloads each skin only once', async () => {
-    renderSwitcher();
+    const { user } = renderSwitcher();
 
-    fireEvent.pointerEnter(radio('raw-color').closest('label')!);
-    fireEvent.focus(radio('raw-color'));
-    fireEvent.click(radio('raw-color'));
+    await user.hover(radio('raw-color'));
+    act(() => radio('raw-color').focus());
+    await user.click(radio('raw-color'));
 
     await screen.findByRole('heading', { name: 'color skin' });
     expect(colorLoader).toHaveBeenCalledTimes(1);
   });
 
   it('swaps to the selected skin, announces it and tracks the change', async () => {
-    renderSwitcher();
+    const { user } = renderSwitcher();
 
-    fireEvent.click(radio('brutalist'));
+    await user.click(radio('brutalist'));
 
     expect(await screen.findByRole('heading', { name: /^brutalist skin/ })).toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: 'default skin' })).not.toBeInTheDocument();
@@ -91,10 +108,10 @@ describe('SkinSwitcher', () => {
   });
 
   it('hands the lazy skin the content and UI of the page language', async () => {
-    renderSwitcher('es');
+    const { user } = renderSwitcher('es');
 
     expect(screen.getByRole('group', { name: 'Estilo de la página' })).toBeInTheDocument();
-    fireEvent.click(radio('brutalist', 'es'));
+    await user.click(radio('brutalist', 'es'));
 
     expect(
       await screen.findByRole('heading', { name: `brutalist skin es ${getProfile('es').summary}` })
@@ -103,20 +120,20 @@ describe('SkinSwitcher', () => {
   });
 
   it('shows the server skin again when going back to raw-bw', async () => {
-    renderSwitcher();
+    const { user } = renderSwitcher();
 
-    fireEvent.click(radio('raw-color'));
+    await user.click(radio('raw-color'));
     await screen.findByRole('heading', { name: 'color skin' });
-    fireEvent.click(radio('raw-bw'));
+    await user.click(radio('raw-bw'));
 
     expect(await screen.findByRole('heading', { name: 'default skin' })).toBeInTheDocument();
   });
 
   it('keeps the current skin when the chunk fails to load', async () => {
     colorLoader.mockRejectedValue(new Error('offline'));
-    renderSwitcher();
+    const { user } = renderSwitcher();
 
-    fireEvent.click(radio('raw-color'));
+    await user.click(radio('raw-color'));
 
     await waitFor(() => expect(colorLoader).toHaveBeenCalled());
     await act(() => Promise.resolve());
@@ -127,9 +144,9 @@ describe('SkinSwitcher', () => {
   it('uses a View Transition when available', async () => {
     const startViewTransition = vi.fn((update: () => void) => update());
     Object.assign(document, { startViewTransition });
-    renderSwitcher();
+    const { user } = renderSwitcher();
 
-    fireEvent.click(radio('raw-color'));
+    await user.click(radio('raw-color'));
 
     await screen.findByRole('heading', { name: 'color skin' });
     expect(startViewTransition).toHaveBeenCalledTimes(1);
@@ -142,9 +159,9 @@ describe('SkinSwitcher', () => {
       'matchMedia',
       mockMatchMedia(() => true)
     );
-    renderSwitcher();
+    const { user } = renderSwitcher();
 
-    fireEvent.click(radio('raw-color'));
+    await user.click(radio('raw-color'));
 
     await screen.findByRole('heading', { name: 'color skin' });
     expect(startViewTransition).not.toHaveBeenCalled();
