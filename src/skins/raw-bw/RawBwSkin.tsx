@@ -2,6 +2,7 @@ import Image from 'next/image';
 import type { FC } from 'react';
 
 import { CopyEmail } from '@/components/CopyEmail';
+import { CurrentYear } from '@/components/CurrentYear';
 import { getProjectImage, SECTION_IDS } from '@/content';
 import { getLanguageLinks, PAGES, pagePath } from '@/i18n/config';
 import { formatPeriod, formatYearMonth } from '@/i18n/format';
@@ -20,7 +21,8 @@ const RawBwSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
   const { name, role, summary, about, links, projects, experience, education } = profile;
   const { certifications, languages, skills } = profile;
   const t = dict.rawBw;
-  const year = new Date().getFullYear();
+  // Prerendered: evaluated at build time, CurrentYear updates it in the browser
+  const buildYear = new Date().getFullYear();
 
   return (
     <div className={`${styles.skin} ${mono.variable} ${sans.variable}`}>
@@ -212,7 +214,7 @@ const RawBwSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
 
       <footer className={styles.foot} data-el='footer'>
         <span>
-          © {year} {name.toLowerCase()} ·{' '}
+          © <CurrentYear buildYear={buildYear} /> {name.toLowerCase()} ·{' '}
           <a href={pagePath(lang, PAGES.privacy)}>{dict.legal.privacy.toLowerCase()}</a>
         </span>
         <span>
