@@ -1,6 +1,24 @@
 {
+  // Prettier formats, ESLint fixes (and owns the import order)
   "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "never"
+  },
+  // Same as printWidth in .prettierrc
+  "editor.rulers": [100],
+  // The repo's TypeScript, not the one bundled with VS Code
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  // Auto-imports follow the conventions ESLint enforces: `@/` paths, `import type`
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.preferTypeOnlyAutoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "search.exclude": {
+    "**/.next": true,
+    "**/coverage": true,
+    "**/test-results": true,
+    "**/playwright-report": true
   }
 }

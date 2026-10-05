@@ -2,10 +2,9 @@
   "recommendations": [
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
-    "deque-systems.vscode-axe-linter",
     "EditorConfig.EditorConfig",
-    "usernamehw.errorlens",
-    "aaron-bond.better-comments",
-    "vitest.explorer"
+    "vitest.explorer",
+    "ms-playwright.playwright",
+    "deque-systems.vscode-axe-linter"
   ]
 }
