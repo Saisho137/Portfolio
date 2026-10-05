@@ -41,6 +41,11 @@
     gap: 1.5rem;
     justify-content: flex-end;
 
+    /* Blockified flex items lose the marker; the list keeps its semantics in Safari */
+    & li {
+      display: block;
+    }
+
     & [aria-current='page'] {
       font-weight: 700;
       text-decoration: none;
