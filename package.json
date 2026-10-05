@@ -53,6 +53,18 @@
     "vite": "8.3.2",
     "vitest": "5.0.3"
   },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^24.0.0",
+      "onFail": "error"
+    },
+    "packageManager": {
+      "name": "npm",
+      "version": ">=11.10.0 <12",
+      "onFail": "error"
+    }
+  },
   "volta": {
     "node": "24.21.0",
     "npm": "11.19.0"
