@@ -1,1 +1,1 @@
-export { GOOGLE_SITE_VERIFICATION, GTM_ID, LEGACY_HOST, SITE_URL } from './seoConstants';
+export { GOOGLE_SITE_VERIFICATION, GTM_ID, SITE_URL } from './seoConstants';
