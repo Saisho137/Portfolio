@@ -1,6 +1,5 @@
-# EditorConfig is awesome: https://EditorConfig.org
-
-# top-most EditorConfig file
+# Whitespace for every file, also the ones Prettier doesn't format (git hooks, .npmrc,
+# .gitignore). Prettier reads indentation and line endings from here: single source
 root = true
 
 [*]

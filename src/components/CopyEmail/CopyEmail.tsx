@@ -1,10 +1,10 @@
 'use client';
 
-import { sendGTMEvent } from '@next/third-parties/google';
-import { AnchorHTMLAttributes, FC, MouseEvent, useEffect, useState } from 'react';
+import { type AnchorHTMLAttributes, type FC, type MouseEvent, useEffect, useState } from 'react';
 
 import { EmailAddress } from '@/components/EmailAddress';
 import type { Dictionary } from '@/i18n/dictionaries';
+import { trackEvent } from '@/utils/analytics';
 
 const FEEDBACK_MS = 2500;
 
@@ -40,7 +40,7 @@ const CopyEmail: FC<CopyEmailProps> = ({ email, labels, className, ...anchorProp
     navigator.clipboard.writeText(email).then(
       () => {
         setCopied(true);
-        sendGTMEvent({ event: 'email_copy' });
+        trackEvent('email_copy', {});
       },
       () => window.location.assign(href)
     );

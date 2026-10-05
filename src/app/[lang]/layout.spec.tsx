@@ -1,11 +1,13 @@
 import { renderToStaticMarkup } from 'react-dom/server';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { Locale } from '@/i18n/config';
 
 import RootLayout, { generateMetadata, generateStaticParams } from './layout';
 
-vi.mock('@next/third-parties/google', () => ({ GoogleTagManager: () => null }));
+vi.mock('@next/third-parties/google', () => ({
+  GoogleAnalytics: ({ gaId }: { gaId: string }) => <meta name='ga-test' content={gaId} />
+}));
 
 const params = (lang: string) => Promise.resolve({ lang });
 
@@ -59,7 +61,35 @@ describe('RootLayout', () => {
     };
 
     expect(graph.map((node) => node['@type'])).toEqual(['WebSite', 'ProfilePage', 'Person']);
-    expect(graph[1].inLanguage).toBe('es');
+    expect(graph.find((node) => node['@type'] === 'ProfilePage')?.inLanguage).toBe('es');
+  });
+
+  describe('analytics', () => {
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+
+    it('loads GA4 on the production deployment', async () => {
+      vi.stubEnv('VERCEL_ENV', 'production');
+      const doc = await renderLayout();
+
+      expect(doc.querySelector('meta[name="ga-test"]')?.getAttribute('content')).toBe(
+        'G-Q7NJCZDQBL'
+      );
+    });
+
+    it.each(['preview', undefined])('stays off elsewhere (VERCEL_ENV=%s)', async (env) => {
+      vi.stubEnv('VERCEL_ENV', env);
+      const doc = await renderLayout();
+
+      expect(doc.querySelector('meta[name="ga-test"]')).toBeNull();
+    });
+  });
+
+  it('has no no-JS tracking iframe (GA4 needs JavaScript)', async () => {
+    const doc = await renderLayout();
+
+    expect(doc.querySelector('iframe')).toBeNull();
   });
 
   it('builds the metadata of the requested language', async () => {

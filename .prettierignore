@@ -6,3 +6,6 @@ coverage
 next-env.d.ts
 # hand-written standalone mockups
 docs/design/*.html
+test-results
+playwright-report
+blob-report

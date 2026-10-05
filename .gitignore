@@ -41,3 +41,8 @@ next-env.d.ts
 
 # personal source documents (CV, LinkedIn export)
 docs/*.pdf
+
+# playwright
+/test-results/
+/playwright-report/
+/blob-report/

@@ -1,13 +1,13 @@
 'use client';
 
-import { sendGTMEvent } from '@next/third-parties/google';
-import { FC, ReactNode, useState } from 'react';
+import { type FC, type ReactNode, useState } from 'react';
 import { flushSync } from 'react-dom';
 
 import { ThemeToggle } from '@/components/ThemeToggle';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/dictionaries';
 import { format } from '@/i18n/format';
+import { trackEvent } from '@/utils/analytics';
 
 import { BrushIcon, CodeBwIcon, CodeColorIcon } from './icons';
 import { DEFAULT_SKIN, isLazySkin, type LoadedSkin, loadSkin, type SkinId } from './skins';
@@ -63,7 +63,7 @@ const SkinSwitcher: FC<SkinSwitcherProps> = ({ children, lang, labels }) => {
       apply();
     }
 
-    sendGTMEvent({ event: 'skin_change', skin: id });
+    trackEvent('skin_change', { skin: id });
   };
 
   const { loaded } = skin;

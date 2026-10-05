@@ -31,6 +31,8 @@ export interface LoadedSkin {
 // this never suspends, so the View Transition snapshot always contains the new skin.
 const resolved = new Map<string, LoadedSkin>();
 const pending = new Map<string, Promise<LoadedSkin>>();
+// Bumped by resetSkinCache so requests started before a reset can't refill the cache
+let generation = 0;
 
 /** Skin chunk, profile and dictionary in parallel; only the active language is fetched */
 export const loadSkin = (id: LazySkinId, lang: Locale): Promise<LoadedSkin> => {
@@ -40,13 +42,18 @@ export const loadSkin = (id: LazySkinId, lang: Locale): Promise<LoadedSkin> => {
 
   let request = pending.get(key);
   if (!request) {
+    const requestGeneration = generation;
+    const isCurrent = () => requestGeneration === generation;
+
     request = Promise.all([loaders[id](), loadProfile(lang), loadDictionary(lang)])
       .then(([module, profile, dict]) => {
         const skin = { Component: module.default, props: { profile, dict, lang } };
-        resolved.set(key, skin);
+        if (isCurrent()) resolved.set(key, skin);
         return skin;
       })
-      .finally(() => pending.delete(key));
+      .finally(() => {
+        if (isCurrent()) pending.delete(key);
+      });
     pending.set(key, request);
   }
 
@@ -55,6 +62,7 @@ export const loadSkin = (id: LazySkinId, lang: Locale): Promise<LoadedSkin> => {
 
 /** Test helper: forget every loaded skin */
 export const resetSkinCache = () => {
+  generation += 1;
   resolved.clear();
   pending.clear();
 };

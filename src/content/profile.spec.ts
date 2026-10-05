@@ -78,7 +78,8 @@ describe('profile translations', () => {
   });
 
   it('are actually translated', () => {
-    const [en, es] = LOCALES.map(getProfile);
+    const en = getProfile('en');
+    const es = getProfile('es');
 
     expect(es.summary).not.toBe(en.summary);
     es.about.forEach((paragraph, index) => expect(paragraph).not.toBe(en.about[index]));

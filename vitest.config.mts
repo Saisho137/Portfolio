@@ -24,6 +24,8 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
+    // e2e/ belongs to Playwright
+    include: ['src/**/*.spec.{ts,tsx}'],
     setupFiles: ['./vitest.setup.ts'],
     clearMocks: true,
     restoreMocks: true,

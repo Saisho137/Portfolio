@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import { CopyEmail } from '@/components/CopyEmail';
 import { SECTION_IDS } from '@/content/sections';

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 import { CopyEmail } from '@/components/CopyEmail';
 import { getProjectImage, SECTION_IDS } from '@/content';

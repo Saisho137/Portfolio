@@ -1,0 +1,3 @@
+# LF in the repository whatever the OS or editor (Prettier and .editorconfig assume it).
+# Git detects binaries (images, fonts) on its own and leaves them untouched
+* text=auto eol=lf

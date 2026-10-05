@@ -9,13 +9,16 @@ Un solo contenido, en inglés (`/`) y español (`/es`), que se puede ver con tre
 - [Next.js 16](https://nextjs.org/) (App Router, Turbopack, prerender estático) + [React 19](https://react.dev/)
 - TypeScript 6
 - CSS nativo: CSS Modules, `@layer`, nesting, `light-dark()`, `color-mix()`, unidades `dvh`/`svh`
-- [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/)
+- [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/) (`user-event`)
+- [Playwright](https://playwright.dev/) + [axe](https://github.com/dequelabs/axe-core-npm) + [Lighthouse](https://github.com/GoogleChrome/lighthouse) para las pruebas en navegador real
+- [Knip](https://knip.dev/) para código, exports y dependencias sin uso
 - ESLint 9 (flat config, `typescript-eslint` type-aware) + Prettier
-- [Volta](https://volta.sh/) para fijar Node.js y npm
+- [Volta](https://volta.sh/) para fijar Node.js y npm, y `devEngines` en `package.json` para exigirlas
+- Google Analytics 4 (`@next/third-parties`)
 
 ## Cómo empezar
 
-1. Instalar [Volta](https://volta.sh/). Las versiones de Node.js (24 LTS) y npm (11) están fijadas en el campo `volta` del `package.json` y se usan solas al entrar al proyecto. Sin Volta, instalar manualmente esas versiones.
+1. Instalar [Volta](https://volta.sh/). Las versiones exactas de Node.js (24 LTS) y npm (11) están en el campo `volta` del `package.json` y se usan solas al entrar al proyecto. Sin Volta, instalar manualmente esas versiones: `devEngines` hace que npm falle (`EBADDEVENGINES`) al instalar o correr scripts con un Node que no sea 24 o un npm fuera de 11.10–11.x. Volta [ya no se mantiene](https://github.com/volta-cli/volta#readme) y recomienda migrar a [mise](https://mise.jdx.dev/): sigue funcionando, pero es una migración pendiente.
 2. Instalar dependencias y levantar el entorno local:
    ```sh
    npm ci
@@ -27,17 +30,28 @@ Un solo contenido, en inglés (`/`) y español (`/es`), que se puede ver con tre
    ```
    Corrige lo que pueda (`eslint --fix`, `prettier --write`) y luego corre typecheck, tests (con coverage, umbral 85% de líneas) y build. Solo falla si queda algo que no se pudo corregir automáticamente. El hook `pre-push` lo ejecuta solo (ver [Git hooks](#git-hooks)).
 
-| Script               | Qué hace                                     |
-| -------------------- | -------------------------------------------- |
-| `npm run dev`        | Servidor de desarrollo                       |
-| `npm run build`      | Build de producción                          |
-| `npm run start`      | Sirve el build                               |
-| `npm run lint[:fix]` | ESLint                                       |
-| `npm run typecheck`  | `tsc --noEmit`                               |
-| `npm run test`       | Vitest una vez, siempre con coverage         |
-| `npm run test:watch` | Vitest en modo watch                         |
-| `npm run format`     | Prettier (`format:check` solo verifica)      |
-| `npm run prepush`    | Lint fix + format + typecheck + test + build |
+| Script                    | Qué hace                                                                                    |
+| ------------------------- | ------------------------------------------------------------------------------------------- |
+| `npm run dev`             | Servidor de desarrollo                                                                      |
+| `npm run build`           | Build de producción                                                                         |
+| `npm run start`           | Sirve el build                                                                              |
+| `npm run lint[:fix]`      | ESLint (tras `next typegen`: los tipos de imágenes viven en `next-env.d.ts`, no versionado) |
+| `npm run typecheck`       | `next typegen` + `tsc --noEmit`                                                             |
+| `npm run knip`            | Archivos, exports y dependencias sin uso (manual)                                           |
+| `npm run test`            | Vitest una vez, siempre con coverage                                                        |
+| `npm run test:watch`      | Vitest en modo watch                                                                        |
+| `npm run test:e2e`        | Playwright contra el build local (correr `build` antes)                                     |
+| `npm run test:lighthouse` | Lighthouse estricto contra producción                                                       |
+| `npm run format`          | Prettier (`format:check` solo verifica)                                                     |
+| `npm run prepush`         | Lint fix + format + typecheck + test + build                                                |
+
+### Pruebas en navegador (`e2e/`)
+
+Scripts manuales, fuera de `prepush`: se corren cuando se quiere validar en navegador. Playwright con el Chrome instalado (`channel: 'chrome'`, no descarga navegadores). Por defecto levanta `next start` en el puerto 3100, así que antes hay que correr `npm run build`. Con `BASE_URL` prueba un sitio desplegado.
+
+- **desktop**: rutas, redirects y 404; head SEO y JSON-LD por idioma; axe con contraste en las 3 skins × 2 idiomas × 2 temas; que las skins lazy solo descarguen el idioma activo; navegación sin JS; tema + `theme-color` + persistencia; copiar el email (portapapeles, toast que no mueve nada).
+- **mobile** (Pixel 7, táctil): las screenshots toman color al cruzar el centro de la pantalla, y quedan a color con reduced motion.
+- **lighthouse**: accesibilidad, buenas prácticas, SEO y agentic browsing en 100 siempre. Performance tiene margen porque medida desde una máquina varía con la red (el mismo deploy da 95–100 en corridas seguidas): ≥ 90 en local (sin CDN) y ≥ 95 con la mediana de 3 corridas en `test:lighthouse`. `LH_MIN_PERFORMANCE` cambia el umbral. Imprime los puntajes reales.
 
 ### Git hooks
 
@@ -76,15 +90,22 @@ La metadata (`buildSiteMetadata` en el layout), el JSON-LD (`WebSite` + `Profile
 - Las otras skins son chunks separados (JS + CSS + fuentes con `preload: false`) que se descargan **por intención**: `pointerenter` (hover), `focus` (teclado) o `touchstart` (móvil) sobre su icono. Quien no explora no paga nada.
 - Al seleccionar, el cambio usa la **View Transitions API** (`document.startViewTransition` + `flushSync`); sin soporte o con `prefers-reduced-motion`, cambia sin animación. Si el chunk no carga, se queda la skin actual. La elección no se persiste: cada visita entra en raw-bw.
 
+### Analítica
+
+Google Analytics 4 directo (sin Tag Manager), con `GoogleAnalytics` de `@next/third-parties`: se carga después de la hidratación (`async`), sin bloquear la página. Solo en el deploy de producción de Vercel (`VERCEL_ENV === 'production'`, leído en el build): `next dev`, los previews y las corridas locales (E2E, Lighthouse) no cuentan como visitas.
+
+- **Automático (medición mejorada de GA4)**: páginas vistas por idioma, fuente del tráfico, scroll y clics salientes (GitHub, LinkedIn, proyectos).
+- **Eventos propios** (`src/utils/analytics.ts`, tipados, sin datos personales): `email_copy` (evento clave: intención de contacto), `skin_change` (`skin`) y `theme_change` (`theme`). Los componentes llaman a `trackEvent`, no a la librería.
+
 ### Tema y accesibilidad
 
 - **Claro/oscuro**: por defecto sigue al sistema (`color-scheme: light dark`). Cada skin pinta con `light-dark()`, así que forzar `color-scheme` re-tematiza toda la página. El `ThemeToggle` (junto al selector de skins) guarda la elección en `localStorage` y la aplica en `<html data-theme>`. Un script inline en `<head>` (`src/utils/theme.ts`) la restaura antes del primer paint, sin flash. Sin JS, manda el sistema.
 - **Color de la UI del navegador**: las `<meta name="theme-color">` del viewport siguen al sistema con `media`. Con un tema elegido a mano se agrega otra meta sin `media` al inicio del `<head>` (el navegador usa la primera que aplica). Las de React no se editan: al hidratar, React agregaría copias.
 - **Preferencias del usuario**: `prefers-reduced-motion` desactiva animaciones y View Transitions; `prefers-contrast: more` quita la estática y refuerza los tonos atenuados; `forced-colors` (alto contraste de Windows) oculta los overlays y marca la skin activa con colores de sistema.
-- **Email**: `CopyEmail` copia la dirección al portapapeles en vez de abrir el cliente de correo, con un aviso visible que también anuncian los lectores de pantalla (`role="status"`). Sin JS, sin Clipboard API, si falla la copia o con clicks modificados (nueva pestaña, etc.) sigue siendo un `mailto:` normal.
+- **Email**: `CopyEmail` copia la dirección al portapapeles en vez de abrir el cliente de correo, con un toast flotante (sobre la barra de ajustes, no desplaza el contenido) que también anuncian los lectores de pantalla (`role="status"`). Sin JS, sin Clipboard API, si falla la copia o con clicks modificados (nueva pestaña, etc.) sigue siendo un `mailto:` normal.
 - **Screenshots en táctil**: en raw-bw las imágenes son grises y toman color con hover. Sin hover (`hover: none`) toman color al cruzar el centro de la pantalla (`animation-timeline: view()`); sin soporte o con `prefers-reduced-motion`, quedan a color.
 - **Navegación**: skip link a `<main id="main">` (todas las skins lo tienen), foco visible, landmarks y radios nativos en el selector.
-- **Tests**: el contrato de skins corre `axe-core` sobre cada skin. El contraste se verifica en un navegador real (jsdom no calcula colores): todas las paletas cumplen WCAG AA en ambos temas.
+- **Tests**: el contrato de skins corre `axe-core` sobre cada skin en jsdom. El contraste lo verifica el E2E en Chrome (jsdom no calcula colores): todas las paletas cumplen WCAG AA en ambos temas.
 
 El detalle de la decisión y las alternativas descartadas está en [`docs/design/README.md`](docs/design/README.md), junto a los mockups originales.
 
@@ -105,6 +126,7 @@ src/
 ├── styles/globals.css    # Reset, tokens y capas globales
 ├── test/                 # Utilidades de test compartidas (contrato de skins)
 └── utils/                # Constantes y helpers de SEO
+e2e/                      # Playwright: navegador real, axe y Lighthouse
 ```
 
 No hay carpeta `public/`: favicon (`icon.svg` con versión oscura + `favicon.ico`, `apple-icon.png`, `icon1/2.png` para el manifest), manifest, robots, sitemap e imágenes sociales viven en `src/app/`.
@@ -133,8 +155,10 @@ Un id inexistente rompe el build, y hay tests que verifican que no queden imáge
 
 ### Convenciones
 
-- Imports absolutos con el alias `@/` → `src/`. El orden lo valida ESLint (`import/order`).
+- Imports absolutos con el alias `@/` → `src/`. El orden lo valida ESLint (`import/order`); VS Code no reordena imports (`.vscode/settings.json`) para no pelear con esa regla.
+- Formato: `.editorconfig` es la fuente única de espacios (indentación, LF, newline final) para todos los archivos y Prettier lo lee; `.prettierrc` solo tiene el estilo que difiere de los defaults; `.gitattributes` fuerza LF en git. VS Code formatea con Prettier al guardar y aplica los fixes de ESLint.
 - Estilos: CSS Modules nativos. Los selectores globales y los tokens comunes van en `globals.css`; cada skin define su paleta con `light-dark()` dentro de `@layer skin`.
-- Tests junto al archivo que prueban (`*.spec.ts(x)`).
+- Tests unitarios junto al archivo que prueban (`*.spec.ts(x)`), con `user-event` para las interacciones (`fireEvent` solo donde no alcanza, p. ej. `touchstart`). Los de navegador, en `e2e/`.
+- TypeScript estricto más `noUncheckedIndexedAccess`, `noUnusedLocals/Parameters` y `noFallthroughCasesInSwitch`. ESLint exige imports de solo tipos con `type` (no arrastran módulos al bundle), `eqeqeq` y sin `console.log`.
 - Commits con [Conventional Commits](https://www.conventionalcommits.org/): `tipo(scope): descripción`.
-- Dependencias: versiones exactas. `.npmrc` fija `min-release-age=3`: `npm install` solo resuelve versiones publicadas hace más de 3 días (defensa ante paquetes comprometidos que se retiran en horas). `npm ci` no se ve afectado porque respeta el lockfile. Dependabot (`.github/dependabot.yml`) abre cada lunes un PR agrupado de minor/patch, con el mismo margen de 3 días (`cooldown`). ESLint, TypeScript y `@types/node` tienen los majors bloqueados (ver los motivos en el archivo).
+- Dependencias: versiones exactas. `.npmrc` fija `min-release-age=3`: `npm install` solo resuelve versiones publicadas hace más de 3 días (defensa ante paquetes comprometidos que se retiran en horas). `npm ci` no se ve afectado porque respeta el lockfile. También prohíbe dependencias por git o URL (`allow-git`/`allow-remote=none`) y hace fallar la instalación si un paquete trae scripts de instalación que no estén en `package.json#allowScripts` (`strict-allow-scripts`). Dependabot (`.github/dependabot.yml`) abre cada lunes un PR agrupado de minor/patch, con el mismo margen de 3 días (`cooldown`). ESLint, TypeScript y `@types/node` tienen los majors bloqueados (ver los motivos en el archivo).
