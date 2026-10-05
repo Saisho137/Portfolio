@@ -29,20 +29,20 @@ Un solo contenido, en inglés (`/`) y español (`/es`), que se puede ver con tre
    ```
    Corrige lo que pueda (`eslint --fix`, `prettier --write`) y luego corre typecheck, Knip, tests (con coverage, umbral 85% de líneas) y build. Solo falla si queda algo que no se pudo corregir automáticamente. El hook `pre-push` lo ejecuta solo (ver [Git hooks](#git-hooks)).
 
-| Script                    | Qué hace                                                |
-| ------------------------- | ------------------------------------------------------- |
-| `npm run dev`             | Servidor de desarrollo                                  |
-| `npm run build`           | Build de producción                                     |
-| `npm run start`           | Sirve el build                                          |
-| `npm run lint[:fix]`      | ESLint                                                  |
-| `npm run typecheck`       | `next typegen` + `tsc --noEmit`                         |
-| `npm run knip`            | Archivos, exports y dependencias sin uso                |
-| `npm run test`            | Vitest una vez, siempre con coverage                    |
-| `npm run test:watch`      | Vitest en modo watch                                    |
-| `npm run test:e2e`        | Playwright contra el build local (correr `build` antes) |
-| `npm run test:lighthouse` | Lighthouse estricto contra producción                   |
-| `npm run format`          | Prettier (`format:check` solo verifica)                 |
-| `npm run prepush`         | Lint fix + format + typecheck + Knip + test + build     |
+| Script                    | Qué hace                                                                                    |
+| ------------------------- | ------------------------------------------------------------------------------------------- |
+| `npm run dev`             | Servidor de desarrollo                                                                      |
+| `npm run build`           | Build de producción                                                                         |
+| `npm run start`           | Sirve el build                                                                              |
+| `npm run lint[:fix]`      | ESLint (tras `next typegen`: los tipos de imágenes viven en `next-env.d.ts`, no versionado) |
+| `npm run typecheck`       | `next typegen` + `tsc --noEmit`                                                             |
+| `npm run knip`            | Archivos, exports y dependencias sin uso                                                    |
+| `npm run test`            | Vitest una vez, siempre con coverage                                                        |
+| `npm run test:watch`      | Vitest en modo watch                                                                        |
+| `npm run test:e2e`        | Playwright contra el build local (correr `build` antes)                                     |
+| `npm run test:lighthouse` | Lighthouse estricto contra producción                                                       |
+| `npm run format`          | Prettier (`format:check` solo verifica)                                                     |
+| `npm run prepush`         | Lint fix + format + typecheck + Knip + test + build                                         |
 
 ### Pruebas en navegador (`e2e/`)
 
