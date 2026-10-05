@@ -53,6 +53,8 @@ export default async function RootLayout({
         <noscript>
           <iframe
             title='google tag manager'
+            // Only fires GTM's no-JS pixel: it needs no scripts, forms or same-origin access
+            sandbox=''
             src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
             height='0'
             width='0'
