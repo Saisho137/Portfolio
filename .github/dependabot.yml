@@ -28,3 +28,16 @@ updates:
       # Must match the Node major pinned in package.json#volta (24)
       - dependency-name: '@types/node'
         update-types: [version-update:semver-major]
+
+  # Actions are pinned by SHA (with the tag as a comment): Dependabot bumps both
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 3
+    commit-message:
+      prefix: ci
+    groups:
+      actions:
+        patterns: ['*']

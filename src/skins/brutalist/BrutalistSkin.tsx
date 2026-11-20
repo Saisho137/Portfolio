@@ -73,7 +73,12 @@ const BrutalistSkin: FC<SkinProps> = ({ profile, dict, lang }) => {
       </svg>
 
       <aside className={styles.rail}>
-        <a className={styles.logo} href='#about' aria-label={`${name}, ${t.backToTop}`}>
+        <a
+          className={styles.logo}
+          href='#about'
+          // Starts with the visible initials: the accessible name must contain them (WCAG 2.5.3)
+          aria-label={`${initials(name)}. ${name}, ${t.backToTop}`}
+        >
           <span className={styles.logoWord}>{initials(name)}.</span>
           <svg viewBox='0 0 120 92' aria-hidden='true'>
             <path d='M6 10 Q60 2 114 10 L112 66 Q60 60 8 66 Z' />
