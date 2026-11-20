@@ -1,5 +1,7 @@
 # Portfolio — Santiago Betancur Duque
 
+[![CI](https://github.com/Saisho137/Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Saisho137/Portfolio/actions/workflows/ci.yml)
+
 Portfolio personal: [santiago-betancur-duque.vercel.app](https://santiago-betancur-duque.vercel.app).
 
 Un solo contenido, en inglés (`/`) y español (`/es`), que se puede ver con tres estilos ("skins") bajo la misma URL: **raw-bw** (HTML crudo en blanco y negro, por defecto), **raw-color** (HTML crudo con etiquetas a color) y **brutalist** (inspirado en utrecht.jp). Todo con HTML y CSS nativos: sin Canvas, WebGL ni librerías de animación.
@@ -66,7 +68,7 @@ Fuera de `prepush`: se corren cuando se quiere validar en navegador, y en CI (so
 
 GitHub Actions (`.github/workflows/ci.yml`) en cada PR y push a `main`: las variantes de solo verificación de `prepush` (`format:check`, `lint`, `typecheck`, `test`, `build`), más `knip` y Playwright `desktop` + `mobile` contra el build. Quedan fuera `visual` (las baselines son `-darwin`, en Linux no coinciden) y `lighthouse` (apunta a producción). Node y npm salen del campo `volta`. Sube `coverage/lcov.info` siempre y los traces de Playwright si falla. Las actions van fijadas por SHA y Dependabot las actualiza cada mes.
 
-`main` está protegida (ruleset `main-protection`, sin excepciones ni para el dueño): solo se cambia por PR, con el CI en verde y la rama al día con `main`, las conversaciones resueltas y sin force push ni borrado.
+`main` está protegida (ruleset `main-protection`; los admins del repo pueden saltárselo): solo se cambia por PR, con el CI en verde y la rama al día con `main`, las conversaciones resueltas y sin force push ni borrado.
 
 ## Arquitectura
 
