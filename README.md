@@ -37,7 +37,7 @@ Un solo contenido, en inglés (`/`) y español (`/es`), que se puede ver con tre
 | `npm run start`           | Sirve el build                                                                              |
 | `npm run lint[:fix]`      | ESLint (tras `next typegen`: los tipos de imágenes viven en `next-env.d.ts`, no versionado) |
 | `npm run typecheck`       | `next typegen` + `tsc --noEmit`                                                             |
-| `npm run knip`            | Archivos, exports y dependencias sin uso (manual)                                           |
+| `npm run knip`            | Archivos, exports y dependencias sin uso (fuera de `prepush`, corre en CI)                  |
 | `npm run test`            | Vitest una vez, siempre con coverage                                                        |
 | `npm run test:watch`      | Vitest en modo watch                                                                        |
 | `npm run test:e2e`        | Playwright contra el build local (correr `build` antes)                                     |
@@ -48,7 +48,7 @@ Un solo contenido, en inglés (`/`) y español (`/es`), que se puede ver con tre
 
 ### Pruebas en navegador (`e2e/`)
 
-Scripts manuales, fuera de `prepush`: se corren cuando se quiere validar en navegador. Playwright con el Chrome instalado (`channel: 'chrome'`, no descarga navegadores). Por defecto levanta `next start` en el puerto 3100, así que antes hay que correr `npm run build`. Con `BASE_URL` prueba un sitio desplegado.
+Fuera de `prepush`: se corren cuando se quiere validar en navegador, y en CI (solo `desktop` y `mobile`). Playwright con el Chrome instalado (`channel: 'chrome'`, no descarga navegadores). Por defecto levanta `next start` en el puerto 3100, así que antes hay que correr `npm run build`. Con `BASE_URL` prueba un sitio desplegado.
 
 - **desktop**: rutas, redirects, 404, aviso de privacidad y headers de seguridad; head SEO y JSON-LD por idioma; axe con contraste en las 3 skins × 2 idiomas × 2 temas; que las skins lazy solo descarguen el idioma activo; navegación sin JS; tema + `theme-color` + persistencia; copiar el email (portapapeles, toast que no mueve nada).
 - **mobile** (Pixel 7, táctil): las screenshots toman color al cruzar el centro de la pantalla, y quedan a color con reduced motion.
@@ -61,6 +61,12 @@ Scripts manuales, fuera de `prepush`: se corren cuando se quiere validar en nave
 
 - **`commit-msg`**: [commitlint](https://commitlint.js.org/) valida [Conventional Commits](https://www.conventionalcommits.org/) (`tipo(scope): descripción`, scope opcional) con la descripción en menos de 40 caracteres (`commitlint.config.mjs`).
 - **`pre-push`**: exige el árbol limpio (si no, validaría el trabajo sin commitear en vez de lo que se sube), corre `npm run prepush` y falla si este corrigió archivos: hay que commitear las correcciones y volver a hacer push.
+
+### CI
+
+GitHub Actions (`.github/workflows/ci.yml`) en cada PR y push a `main`: las variantes de solo verificación de `prepush` (`format:check`, `lint`, `typecheck`, `test`, `build`), más `knip` y Playwright `desktop` + `mobile` contra el build. Quedan fuera `visual` (las baselines son `-darwin`, en Linux no coinciden) y `lighthouse` (apunta a producción). Node y npm salen del campo `volta`. Sube `coverage/lcov.info` siempre y los traces de Playwright si falla. Las actions van fijadas por SHA y Dependabot las actualiza cada mes.
+
+`main` está protegida (ruleset `main-protection`, sin excepciones ni para el dueño): solo se cambia por PR, con el CI en verde y la rama al día con `main`, las conversaciones resueltas y sin force push ni borrado.
 
 ## Arquitectura
 
