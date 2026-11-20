@@ -22,9 +22,9 @@ describe('BrutalistSkin', () => {
     const { profile } = skinProps('en');
     render(<BrutalistSkin {...skinProps('en')} />);
 
-    expect(screen.getByRole('link', { name: `${profile.name}, back to top` })).toHaveTextContent(
-      'sbd.'
-    );
+    expect(
+      screen.getByRole('link', { name: `sbd. ${profile.name}, back to top` })
+    ).toHaveTextContent('sbd.');
   });
 
   it.each([
